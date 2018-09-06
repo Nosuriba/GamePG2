@@ -5,12 +5,21 @@
 
 #define LpGameScene (GameScene::GetInstance())
 
-enum MOUSE
+/* マウスボタンのトリガー処理用 */
+enum M_PUSH
 {
 	PUSH_NOW,
 	PUSH_OLD,
 	PUSH_MAX
 };
+
+//static struct s_Deleter
+//{
+//	void operator()(GameScene* s_Instance)
+//	{
+//		delete s_Instance;
+//	}
+//};
 
 class GameScene
 {
@@ -18,6 +27,7 @@ public:
 	~GameScene();
 	static GameScene & GetInstance()
 	{
+		/* ゲームシーンクラスを一度だけインスタンスするようにしている */
 		std::call_once(initFlag, Create);
 		Create();
 		return *s_Instance;
@@ -27,8 +37,8 @@ public:
 	void Run();
 private:
 	GameScene();
-
 	int UpDate();
+
 
 	int SysInit();
 	int SysDestroy();
@@ -44,11 +54,9 @@ private:
 
 	static std::once_flag initFlag;
 	static GameScene	  *s_Instance;
+	//static std::unique_ptr<GameScene> s_Instance;
+	//static s_Deleter s_Delete ;
 	int (GameScene::*gScenePtr)(void);
 
-	/* マウスの情報を保存する変数 */
-	int mousePush;
-	int mousePushOld;
-
-	int mousePushD[PUSH_MAX];
+	int mousePush[PUSH_MAX];
 };

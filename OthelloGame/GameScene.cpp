@@ -7,11 +7,10 @@
 
 std::once_flag GameScene::initFlag;
 GameScene	  *GameScene::s_Instance;
+// std::unique_ptr<GameScene> GameScene::s_Instance;
 
 GameScene::GameScene()
 {
-	mousePush		= 0;
-	mousePushOld	= 0;
 	gScenePtr		= &GameScene::SysInit;
 }
 
@@ -21,6 +20,7 @@ GameScene::~GameScene()
 
 void GameScene::Create()
 {
+	// s_Instance = std::make_unique<GameScene>();
 	s_Instance = new GameScene();
 }
 
@@ -28,7 +28,7 @@ void GameScene::Destroy()
 {
 	if (s_Instance)
 	{
-		delete s_Instance;
+		// delete s_Instance;
 		s_Instance = nullptr;
 	}
 }
@@ -37,31 +37,28 @@ void GameScene::Run()
 {
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
-		mousePushD[PUSH_OLD] = mousePushD[PUSH_NOW];
-		mousePushD[PUSH_NOW] = DxLib::GetMouseInput();
-		GameScene::UpDate();
+		/* ボタンを押す前に、現在押したボタンの情報を
+		   古いボタンの情報に渡している */
+		mousePush[PUSH_OLD] = mousePush[PUSH_NOW];
+		mousePush[PUSH_NOW] = DxLib::GetMouseInput();
+
+		(this->*gScenePtr)();
 	}
+
+	
 	DxLib_End();
 }
 
 int GameScene::UpDate()
 {
-	int setScene	= (this->*gScenePtr)();
-	mousePush		= DxLib::GetMouseInput();
-
-	/* マウスをクリックしていない時、 */
-	if (mousePush == 0)
-	{
-		mousePushOld = 0;
-	}
-
-	return setScene;
+	return 0;
 }
 
 int GameScene::SysInit()
 {
 	gScenePtr = &GameScene::TitleInit;
 
+	/* 表示するウィンドウの設定を行っている */
 	DxLib::SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 16);
 	DxLib::ChangeWindowMode(true);
 	DxLib::SetWindowText("1701310_北川 潤一 : OthelloGame");
@@ -70,6 +67,7 @@ int GameScene::SysInit()
 		return false;
 	}
 	DxLib::SetDrawScreen(DX_SCREEN_BACK);
+
 	return 0;
 }
 
@@ -86,15 +84,8 @@ int GameScene::TitleInit()
 
 int GameScene::TitleMain()
 {
-	/*if (mousePush & MOUSE_INPUT_LEFT && mousePushOld != mousePush)
+	if (mousePush[PUSH_NOW] & (~mousePush[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 	{
-		mousePushOld = mousePush;
-		gScenePtr	 = &GameScene::GameInit;
-	}
-*/
-	if (mousePushD[PUSH_NOW] & (~mousePushD[PUSH_OLD]) & MOUSE_INPUT_LEFT)
-	{
-		mousePushOld = mousePush;
 		gScenePtr = &GameScene::GameInit;
 	}
 	DxLib::ClsDrawScreen();
@@ -112,9 +103,8 @@ int GameScene::GameInit()
 
 int GameScene::GameMain()
 {
-	if (mousePush & MOUSE_INPUT_LEFT && mousePushOld != mousePush)
+	if (mousePush[PUSH_NOW] & (~mousePush[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 	{
-		mousePushOld = mousePush;
 		gScenePtr	 = &GameScene::ResultInit;
 	}
 	DxLib::ClsDrawScreen();
@@ -137,9 +127,8 @@ int GameScene::ResultInit()
 
 int GameScene::ResultMain()
 {
-	if (mousePush & MOUSE_INPUT_LEFT && mousePushOld != mousePush)
+	if (mousePush[PUSH_NOW] & (~mousePush[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 	{
-		mousePushOld = DxLib::GetMouseInput();
 		gScenePtr	 = &GameScene::TitleInit;
 	}
 	DxLib::ClsDrawScreen();

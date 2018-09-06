@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <map>
+#include <mutex>
 #include "Vector2.h"
 
 #define LpImageMng ImageMng::GetInstance()
@@ -13,7 +14,7 @@ class ImageMng
 public:
 	static ImageMng & GetInstance()
 	{
-		Create();
+		std::call_once(initFlag, Create);
 		return *s_Instance;
 	}
 	static void Create();
@@ -23,7 +24,8 @@ public:
 	~ImageMng();
 private:
 	ImageMng();
-	static ImageMng *s_Instance;
+	static ImageMng		  *s_Instance;
+	static std::once_flag initFlag;
 	std::map<std::string, VEC_INT> imgMap;
 };
 

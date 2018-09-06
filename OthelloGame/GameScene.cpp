@@ -2,16 +2,17 @@
 #include "GameScene.h"
 #include "ImageMng.h"
 
-GameScene *GameScene::s_Instance;
-
 #define SCREEN_SIZE_X (800)
 #define SCREEN_SIZE_Y (600)
+
+std::once_flag GameScene::initFlag;
+GameScene	  *GameScene::s_Instance;
 
 GameScene::GameScene()
 {
 	mousePush		= 0;
 	mousePushOld	= 0;
-	gScenePtr = &GameScene::SysInit;
+	gScenePtr		= &GameScene::SysInit;
 }
 
 GameScene::~GameScene()
@@ -20,10 +21,7 @@ GameScene::~GameScene()
 
 void GameScene::Create()
 {
-	if (!s_Instance)
-	{
-		s_Instance = new GameScene();
-	}
+	s_Instance = new GameScene();
 }
 
 void GameScene::Destroy()
@@ -31,6 +29,7 @@ void GameScene::Destroy()
 	if (s_Instance)
 	{
 		delete s_Instance;
+		s_Instance = nullptr;
 	}
 }
 
@@ -38,6 +37,8 @@ void GameScene::Run()
 {
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
+		mousePushD[PUSH_OLD] = mousePushD[PUSH_NOW];
+		mousePushD[PUSH_NOW] = DxLib::GetMouseInput();
 		GameScene::UpDate();
 	}
 	DxLib_End();
@@ -45,16 +46,16 @@ void GameScene::Run()
 
 int GameScene::UpDate()
 {
-	int SetMode		= (this->*gScenePtr)();
+	int setScene	= (this->*gScenePtr)();
 	mousePush		= DxLib::GetMouseInput();
 
-	/* クリックした情報 */
-	if (mousePush != mousePushOld)
+	/* マウスをクリックしていない時、 */
+	if (mousePush == 0)
 	{
 		mousePushOld = 0;
 	}
 
-	return 0;
+	return setScene;
 }
 
 int GameScene::SysInit()
@@ -83,12 +84,17 @@ int GameScene::TitleInit()
 	return 0;
 }
 
-
 int GameScene::TitleMain()
 {
-	if (mousePush & MOUSE_INPUT_LEFT && mousePushOld != mousePush)
+	/*if (mousePush & MOUSE_INPUT_LEFT && mousePushOld != mousePush)
 	{
-		mousePushOld = DxLib::GetMouseInput();
+		mousePushOld = mousePush;
+		gScenePtr	 = &GameScene::GameInit;
+	}
+*/
+	if (mousePushD[PUSH_NOW] & (~mousePushD[PUSH_OLD]) & MOUSE_INPUT_LEFT)
+	{
+		mousePushOld = mousePush;
 		gScenePtr = &GameScene::GameInit;
 	}
 	DxLib::ClsDrawScreen();
@@ -108,8 +114,8 @@ int GameScene::GameMain()
 {
 	if (mousePush & MOUSE_INPUT_LEFT && mousePushOld != mousePush)
 	{
-		mousePushOld = DxLib::GetMouseInput();
-		gScenePtr = &GameScene::ResultInit;
+		mousePushOld = mousePush;
+		gScenePtr	 = &GameScene::ResultInit;
 	}
 	DxLib::ClsDrawScreen();
 	DxLib::DrawString(60, 60, "ゲームシーンだよ", 0xffffff);
@@ -134,7 +140,7 @@ int GameScene::ResultMain()
 	if (mousePush & MOUSE_INPUT_LEFT && mousePushOld != mousePush)
 	{
 		mousePushOld = DxLib::GetMouseInput();
-		gScenePtr = &GameScene::TitleInit;
+		gScenePtr	 = &GameScene::TitleInit;
 	}
 	DxLib::ClsDrawScreen();
 	DxLib::DrawString(60, 60, "リザルトシーンだよ", 0xffffff);

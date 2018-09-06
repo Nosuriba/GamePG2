@@ -1,7 +1,8 @@
 #include <DxLib.h>
 #include "ImageMng.h"
 
-ImageMng *ImageMng::s_Instance;
+ImageMng	  *ImageMng::s_Instance;
+std::once_flag ImageMng::initFlag;
 
 ImageMng::ImageMng()
 {
@@ -13,10 +14,7 @@ ImageMng::~ImageMng()
 
 void ImageMng::Create()
 {
-	if (!s_Instance)
-	{
-		s_Instance = new ImageMng();
-	}
+	s_Instance = new ImageMng();
 }
 
 void ImageMng::Destroy()
@@ -24,6 +22,7 @@ void ImageMng::Destroy()
 	if (s_Instance)
 	{
 		delete s_Instance;
+		s_Instance = nullptr;
 	}
 }
 

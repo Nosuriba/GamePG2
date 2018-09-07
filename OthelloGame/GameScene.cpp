@@ -1,12 +1,14 @@
 #include <DxLib.h>
 #include "GameScene.h"
+#include "GameBoard.h"
 #include "ImageMng.h"
 
 #define SCREEN_SIZE_X (800)
 #define SCREEN_SIZE_Y (600)
 
-std::once_flag GameScene::initFlag;
+/* 静的なメンバ変数の定義 */
 GameScene	  *GameScene::s_Instance;
+std::once_flag GameScene::initFlag;
 // std::unique_ptr<GameScene> GameScene::s_Instance;
 
 GameScene::GameScene()
@@ -58,7 +60,7 @@ int GameScene::SysInit()
 {
 	gScenePtr = &GameScene::TitleInit;
 
-	/* 表示するウィンドウの設定を行っている */
+	/* 表示するウィンドウの初期設定を行っている */
 	DxLib::SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 16);
 	DxLib::ChangeWindowMode(true);
 	DxLib::SetWindowText("1701310_北川 潤一 : OthelloGame");
@@ -89,7 +91,8 @@ int GameScene::TitleMain()
 		gScenePtr = &GameScene::GameInit;
 	}
 	DxLib::ClsDrawScreen();
-	DxLib::DrawString(60, 60, "タイトルシーンだよ", 0xffffff);
+	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/sample.png")[0], true);
+	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "タイトルシーンだよ", 0x000000);
 	DxLib::ScreenFlip();
 
 	return 0;
@@ -97,6 +100,7 @@ int GameScene::TitleMain()
 
 int GameScene::GameInit()
 {
+	boardPtr = std::make_shared<GameBoard>();
 	gScenePtr = &GameScene::GameMain;
 	return 0;
 }
@@ -108,8 +112,8 @@ int GameScene::GameMain()
 		gScenePtr	 = &GameScene::ResultInit;
 	}
 	DxLib::ClsDrawScreen();
-	DxLib::DrawString(60, 60, "ゲームシーンだよ", 0xffffff);
-	/*DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/sample.png")[0], true);*/
+	DxLib::DrawExtendString(0, 0,1.5f, 1.5f, "ゲームシーンだよ", 0xffffff);
+	boardPtr->DrawBoard();
 	DxLib::ScreenFlip();
 	return 0;
 }
@@ -132,7 +136,7 @@ int GameScene::ResultMain()
 		gScenePtr	 = &GameScene::TitleInit;
 	}
 	DxLib::ClsDrawScreen();
-	DxLib::DrawString(60, 60, "リザルトシーンだよ", 0xffffff);
+	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f,"リザルトシーンだよ", 0xffffff);
 	DxLib::ScreenFlip();
 	
 	return 0;

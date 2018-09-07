@@ -2,6 +2,9 @@
 #include <mutex>
 #include <memory>
 #include <list>
+#include "Vector2.h"
+
+class GameBoard;
 
 #define LpGameScene (GameScene::GetInstance())
 
@@ -39,7 +42,6 @@ private:
 	GameScene();
 	int UpDate();
 
-
 	int SysInit();
 	int SysDestroy();
 
@@ -57,6 +59,7 @@ private:
 	//static std::unique_ptr<GameScene> s_Instance;
 	//static s_Deleter s_Delete ;
 	int (GameScene::*gScenePtr)(void);
+	std::shared_ptr<GameBoard> boardPtr;
 
 	int mousePush[PUSH_MAX];
 };

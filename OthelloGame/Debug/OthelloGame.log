@@ -1,4 +1,7 @@
-﻿  GameBoard.cpp
-c:\users\のすりばー\desktop\gamepg2\othellogame\gameboard.cpp(70): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-c:\users\のすりばー\desktop\gamepg2\othellogame\gameboard.cpp(70): warning C4018: '<=': signed と unsigned の数値を比較しようとしました。
+﻿  GameScene.cpp
+  GamePiece.cpp
+  GameBoard.cpp
+c:\users\のすりばー\desktop\gamepg2\othellogame\gameboard.cpp(60): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+c:\users\のすりばー\desktop\gamepg2\othellogame\gameboard.cpp(60): warning C4018: '<=': signed と unsigned の数値を比較しようとしました。
+  コードを生成中...
   OthelloGame.vcxproj -> C:\Users\のすりばー\Desktop\GamePG2\OthelloGame\Debug\OthelloGame.exe

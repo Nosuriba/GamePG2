@@ -117,10 +117,11 @@ int GameScene::GameMain()
 		DxLib::GetMousePoint(&mPos.x, &mPos.y);
 		/* ピースの情報が変わるかのデバッグ用 */
 		boardPtr->SetPiecePos(mPos);
+		boardPtr->Update();
 	}
 	DxLib::ClsDrawScreen();
 	DxLib::DrawExtendString(0, 0,1.5f, 1.5f, "ゲームシーンだよ", 0xffffff);
-	boardPtr->DrawBoard();
+	boardPtr->Draw();
 	DxLib::ScreenFlip();
 	return 0;
 }

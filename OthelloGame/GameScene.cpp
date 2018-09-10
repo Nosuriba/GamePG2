@@ -9,7 +9,7 @@
 /* 静的なメンバ変数の定義 */
 GameScene	  *GameScene::s_Instance;
 std::once_flag GameScene::initFlag;
-// std::unique_ptr<GameScene> GameScene::s_Instance;
+//std::unique_ptr<GameScene, s_Deleter> GameScene::s_Instance;
 
 GameScene::GameScene()
 {
@@ -22,7 +22,7 @@ GameScene::~GameScene()
 
 void GameScene::Create()
 {
-	// s_Instance = std::make_unique<GameScene>();
+	/*s_Instance.reset(new GameScene());*/
 	s_Instance = new GameScene();
 }
 
@@ -30,7 +30,7 @@ void GameScene::Destroy()
 {
 	if (s_Instance)
 	{
-		// delete s_Instance;
+		delete s_Instance;
 		s_Instance = nullptr;
 	}
 }
@@ -46,8 +46,7 @@ void GameScene::Run()
 
 		(this->*gScenePtr)();
 	}
-
-	
+	LpGameScene.Destroy();
 	DxLib_End();
 }
 
@@ -107,9 +106,17 @@ int GameScene::GameInit()
 
 int GameScene::GameMain()
 {
+	Vector2 mPos = { 0,0 };
 	if (mousePush[PUSH_NOW] & (~mousePush[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 	{
 		gScenePtr	 = &GameScene::ResultInit;
+	}
+
+	if (mousePush[PUSH_NOW] & (~mousePush[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
+	{
+		DxLib::GetMousePoint(&mPos.x, &mPos.y);
+		/* ピースの情報が変わるかのデバッグ用 */
+		boardPtr->SetPiecePos(mPos);
 	}
 	DxLib::ClsDrawScreen();
 	DxLib::DrawExtendString(0, 0,1.5f, 1.5f, "ゲームシーンだよ", 0xffffff);

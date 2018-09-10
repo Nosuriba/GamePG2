@@ -4,6 +4,7 @@
 #include <list>
 #include "Vector2.h"
 
+//class GameScene;
 class GameBoard;
 
 #define LpGameScene (GameScene::GetInstance())
@@ -18,7 +19,7 @@ enum M_PUSH
 
 //static struct s_Deleter
 //{
-//	void operator()(GameScene* s_Instance)
+//	void operator()(std::unique_ptr<GameScene, s_Deleter>*  s_Instance)
 //	{
 //		delete s_Instance;
 //	}
@@ -50,14 +51,13 @@ private:
 	int TitleMain();
 	int GameInit();
 	int GameMain();
-	int GameDestroy();
+	int GameDestroy();							/* とりあえず、帰ってきたらシングルトンクラスの生ポをスマポに変える*/
 	int ResultInit();
 	int ResultMain();
 
 	static std::once_flag initFlag;
 	static GameScene	  *s_Instance;
-	//static std::unique_ptr<GameScene> s_Instance;
-	//static s_Deleter s_Delete ;
+	/*static std::unique_ptr<GameScene, s_Deleter> s_Instance;*/
 	int (GameScene::*gScenePtr)(void);
 	std::shared_ptr<GameBoard> boardPtr;
 

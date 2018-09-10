@@ -35,21 +35,6 @@ bool GameBoard::CommonBoard(Vector2 vec)
 	return true;
 }
 
-
-Vector2 GameBoard::GetSize(void)
-{
-	pieceSize = { PIECE_SIZE, PIECE_SIZE };
-
-	return pieceSize;
-}
-
-Vector2 GameBoard::GetBoardSize(void)
-{
-	boardSize = { BOARD_SIZE, BOARD_SIZE };
-
-	return boardSize;
-}
-
 void GameBoard::SetPiecePos(Vector2 pos)
 {
 	/* 盤面の描画する位置をずらしているので座標を取得する時、ずらした分の座標引いて
@@ -108,17 +93,17 @@ void GameBoard::Draw()
 	{
 		for (unsigned int x = 0; x < data.size(); x++)
 		{
-			if (data[y][x] == PIECE_NON)
+			if (data[y][x] == PIECE_W)
 			{
-				DrawString((PIECE_SIZE * x) + BOARD_OFFSET_X, (PIECE_SIZE * y) + PIECE_SIZE, "無", 0xff0000);
-			}
-			else if (data[y][x] == PIECE_W)
-			{
-				DrawString((PIECE_SIZE * x) + BOARD_OFFSET_X, (PIECE_SIZE * y) + PIECE_SIZE, "白", 0xffffff);
+				DrawCircle((PIECE_SIZE * x) + BOARD_OFFSET_X + (PIECE_SIZE / 2), 
+						   (PIECE_SIZE * y) + (PIECE_SIZE / 2) + PIECE_SIZE,
+						   (PIECE_SIZE / 2) - 5, 0xffffff, true);
 			}
 			else if (data[y][x] == PIECE_B)
 			{
-				DrawString((PIECE_SIZE * x) + BOARD_OFFSET_X, (PIECE_SIZE * y) + PIECE_SIZE, "黒", 0xffffff);
+				DrawCircle((PIECE_SIZE * x) + BOARD_OFFSET_X + (PIECE_SIZE / 2),
+						   (PIECE_SIZE * y) + (PIECE_SIZE / 2) + PIECE_SIZE,
+						   (PIECE_SIZE / 2) - 5, 0x000000, true);
 			}
 			else
 			{

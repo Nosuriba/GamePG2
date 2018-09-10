@@ -4,8 +4,6 @@
 #include <list>
 #include "Vector2.h"
 
-class GamePiece;
-
 /* ピースの状態*/
 enum PIECE_ST
 {
@@ -15,16 +13,14 @@ enum PIECE_ST
 	PIECE_MAX
 };
 
+class GamePiece;
+
 class GameBoard
 {
 public:
 	GameBoard();
 	GameBoard(Vector2 vec);
 	~GameBoard();
-
-	/* 情報取得用の関数*/
-	Vector2 GetSize(void);
-	Vector2 GetBoardSize(void);
 
 	void SetPiecePos(Vector2 pos);
 
@@ -38,10 +34,6 @@ private:
 	// std::vector<std::vector<PIECE_ST>> pieceData;
 	std::vector<PIECE_ST*> data;
 	std::vector<PIECE_ST>  pieceData;
-
-	/* 情報取得用の変数*/
-	Vector2 pieceSize = { 0,0 };
-	Vector2 boardSize = { 0,0 };
 
 	std::list<GamePiece> pieceList;
 

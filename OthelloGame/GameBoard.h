@@ -4,16 +4,11 @@
 #include <list>
 #include "Vector2.h"
 
-/* ピースの状態*/
-enum PIECE_ST
-{
-	PIECE_NON,
-	PIECE_B,
-	PIECE_W,
-	PIECE_MAX
-};
-
 class GamePiece;
+class MouseCtl;
+
+using piece_ptr  = std::shared_ptr<GamePiece>;
+using piece_list = std::list<piece_ptr>;
 
 class GameBoard
 {
@@ -21,22 +16,18 @@ public:
 	GameBoard();
 	GameBoard(Vector2 vec);
 	~GameBoard();
-
-	void SetPiecePos(Vector2 pos);
-
-	void Update(void);
+	void Update(const MouseCtl& mouseCtl);
 	void Draw(void);
 private:
 
 	/*コンストラクタの共通化用関数*/
 	bool CommonBoard(Vector2 vec);
+	auto AddObjList(piece_ptr && objPtr);
 
-	// std::vector<std::vector<PIECE_ST>> pieceData;
-	std::vector<PIECE_ST*> data;
-	std::vector<PIECE_ST>  pieceData;
-
-	std::list<GamePiece> pieceList;
-
+	piece_list pieceList;
+	std::vector<std::weak_ptr<GamePiece>*> data;
+	std::vector<std::weak_ptr<GamePiece>>  pieceData;
+	Vector2 pieceSize = { 0,0 };
 };
 
 int DrawLine(Vector2 sPos, Vector2 ePos, unsigned int color, int thickNess);

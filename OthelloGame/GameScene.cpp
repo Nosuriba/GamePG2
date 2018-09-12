@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include "GameScene.h"
 #include "GameBoard.h"
+#include "MouseCtl.h"
 #include "ImageMng.h"
 
 #define SCREEN_SIZE_X (800)
@@ -39,10 +40,10 @@ void GameScene::Run()
 {
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
-		/* ボタンを押す前に、現在押したボタンの情報を
-		   古いボタンの情報に渡している */
-		mousePush[PUSH_OLD] = mousePush[PUSH_NOW];
-		mousePush[PUSH_NOW] = DxLib::GetMouseInput();
+		///* ボタンを押す前に、現在押したボタンの情報を
+		//   古いボタンの情報に渡している */
+		//mousePush[PUSH_OLD] = mousePush[PUSH_NOW];
+		//mousePush[PUSH_NOW] = DxLib::GetMouseInput();
 
 		(this->*gScenePtr)();
 	}
@@ -57,7 +58,9 @@ int GameScene::UpDate()
 
 int GameScene::SysInit()
 {
-	gScenePtr = &GameScene::TitleInit;
+	/* システムの初期化が終わった後、ゲームの初期化をする処理用関数に移行している
+	*/
+	gScenePtr = &GameScene::GameInit;
 
 	/* 表示するウィンドウの初期設定を行っている */
 	DxLib::SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 16);
@@ -68,6 +71,8 @@ int GameScene::SysInit()
 		return false;
 	}
 	DxLib::SetDrawScreen(DX_SCREEN_BACK);
+
+	mousePtr = std::make_unique<MouseCtl>();
 
 	return 0;
 }
@@ -85,10 +90,11 @@ int GameScene::TitleInit()
 
 int GameScene::TitleMain()
 {
-	if (mousePush[PUSH_NOW] & (~mousePush[PUSH_OLD]) & MOUSE_INPUT_LEFT)
+	if (mousePtr->GetButton()[PUSH_NOW] & (~mousePtr->GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
 	{
 		gScenePtr = &GameScene::GameInit;
 	}
+	mousePtr->Update();
 	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/sample.png")[0], true);
 	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "タイトルシーンだよ", 0x000000);
@@ -99,26 +105,25 @@ int GameScene::TitleMain()
 
 int GameScene::GameInit()
 {
-	boardPtr = std::make_shared<GameBoard>();
+	boardPtr = std::make_unique<GameBoard>();
 	gScenePtr = &GameScene::GameMain;
 	return 0;
 }
 
 int GameScene::GameMain()
 {
-	Vector2 mPos = { 0,0 };
-	if (mousePush[PUSH_NOW] & (~mousePush[PUSH_OLD]) & MOUSE_INPUT_LEFT)
+
+	if (mousePtr->GetButton()[PUSH_NOW] & (~mousePtr->GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
 	{
 		gScenePtr	 = &GameScene::ResultInit;
 	}
 
-	if (mousePush[PUSH_NOW] & (~mousePush[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
+	if (mousePtr->GetButton()[PUSH_NOW] & (~mousePtr->GetButton()[PUSH_OLD] & MOUSE_INPUT_LEFT))
 	{
-		DxLib::GetMousePoint(&mPos.x, &mPos.y);
-		/* ピースの情報が変わるかのデバッグ用 */
-		boardPtr->SetPiecePos(mPos);
-		boardPtr->Update();
+		boardPtr->Update(*mousePtr);
 	}
+	/*マウス処理の更新を行う*/
+	mousePtr->Update();
 	DxLib::ClsDrawScreen();
 	DxLib::DrawExtendString(0, 0,1.5f, 1.5f, "ゲームシーンだよ", 0xffffff);
 	boardPtr->Draw();
@@ -139,10 +144,12 @@ int GameScene::ResultInit()
 
 int GameScene::ResultMain()
 {
-	if (mousePush[PUSH_NOW] & (~mousePush[PUSH_OLD]) & MOUSE_INPUT_LEFT)
+	if (mousePtr->GetButton()[PUSH_NOW] & (~mousePtr->GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
 	{
 		gScenePtr	 = &GameScene::TitleInit;
 	}
+
+	mousePtr->Update();
 	DxLib::ClsDrawScreen();
 	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f,"リザルトシーンだよ", 0xffffff);
 	DxLib::ScreenFlip();

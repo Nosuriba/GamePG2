@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include "GameBoard.h"
 #include "GamePiece.h"
+#include "MouseCtl.h"
 
 #define PIECE_SIZE		(64)
 #define BOARD_OFFSET_X	(PIECE_SIZE * 2)
@@ -25,6 +26,7 @@ GameBoard::~GameBoard()
 
 bool GameBoard::CommonBoard(Vector2 vec)
 {
+	/*AddObjList(std::make_shared<GamePiece>());*/
 	pieceData.resize(vec.y * vec.x);
 	data.resize(vec.y);
 	for (unsigned int i = 0; i < data.size(); i++)
@@ -35,28 +37,30 @@ bool GameBoard::CommonBoard(Vector2 vec)
 	return true;
 }
 
-void GameBoard::SetPiecePos(Vector2 pos)
+auto GameBoard::AddObjList(piece_ptr && objPtr)
 {
-	/* 盤面の描画する位置をずらしているので座標を取得する時、ずらした分の座標引いて
-	   渡す座標にずれが起きないようにしている */
-	Vector2 vec = { ((pos.x - BOARD_OFFSET_X) / PIECE_SIZE), ((pos.y - BOARD_OFFSET_Y) / PIECE_SIZE) };
-
-	/* Xの範囲を0～7までの8個、データを渡すようにしている*/
-	if ( ((vec.y >= 0) & (vec.y < data.size())) & ((vec.x >= 0) & (vec.x <= data.size() - 1)) )
-	{
-		data[vec.y][vec.x] = PIECE_W;
-	}
-	else
-	{
-		return;
-	}	
-}
-
-void GameBoard::Update(void)
-{
-	pieceList.push_back(GamePiece());
+	pieceList.push_back(objPtr);
 	auto itr = pieceList.end();
 	itr--;
+
+	return itr;
+}
+
+void GameBoard::Update(const MouseCtl& mouseCtl)
+{
+	 mouseCtl.Update;
+
+	/* ピースデータの情報を保存する場所を設定している */
+	Vector2 mPos = { (mouseCtl.GetPoint.x - BOARD_OFFSET_X) / PIECE_SIZE, 
+					 (mouseCtl.GetPoint.y - BOARD_OFFSET_Y) / PIECE_SIZE } ;
+
+	if ( (mPos.x >= 0 & mPos.x < data.size() - 1) & (mPos.y >= 0 & mPos.y < data.size()) )
+	{
+		for (auto itr : pieceList)
+		{
+			//itr.GetState();
+		}
+	}
 }
 
 void GameBoard::Draw()
@@ -71,7 +75,7 @@ void GameBoard::Draw()
 	ePos = { BOARD_SIZE + BOARD_OFFSET_X, BOARD_SIZE };
 
 	/* グリッドの描画をしている*/
-	for (unsigned int y = 0; y <= data.size() + 1; y++)
+	for (unsigned int y = 0; y <= DEF_BOARD_CNT + 1; y++)
 	{
 		sPos.y = PIECE_SIZE * y;
 		ePos.y = PIECE_SIZE * y;
@@ -81,36 +85,41 @@ void GameBoard::Draw()
 	sPos = { BOARD_OFFSET_X, BOARD_OFFSET_Y };
 	ePos = { BOARD_SIZE + BOARD_OFFSET_X, BOARD_SIZE + PIECE_SIZE};
 
-	for (unsigned int x = 0; x <= data.size() + 1; x++)
+	for (unsigned int x = 0; x <= DEF_BOARD_CNT + 1; x++)
 	{
 		sPos.x = PIECE_SIZE * x;
 		ePos.x = PIECE_SIZE * x;
 		DrawLine(sPos, ePos, 0x000000, 1);
 	}
 
-	/* ピースの状態を描画している */
-	for (unsigned int y = 0; y < data.size(); y++)
-	{
-		for (unsigned int x = 0; x < data.size(); x++)
-		{
-			if (data[y][x] == PIECE_W)
-			{
-				DrawCircle((PIECE_SIZE * x) + BOARD_OFFSET_X + (PIECE_SIZE / 2), 
-						   (PIECE_SIZE * y) + (PIECE_SIZE / 2) + PIECE_SIZE,
-						   (PIECE_SIZE / 2) - 5, 0xffffff, true);
-			}
-			else if (data[y][x] == PIECE_B)
-			{
-				DrawCircle((PIECE_SIZE * x) + BOARD_OFFSET_X + (PIECE_SIZE / 2),
-						   (PIECE_SIZE * y) + (PIECE_SIZE / 2) + PIECE_SIZE,
-						   (PIECE_SIZE / 2) - 5, 0x000000, true);
-			}
-			else
-			{
+	///* ピースの状態を描画している */
+	//for (unsigned int y = 0; y < data.size(); y++)
+	//{
+	//	for (unsigned int x = 0; x < data.size(); x++)
+	//	{
+	//		if (data[y][x] == PIECE_W)
+	//		{
+	//			DrawCircle((PIECE_SIZE * x) + BOARD_OFFSET_X + (PIECE_SIZE / 2), 
+	//					   (PIECE_SIZE * y) + (PIECE_SIZE / 2) + PIECE_SIZE,
+	//					   (PIECE_SIZE / 2) - 5, 0xffffff, true);
+	//		}
+	//		else if (data[y][x] == PIECE_B)
+	//		{
+	//			DrawCircle((PIECE_SIZE * x) + BOARD_OFFSET_X + (PIECE_SIZE / 2),
+	//					   (PIECE_SIZE * y) + (PIECE_SIZE / 2) + PIECE_SIZE,
+	//					   (PIECE_SIZE / 2) - 5, 0x000000, true);
+	//		}
+	//		else
+	//		{
 
-			}
-		}
-	}
+	//		}
+	//	}
+	//}
+
+	/*for (auto itr : pieceList)
+	{
+		itr.Draw();
+	}*/
 	
 }
 

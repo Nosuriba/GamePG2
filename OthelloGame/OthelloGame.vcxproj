@@ -128,6 +128,7 @@
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="ImageMng.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MouseCtl.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +136,7 @@
     <ClInclude Include="GamePiece.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="ImageMng.h" />
+    <ClInclude Include="MouseCtl.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -6,16 +6,17 @@
 
 //class GameScene;
 class GameBoard;
+class MouseCtl;
 
 #define LpGameScene (GameScene::GetInstance())
 
 /* マウスボタンのトリガー処理用 */
-enum M_PUSH
-{
-	PUSH_NOW,
-	PUSH_OLD,
-	PUSH_MAX
-};
+//enum M_PUSH
+//{
+//	PUSH_NOW,
+//	PUSH_OLD,
+//	PUSH_MAX
+//};
 
 //static struct s_Deleter
 //{
@@ -51,7 +52,7 @@ private:
 	int TitleMain();
 	int GameInit();
 	int GameMain();
-	int GameDestroy();							/* とりあえず、帰ってきたらシングルトンクラスの生ポをスマポに変える*/
+	int GameDestroy();
 	int ResultInit();
 	int ResultMain();
 
@@ -59,7 +60,8 @@ private:
 	static GameScene	  *s_Instance;
 	/*static std::unique_ptr<GameScene, s_Deleter> s_Instance;*/
 	int (GameScene::*gScenePtr)(void);
-	std::shared_ptr<GameBoard> boardPtr;
+	std::unique_ptr<GameBoard> boardPtr;
+	std::unique_ptr<MouseCtl> mousePtr;
 
-	int mousePush[PUSH_MAX];
+	// int mousePush[PUSH_MAX];
 };

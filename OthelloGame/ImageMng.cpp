@@ -2,7 +2,7 @@
 #include "ImageMng.h"
 
 /* Ã“I‚Èƒƒ“ƒo•Ï”‚Ì’è‹` */
-std::unique_ptr<ImageMng, ImageMng::ImageMngDeleter> ImageMng::s_Instance;
+std::unique_ptr<ImageMng, ImageMng::ImageMngDeleter> ImageMng::s_Instance(new ImageMng());
 
 ImageMng::ImageMng()
 {

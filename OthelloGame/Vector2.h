@@ -20,6 +20,10 @@ public:
 	/* ”äŠr‰‰ŽZŽq */
 	bool operator == (const Vector2& vec) const;
 	bool operator != (const Vector2& vec) const;
+	bool operator >  (const Vector2& vec) const;
+	bool operator <  (const Vector2& vec) const;
+	bool operator >= (const Vector2& vec) const;
+	bool operator <= (const Vector2& vec) const;
 
 	/* ’P€‰‰ŽZŽq */
 	Vector2& operator += (const Vector2& vec);

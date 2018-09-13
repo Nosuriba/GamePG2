@@ -96,8 +96,8 @@ int GameScene::GameMain()
 		gScenePtr	 = &GameScene::ResultInit;
 	}
 	/*マウス処理の更新を行う*/
+	boardPtr->Update(*mousePtr);		// マウスのクリック処理と描画位置の処理
 	mousePtr->Update();
-	boardPtr->Update(*mousePtr);
 	DxLib::ClsDrawScreen();
 	DxLib::DrawExtendString(0, 0,1.5f, 1.5f, "ゲームシーンだよ", 0xffffff);
 	boardPtr->Draw();

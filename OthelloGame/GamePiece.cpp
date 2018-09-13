@@ -3,12 +3,12 @@
 
 GamePiece::GamePiece()
 {
-	 pState = PIECE_NON;
+	 //pState = PIECE_NON;
 }
 
 GamePiece::GamePiece(Vector2 vec, Vector2 offset)
 {
-	pState = PIECE_NON;
+	pState		 = PIECE_NON;
 	this->pos	 = vec;
 	this->offset = offset;
 }

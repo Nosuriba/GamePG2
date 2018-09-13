@@ -14,19 +14,21 @@ class ImageMng
 public:
 	static ImageMng & GetInstance()
 	{
-		std::call_once(initFlag, Create);
-		Create();
 		return *s_Instance;
 	}
-	static void Create();
-	static void Destroy();
 	const VEC_INT ImgGetID(std::string fileName);
 	const VEC_INT ImgGetID(std::string fileName, Vector2 divCnt, Vector2 divSize, Vector2 chipOffset);
-	~ImageMng();
 private:
+	struct ImageMngDeleter
+	{
+		void operator()(ImageMng * imageMng)
+		{
+			delete imageMng;
+		}
+	};
 	ImageMng();
-	static ImageMng		  *s_Instance;
-	static std::once_flag initFlag;
+	~ImageMng();
+	static std::unique_ptr<ImageMng, ImageMngDeleter> s_Instance;
 	std::map<std::string, VEC_INT> imgMap;		// ‰æ‘œID‚Ìƒnƒ“ƒhƒ‹‚Æ‰æ‘œ‚Ì•ªŠ„”‚ğ•Û‘¶‚·‚é•Ï”
 };
 

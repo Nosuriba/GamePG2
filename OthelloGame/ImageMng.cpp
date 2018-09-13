@@ -2,8 +2,7 @@
 #include "ImageMng.h"
 
 /* Ã“I‚Èƒƒ“ƒo•Ï”‚Ì’è‹` */
-ImageMng	  *ImageMng::s_Instance;
-std::once_flag ImageMng::initFlag;
+std::unique_ptr<ImageMng, ImageMng::ImageMngDeleter> ImageMng::s_Instance;
 
 ImageMng::ImageMng()
 {
@@ -11,20 +10,6 @@ ImageMng::ImageMng()
 
 ImageMng::~ImageMng()
 {
-}
-
-void ImageMng::Create()
-{
-	s_Instance = new ImageMng();
-}
-
-void ImageMng::Destroy()
-{
-	if (s_Instance)
-	{
-		delete s_Instance;
-		s_Instance = nullptr;
-	}
 }
 
 const VEC_INT ImageMng::ImgGetID(std::string fileName)

@@ -8,9 +8,7 @@
 #define SCREEN_SIZE_Y (600)
 
 /* 静的なメンバ変数の定義 */
-GameScene	  *GameScene::s_Instance;
-std::once_flag GameScene::initFlag;
-//std::unique_ptr<GameScene, s_Deleter> GameScene::s_Instance;
+std::unique_ptr<GameScene, GameScene::GameSceneDeleter> GameScene::s_Instance(new GameScene());
 
 GameScene::GameScene()
 {
@@ -19,36 +17,16 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
-}
-
-void GameScene::Create()
-{
-	/*s_Instance.reset(new GameScene());*/
-	s_Instance = new GameScene();
-}
-
-void GameScene::Destroy()
-{
-	if (s_Instance)
-	{
-		delete s_Instance;
-		s_Instance = nullptr;
-	}
+	DxLib_End();
 }
 
 void GameScene::Run()
 {
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
-		///* ボタンを押す前に、現在押したボタンの情報を
-		//   古いボタンの情報に渡している */
-		//mousePush[PUSH_OLD] = mousePush[PUSH_NOW];
-		//mousePush[PUSH_NOW] = DxLib::GetMouseInput();
-
 		(this->*gScenePtr)();
 	}
-	LpGameScene.Destroy();
-	DxLib_End();
+	/*GameSceneDeleter(s_Instance);*/
 }
 
 int GameScene::UpDate()
@@ -117,13 +95,9 @@ int GameScene::GameMain()
 	{
 		gScenePtr	 = &GameScene::ResultInit;
 	}
-
-	if (mousePtr->GetButton()[PUSH_NOW] & (~mousePtr->GetButton()[PUSH_OLD] & MOUSE_INPUT_LEFT))
-	{
-		boardPtr->Update(*mousePtr);
-	}
 	/*マウス処理の更新を行う*/
 	mousePtr->Update();
+	boardPtr->Update(*mousePtr);
 	DxLib::ClsDrawScreen();
 	DxLib::DrawExtendString(0, 0,1.5f, 1.5f, "ゲームシーンだよ", 0xffffff);
 	boardPtr->Draw();

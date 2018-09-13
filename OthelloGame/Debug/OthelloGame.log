@@ -1,6 +1,6 @@
-﻿  GameBoard.cpp
-c:\users\のすりばー\desktop\gamepg2\othellogame\gameboard.cpp(50): error C2276: '&': 仮想関数のアドレスを取ろうとしました。
-c:\users\のすりばー\desktop\gamepg2\othellogame\gameboard.cpp(53): error C2228: '.x' の左側はクラス、構造体、共用体でなければなりません
-c:\users\のすりばー\desktop\gamepg2\othellogame\gameboard.cpp(54): error C2228: '.y' の左側はクラス、構造体、共用体でなければなりません
-c:\users\のすりばー\desktop\gamepg2\othellogame\gameboard.cpp(56): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-c:\users\のすりばー\desktop\gamepg2\othellogame\gameboard.cpp(56): warning C4554: '&': 演算子の優先順位に問題があります。かっこを使用して優先順位を明確にしてください
+﻿  GameScene.cpp
+  コードを生成中...
+  コンパイル中...
+  ImageMng.cpp
+  コードを生成中...
+  OthelloGame.vcxproj -> C:\Users\のすりばー\Desktop\GamePG2\OthelloGame\Debug\OthelloGame.exe

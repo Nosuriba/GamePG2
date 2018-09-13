@@ -26,7 +26,7 @@ GameBoard::~GameBoard()
 
 bool GameBoard::CommonBoard(Vector2 vec)
 {
-	/*AddObjList(std::make_shared<GamePiece>());*/
+	
 	pieceData.resize(vec.y * vec.x);
 	data.resize(vec.y);
 	for (unsigned int i = 0; i < data.size(); i++)
@@ -48,17 +48,26 @@ auto GameBoard::AddObjList(piece_ptr && objPtr)
 
 void GameBoard::Update(const MouseCtl& mouseCtl)
 {
-	 mouseCtl.Update;
-
 	/* ピースデータの情報を保存する場所を設定している */
-	Vector2 mPos = { (mouseCtl.GetPoint.x - BOARD_OFFSET_X) / PIECE_SIZE, 
-					 (mouseCtl.GetPoint.y - BOARD_OFFSET_Y) / PIECE_SIZE } ;
+	Vector2 mPos = { (mouseCtl.GetPoint().x - BOARD_OFFSET_X) / PIECE_SIZE, 
+					 (mouseCtl.GetPoint().y - BOARD_OFFSET_Y) / PIECE_SIZE } ;
 
-	if ( (mPos.x >= 0 & mPos.x < data.size() - 1) & (mPos.y >= 0 & mPos.y < data.size()) )
+	if (mouseCtl.GetButton()[PUSH_NOW] & (~mouseCtl.GetButton()[PUSH_OLD] & MOUSE_INPUT_LEFT))
 	{
-		for (auto itr : pieceList)
+		/* ピースの要素が見つからなかった場合に、*/
+		if (((mPos.x >= 0) & (mPos.x < data.size() - 1)) & ((mPos.y >= 0) & (mPos.y < data.size())))
 		{
-			//itr.GetState();
+
+			if (data[mPos.y][mPos.x].expired())
+			{
+				/*auto tmp = AddObjList(std::make_shared<GamePiece>(mPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y)));
+				data[mPos.y][mPos.x] = (*tmp);
+				data[mPos.y][mPos.x].lock()->SetState(PIECE_W);*/
+			}
+			else
+			{
+				data[mPos.y][mPos.x].lock()->SetReverse();
+			}
 		}
 	}
 }
@@ -79,48 +88,25 @@ void GameBoard::Draw()
 	{
 		sPos.y = PIECE_SIZE * y;
 		ePos.y = PIECE_SIZE * y;
-		DrawLine(sPos, ePos, 0x000000, 1);
+		DrawLine(sPos, ePos, 0xffffff, 1);
 	}
 
 	sPos = { BOARD_OFFSET_X, BOARD_OFFSET_Y };
 	ePos = { BOARD_SIZE + BOARD_OFFSET_X, BOARD_SIZE + PIECE_SIZE};
 
+	/* 線の位置修正を行っておく*/
 	for (unsigned int x = 0; x <= DEF_BOARD_CNT + 1; x++)
 	{
 		sPos.x = PIECE_SIZE * x;
 		ePos.x = PIECE_SIZE * x;
-		DrawLine(sPos, ePos, 0x000000, 1);
+		DrawLine(sPos, ePos, 0xffffff, 1);
 	}
-
-	///* ピースの状態を描画している */
-	//for (unsigned int y = 0; y < data.size(); y++)
-	//{
-	//	for (unsigned int x = 0; x < data.size(); x++)
-	//	{
-	//		if (data[y][x] == PIECE_W)
-	//		{
-	//			DrawCircle((PIECE_SIZE * x) + BOARD_OFFSET_X + (PIECE_SIZE / 2), 
-	//					   (PIECE_SIZE * y) + (PIECE_SIZE / 2) + PIECE_SIZE,
-	//					   (PIECE_SIZE / 2) - 5, 0xffffff, true);
-	//		}
-	//		else if (data[y][x] == PIECE_B)
-	//		{
-	//			DrawCircle((PIECE_SIZE * x) + BOARD_OFFSET_X + (PIECE_SIZE / 2),
-	//					   (PIECE_SIZE * y) + (PIECE_SIZE / 2) + PIECE_SIZE,
-	//					   (PIECE_SIZE / 2) - 5, 0x000000, true);
-	//		}
-	//		else
-	//		{
-
-	//		}
-	//	}
-	//}
 
 	/*for (auto itr : pieceList)
 	{
-		itr.Draw();
-	}*/
-	
+		itr->Draw();
+	}
+	*/
 }
 
 int DrawLine(Vector2 sPos, Vector2 ePos, unsigned int color, int thickNess)

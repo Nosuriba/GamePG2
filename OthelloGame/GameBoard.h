@@ -16,7 +16,7 @@ public:
 	GameBoard();
 	GameBoard(Vector2 vec);
 	~GameBoard();
-	void Update(const MouseCtl& mouseCtl);
+	void Update(const MouseCtl& mouseCtl);		// ‚±‚±‚ÌC³‚ğ‚·‚é
 	void Draw(void);
 private:
 

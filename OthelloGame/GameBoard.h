@@ -2,13 +2,17 @@
 #include <vector>
 #include <memory>
 #include <list>
-#include "Vector2.h"
 
+class Vector2;
 class GamePiece;
 class MouseCtl;
+class Player;
 
 using piece_ptr  = std::shared_ptr<GamePiece>;
 using piece_list = std::list<piece_ptr>;
+
+using player_ptr  = std::shared_ptr<Player>;
+using player_list = std::list<player_ptr>;
 
 class GameBoard
 {
@@ -22,12 +26,14 @@ private:
 
 	/*コンストラクタの共通化用関数*/
 	bool CommonBoard(Vector2 vec);
-	auto AddObjList(piece_ptr && objPtr);
 
-	piece_list pieceList;
+	auto AddObjList(piece_ptr && objPtr);
+	auto AddObjList(player_ptr && plPtr);
+
+	player_list playerList;
+	piece_list  pieceList;
 	std::vector<std::weak_ptr<GamePiece>*> data;
 	std::vector<std::weak_ptr<GamePiece>>  pieceData;
-	Vector2 pieceSize = { 0,0 };
 };
 
 int DrawLine(Vector2 sPos, Vector2 ePos, unsigned int color, int thickNess);

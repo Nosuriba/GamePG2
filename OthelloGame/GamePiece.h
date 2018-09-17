@@ -2,7 +2,7 @@
 #include <vector>
 #include <memory>
 #include <list>
-#include "GameBoard.h"
+#include "Vector2.h"
 
 /* ƒs[ƒX‚Ìó‘Ô*/
 enum PIECE_ST

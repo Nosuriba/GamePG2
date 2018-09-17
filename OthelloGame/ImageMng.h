@@ -21,7 +21,7 @@ public:
 private:
 	struct ImageMngDeleter
 	{
-		void operator()(ImageMng * imageMng)
+		void operator()(ImageMng * imageMng) const
 		{
 			delete imageMng;
 		}

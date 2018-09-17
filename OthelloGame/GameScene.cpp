@@ -74,8 +74,8 @@ int GameScene::TitleMain()
 	}
 	mousePtr->Update();
 	DxLib::ClsDrawScreen();
-	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/sample.png")[0], true);
-	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "タイトルシーンだよ", 0x000000);
+	DxLib::DrawGraph(100, 50, LpImageMng.ImgGetID("image/sample2.png")[0], true);
+	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "タイトルシーンだよ", 0xffffff);
 	DxLib::ScreenFlip();
 
 	return 0;

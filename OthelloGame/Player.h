@@ -25,7 +25,7 @@ public:
 private:
 	/*プレイヤーの順番を登録するかの判定用*/
 	
-	int  player;
+	static int  playerID;
 	std::deque<int> pNum;
 
 	// PL_NUM player;

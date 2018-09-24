@@ -2,9 +2,11 @@
 
 #define PLAYER_MAX (4)
 
+int Player::playerID;
+
 Player::Player()
 {
-	player = 0;
+	playerID = 0;
 }
 
 
@@ -19,7 +21,7 @@ bool Player::pieceFlag(bool pFlag)
 
 int Player::playerNum()
 {
-	return player;
+	return playerID;
 }
 
 void Player::registNum(void)
@@ -33,9 +35,9 @@ void Player::registNum(void)
 		}
 	}
 	/*ƒvƒŒƒCƒ„[‚Ì‡”Ô‚ğ“ü‚ê‘Ö‚¦‚éˆ—*/
-	player = pNum.front();
+	playerID = pNum.front();
 	pNum.pop_front();
-	pNum.push_back(player);
+	pNum.push_back(playerID);
 }
 
 //PL_NUM Player::playerNum()

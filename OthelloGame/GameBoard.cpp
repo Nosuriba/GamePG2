@@ -65,12 +65,10 @@ void GameBoard::Update(const MouseCtl& mouseCtl)
 	{
 		Vector2 mPos = { (mouseCtl.GetPoint().x - BOARD_OFFSET_X),
 						 (mouseCtl.GetPoint().y - BOARD_OFFSET_Y) };
-
-		/* 取得したマウス座標が、ボード座標の範囲外でない時に
-		   ピースデータを情報を取得するための処理を行う		 */
+		/* クリックした位置がボードの盤面外でなければ、ピースの設置を行う */
 		if ((mPos >= Vector2(0,0)) & (mPos < Vector2((data.size() * PIECE_SIZE), (data.size() * PIECE_SIZE))))
 		{
-			/* ピースを格納する配列の位置と、ピースを描画する位置座標を設定している */
+			/* ピースを格納するための設定 */
 			mPos /= PIECE_SIZE;
 			Vector2 pPos = { mPos.x * PIECE_SIZE, mPos.y * PIECE_SIZE };
 			if (data[mPos.y][mPos.x].expired())
@@ -82,17 +80,33 @@ void GameBoard::Update(const MouseCtl& mouseCtl)
 				{
 					auto pl = AddObjList(std::make_shared<Player>());
 				}
-				/* プレイヤーが順番通りに置けているかの処理 */
+
+				/* プレイヤーが順番通りにピースを置けているかの処理 */
 				for (auto itr : playerList)
 				{
-					itr->registNum();
-					if (itr->playerNum() % 2 == 0)
+					itr->registNum();				// プレイヤーの順番を登録している
+					
+					/* プレイヤーの番号に対してピースの色を設定している */
+					if(itr->playerNum() == PIECE_C)
+					{
+						data[mPos.y][mPos.x].lock()->SetState(PIECE_C);
+					}
+					else if (itr->playerNum() == PIECE_W)
 					{
 						data[mPos.y][mPos.x].lock()->SetState(PIECE_W);
 					}
-					else
+					else if (itr->playerNum() == PIECE_R)
+					{
+						data[mPos.y][mPos.x].lock()->SetState(PIECE_R);
+					}
+					else if (itr->playerNum() == PIECE_B)
 					{
 						data[mPos.y][mPos.x].lock()->SetState(PIECE_B);
+					}
+					else
+					{
+						/* プレイヤーが設定した人数を超えたときの処理 */
+						data[mPos.y][mPos.x].lock()->SetState(PIECE_W);
 					}
 				}	
 			}
@@ -109,13 +123,13 @@ void GameBoard::Draw()
 	Vector2 sPos = { BOARD_OFFSET_X, BOARD_OFFSET_Y };
 	Vector2 ePos = { BOARD_SIZE + BOARD_OFFSET_X, BOARD_SIZE + PIECE_SIZE };
 
-	/* 盤面の描画をしている */
+	/* 盤面の描画 */
 	DrawBox(sPos, ePos, 0x104010, true);
 
 	sPos = { BOARD_OFFSET_X, BOARD_OFFSET_Y };
 	ePos = { BOARD_SIZE + BOARD_OFFSET_X, BOARD_SIZE };
 
-	/* グリッドの描画をしている*/
+	/* グリッドの描画 */
 	for (unsigned int y = 0; y <= DEF_BOARD_CNT + 1; y++)
 	{
 		sPos.y = PIECE_SIZE * y;
@@ -126,7 +140,6 @@ void GameBoard::Draw()
 	sPos = { BOARD_OFFSET_X, BOARD_OFFSET_Y };
 	ePos = { BOARD_SIZE + BOARD_OFFSET_X, BOARD_SIZE + PIECE_SIZE};
 
-	/* 線の位置修正を行っておく*/
 	for (unsigned int x = 0; x <= DEF_BOARD_CNT; x++)
 	{
 		sPos.x = (PIECE_SIZE * x) + BOARD_OFFSET_X;
@@ -134,11 +147,13 @@ void GameBoard::Draw()
 		DrawLine(sPos, ePos, 0xcccccc, 1);
 	}
 
+	/* ピースの描画 */
 	for (auto itr : pieceList)
 	{
 		itr->Draw();
 	}
 
+	/* プレイヤー番号の描画 */
 	for (auto itr : playerList)
 	{
 		DrawExtendFormatString(300, 0, 2, 2, 0x00ff00, "%d", itr->playerNum());

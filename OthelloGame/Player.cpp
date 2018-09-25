@@ -1,4 +1,6 @@
+#include <DxLib.h>
 #include "Player.h"
+#include "MouseCtl.h"
 
 #define PLAYER_MAX (4)
 
@@ -14,17 +16,26 @@ Player::~Player()
 {
 }
 
-bool Player::pieceFlag(bool pFlag)
+void Player::Update()
 {
-	return pFlag;
+	
 }
 
-int Player::playerNum()
+bool Player::PieceFlag(const MouseCtl & mouseCtl)
+{
+	if (mouseCtl.GetButton()[PUSH_NOW] & (~mouseCtl.GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
+	{
+		return true;
+	}
+	return false;
+}
+
+int Player::PlayerNum()
 {
 	return playerID;
 }
 
-void Player::registNum(void)
+void Player::RegistNum(void)
 {
 	if (pNum.size() == 0)
 	{

@@ -11,8 +11,8 @@ class Player;
 using piece_ptr  = std::shared_ptr<GamePiece>;
 using piece_list = std::list<piece_ptr>;
 
-using player_ptr  = std::shared_ptr<Player>;
-using player_list = std::list<player_ptr>;
+//using player_ptr  = std::shared_ptr<Player>;
+//using player_list = std::list<player_ptr>;
 
 class GameBoard
 {
@@ -20,7 +20,8 @@ public:
 	GameBoard();
 	GameBoard(Vector2 vec);
 	~GameBoard();
-	void Update(const MouseCtl& mouseCtl);		// Ç±Ç±ÇÃèCê≥ÇÇ∑ÇÈ
+	void Update(Vector2 vec, int pNum);
+	/*void Update(const MouseCtl& mouseCtl);*/
 	void Draw(void);
 private:
 
@@ -28,9 +29,9 @@ private:
 	bool CommonBoard(Vector2 vec);
 
 	auto AddObjList(piece_ptr && objPtr);
-	auto AddObjList(player_ptr && plPtr);
+	/*auto AddObjList(player_ptr && plPtr);*/
 
-	player_list playerList;
+	/*player_list playerList;*/
 	piece_list  pieceList;
 	std::vector<std::weak_ptr<GamePiece>*> data;
 	std::vector<std::weak_ptr<GamePiece>>  pieceData;

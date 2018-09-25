@@ -18,9 +18,10 @@ class Player
 public:
 	Player();
 	~Player();
-	bool pieceFlag(bool pFlag);
-	void registNum(void);
-	int playerNum();
+	void Update();	
+	bool PieceFlag(const MouseCtl& mouseCtl);		// ピースの設置をするかの判定用
+	void RegistNum(void);
+	int PlayerNum();
 	// PL_NUM playerNum();
 private:
 	/*プレイヤーの順番を登録するかの判定用*/

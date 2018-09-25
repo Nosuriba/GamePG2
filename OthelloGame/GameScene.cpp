@@ -2,6 +2,7 @@
 #include "GameScene.h"
 #include "GameBoard.h"
 #include "MouseCtl.h"
+#include "Player.h"
 #include "ImageMng.h"
 
 #define SCREEN_SIZE_X (800)
@@ -34,6 +35,15 @@ int GameScene::UpDate()
 	return 0;
 }
 
+auto GameScene::AddObjList(player_ptr && plPtr)
+{
+	playerList.push_back(plPtr);
+	auto itr = playerList.end();
+	itr--;
+
+	return itr;
+}
+
 int GameScene::SysInit()
 {
 	/* システムの初期化が終わった後、ゲームの初期化をする処理用関数に移行している
@@ -49,7 +59,7 @@ int GameScene::SysInit()
 		return false;
 	}
 	DxLib::SetDrawScreen(DX_SCREEN_BACK);
-
+	auto pl = AddObjList(std::make_shared<Player>());
 	mousePtr = std::make_unique<MouseCtl>();
 
 	return 0;
@@ -84,19 +94,27 @@ int GameScene::TitleMain()
 int GameScene::GameInit()
 {
 	boardPtr = std::make_unique<GameBoard>();
+	
 	gScenePtr = &GameScene::GameMain;
 	return 0;
 }
 
 int GameScene::GameMain()
 {
-
 	if (mousePtr->GetButton()[PUSH_NOW] & (~mousePtr->GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
 	{
 		gScenePtr	 = &GameScene::ResultInit;
 	}
 	/*マウス処理の更新を行う*/
-	boardPtr->Update(*mousePtr);		// マウスのクリック処理と描画位置の処理
+	// boardPtr->Update(*mousePtr);		// マウスのクリック処理と描画位置の処理
+	for (auto itr : playerList)
+	{
+		if (itr->PieceFlag(*mousePtr) == true)
+		{
+			itr->RegistNum();
+			boardPtr->Update(mousePtr->GetPoint(), itr->PlayerNum());
+		}
+	}
 	mousePtr->Update();
 	DxLib::ClsDrawScreen();
 	DxLib::DrawExtendString(0, 0,1.5f, 1.5f, "ゲームシーンだよ", 0xffffff);
@@ -130,3 +148,4 @@ int GameScene::ResultMain()
 	
 	return 0;
 }
+

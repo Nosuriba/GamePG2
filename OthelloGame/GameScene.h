@@ -2,7 +2,9 @@
 #include <mutex>
 #include <memory>
 #include <list>
+#include <array>
 #include "Vector2.h"
+#include "GamePiece.h"
 
 //class GameScene;
 class GameBoard;
@@ -26,6 +28,7 @@ public:
 	void Run();
 private:
 
+	/* GameSceneƒNƒ‰ƒX‚Ìdeleter‚ğİ’è‚µ‚Ä‚¢‚é */
 	struct GameSceneDeleter
 	{
 		void operator ()(GameScene* gameScene) const
@@ -39,7 +42,7 @@ private:
 
 	int UpDate();
 
-	auto AddObjList(player_ptr && plPtr);
+	void MakePlayer(void);
 
 	int SysInit();
 	int SysDestroy();
@@ -57,7 +60,10 @@ private:
 	static std::unique_ptr<GameScene, GameSceneDeleter>	s_Instance;
 	std::unique_ptr<GameBoard> boardPtr;
 	std::unique_ptr<MouseCtl>  mousePtr;
+	std::unique_ptr<GamePiece> playerPiece;
+
+	std::array <unsigned int, PIECE_MAX> pieceCnt;
 	
 	player_list playerList;
-
+	player_list::iterator player;
 };

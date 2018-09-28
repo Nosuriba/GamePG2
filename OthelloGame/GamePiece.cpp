@@ -30,10 +30,21 @@ void GamePiece::SetState(PIECE_ST pState)
 
 void GamePiece::SetReverse(void)
 {
+	/* 現在4人プレイ用で4種類のピースを作成しているが、
+	　 プレイヤーのループができているかの確認ができた時
+	   2人プレイ用に直しておく*/
 	if (pState != PIECE_NON)
 	{
-		/* ピースの状態を反転させる処理 */
-		pState = (pState == PIECE_W ? pState = PIECE_C : pState = PIECE_W);
+		if (pState == PIECE_W | pState == PIECE_C)
+		{
+			/* ピースの状態を反転させる処理 */
+			pState = (pState == PIECE_W ? pState = PIECE_C : pState = PIECE_W);
+		}
+		else
+		{
+			pState = (pState == PIECE_R ? pState = PIECE_B : pState = PIECE_R);
+		}
+		
 	}
 	
 }

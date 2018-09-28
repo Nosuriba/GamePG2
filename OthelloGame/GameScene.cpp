@@ -35,19 +35,14 @@ int GameScene::UpDate()
 	return 0;
 }
 
-auto GameScene::AddObjList(player_ptr && plPtr)
+void GameScene::MakePlayer(void)
 {
-	playerList.push_back(plPtr);
-	auto itr = playerList.end();
-	itr--;
-
-	return itr;
+	playerList.push_back(std::make_shared<Player>());
 }
 
 int GameScene::SysInit()
 {
-	/* システムの初期化が終わった後、ゲームの初期化をする処理用関数に移行している
-	*/
+	/* システムの初期化が終わった後、ゲームの初期化をする処理用関数に移行している */
 	gScenePtr = &GameScene::GameInit;
 
 	/* 表示するウィンドウの初期設定を行っている */
@@ -59,8 +54,14 @@ int GameScene::SysInit()
 		return false;
 	}
 	DxLib::SetDrawScreen(DX_SCREEN_BACK);
-	auto pl = AddObjList(std::make_shared<Player>());
 	mousePtr = std::make_unique<MouseCtl>();
+
+	/* プレイヤーは順番にループしているが、スタートするプレイヤーの場所が
+		少しおかしいので、後々修正を行う可能性がある*/
+	MakePlayer();
+	MakePlayer();
+
+	player = playerList.begin();
 
 	return 0;
 }
@@ -82,7 +83,7 @@ int GameScene::TitleMain()
 	{
 		gScenePtr = &GameScene::GameInit;
 	}
-	mousePtr->Update();
+	mousePtr->Update();	
 	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(100, 50, LpImageMng.ImgGetID("image/sample2.png")[0], true);
 	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "タイトルシーンだよ", 0xffffff);
@@ -105,19 +106,20 @@ int GameScene::GameMain()
 	{
 		gScenePtr	 = &GameScene::ResultInit;
 	}
-	/*マウス処理の更新を行う*/
-	// boardPtr->Update(*mousePtr);		// マウスのクリック処理と描画位置の処理
-	for (auto itr : playerList)
+
+	if ((*player)->ChangePlayer(*mousePtr, *boardPtr))
 	{
-		if (itr->PieceFlag(*mousePtr) == true)
+		player++;
+		if (player == playerList.end())
 		{
-			itr->RegistNum();
-			boardPtr->Update(mousePtr->GetPoint(), itr->PlayerNum());
+			player = playerList.begin();
 		}
 	}
+	/*マウス処理の更新を行う*/
 	mousePtr->Update();
 	DxLib::ClsDrawScreen();
 	DxLib::DrawExtendString(0, 0,1.5f, 1.5f, "ゲームシーンだよ", 0xffffff);
+	
 	boardPtr->Draw();
 	DxLib::ScreenFlip();
 	return 0;

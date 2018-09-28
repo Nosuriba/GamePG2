@@ -26,8 +26,6 @@ public:
 	void SetReverse(void);
 	void Draw(void);
 private:
-	std::vector<std::weak_ptr<PIECE_ST*>> data;
-	std::vector<std::weak_ptr<PIECE_ST>>  pieceData;
 	/*piece_list pieceList;*/
 	Vector2 pos;
 	Vector2 offset;

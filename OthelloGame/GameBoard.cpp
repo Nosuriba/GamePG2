@@ -59,7 +59,7 @@ auto GameBoard::AddObjList(piece_ptr && objPtr)
 //
 //}
 
-void GameBoard::Update(Vector2 vec, int pNum)
+bool GameBoard::Update(Vector2 vec, int pNum)
 {
 	Vector2 mPos = { (vec.x - BOARD_OFFSET_X),
 					 (vec.y- BOARD_OFFSET_Y) };
@@ -96,12 +96,15 @@ void GameBoard::Update(Vector2 vec, int pNum)
 				/* プレイヤーが設定した人数を超えたときの処理 */
 				data[mPos.y][mPos.x].lock()->SetState(PIECE_W);
 			}
+			return true;
 		}
 		else
 		{
 			data[mPos.y][mPos.x].lock()->SetReverse();
+			return false;
 		}
 	}
+	return false;
 }
 
 void GameBoard::Draw()
@@ -138,12 +141,53 @@ void GameBoard::Draw()
 	{
 		itr->Draw();
 	}
+}
 
-	///* プレイヤー番号の描画 */
-	//for (auto itr : playerList)
-	//{
-	//	DrawExtendFormatString(300, 0, 2, 2, 0x00ff00, "%d", itr->playerNum());
-	//}
+void GameBoard::SetPiece(const Vector2& vec, PIECE_ST pState)
+{
+	Vector2 mPos = { (vec.x - BOARD_OFFSET_X),
+					 (vec.y - BOARD_OFFSET_Y) };
+	/* クリックした位置がボードの盤面外でなければ、ピースの設置を行う */
+	if ((mPos >= Vector2(0, 0)) & (mPos < Vector2((data.size() * PIECE_SIZE), (data.size() * PIECE_SIZE))))
+	{
+		/* ピースを格納するための設定 */
+		mPos /= PIECE_SIZE;
+		/* ピース座標の設定*/
+		Vector2 pPos = { mPos.x * PIECE_SIZE, mPos.y * PIECE_SIZE };
+		if (data[mPos.y][mPos.x].expired())
+		{
+			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(PIECE_OFFSET_X, PIECE_OFFSET_Y)));
+			data[mPos.y][mPos.x] = (*tmp);
+			data[mPos.y][mPos.x].lock()->SetState(pState);
+
+			///* プレイヤーの番号に対してピースの色を設定している */
+			//if (pNum == PIECE_C)
+			//{
+			//	data[mPos.y][mPos.x].lock()->SetState(PIECE_C);
+			//}
+			//else if (pNum == PIECE_W)
+			//{
+			//	data[mPos.y][mPos.x].lock()->SetState(PIECE_W);
+			//}
+			//else if (pNum == PIECE_R)
+			//{
+			//	data[mPos.y][mPos.x].lock()->SetState(PIECE_R);
+			//}
+			//else if (pNum == PIECE_B)
+			//{
+			//	data[mPos.y][mPos.x].lock()->SetState(PIECE_B);
+			//}
+			//else
+			//{
+			//	/* プレイヤーが設定した人数を超えたときの処理 */
+			//	data[mPos.y][mPos.x].lock()->SetState(PIECE_W);
+			//}
+		}
+		else
+		{
+			data[mPos.y][mPos.x].lock()->SetReverse();
+		}
+	}
 }
 
 int DrawLine(Vector2 sPos, Vector2 ePos, unsigned int color, int thickNess)

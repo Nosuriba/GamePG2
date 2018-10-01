@@ -13,7 +13,6 @@ Player::Player()
 	id = (PIECE_ST)playerCnt;
 }
 
-
 Player::~Player()
 {
 }
@@ -23,13 +22,15 @@ void Player::Update()
 	
 }
 
-bool Player::ChangePlayer(const MouseCtl & mouse, GameBoard & gBoard)
+bool Player::ChangePlayer(const MouseCtl& mouse, GameBoard& gBoard)
 {
-	gBoard.Draw();
+	bool rtnFlag = false;
 	if (mouse.GetButton()[PUSH_NOW] & (~mouse.GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 	{
-		gBoard.SetPiece(mouse.GetPoint(), id);
-		return true;
+		if (gBoard.SetPiece(mouse.GetPoint(), id))
+		{
+			rtnFlag = true;
+		}
 	}
-	return false;
+	return rtnFlag;
 }

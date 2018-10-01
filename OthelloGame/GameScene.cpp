@@ -56,8 +56,7 @@ int GameScene::SysInit()
 	DxLib::SetDrawScreen(DX_SCREEN_BACK);
 	mousePtr = std::make_unique<MouseCtl>();
 
-	/* プレイヤーは順番にループしているが、スタートするプレイヤーの場所が
-		少しおかしいので、後々修正を行う可能性がある*/
+	/* プレイヤーの登録を行っている */
 	MakePlayer();
 	MakePlayer();
 
@@ -95,7 +94,7 @@ int GameScene::TitleMain()
 int GameScene::GameInit()
 {
 	boardPtr = std::make_unique<GameBoard>();
-	
+	boardPtr->SetPiece({ 3,3 });
 	gScenePtr = &GameScene::GameMain;
 	return 0;
 }

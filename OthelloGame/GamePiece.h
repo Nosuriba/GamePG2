@@ -9,9 +9,7 @@ enum PIECE_ST
 {
 	PIECE_NON,
 	PIECE_W,		// îí
-	PIECE_C,		// çï
-	PIECE_R,		// ê‘
-	PIECE_B,		// ê¬	
+	PIECE_B,		// çï
 	PIECE_MAX
 };
 

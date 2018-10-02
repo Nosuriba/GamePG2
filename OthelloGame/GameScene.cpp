@@ -69,9 +69,9 @@ int GameScene::SysInit()
 	mousePtr = std::make_unique<MouseCtl>();
 
 	/* プレイヤーの登録を行っている */
+	/*MakePlayer();
 	MakePlayer();
-	MakePlayer();
-
+*/
 	return 0;
 }
 
@@ -83,6 +83,7 @@ int GameScene::SysDestroy()
 int GameScene::TitleInit()
 {
 	gScenePtr = &GameScene::TitleMain;
+	playerList.clear();					// 登録されたプレイヤーの情報を全て削除する。
 	return 0;
 }
 
@@ -105,7 +106,11 @@ int GameScene::GameInit()
 {
 	gScenePtr = &GameScene::GameMain;
 	boardPtr = std::make_unique<GameBoard>();
-	boardPtr->StartPiece({ 3,3 }, false);		// true : 通常の白黒配置, false : 白黒を反転して配置
+	boardPtr->StartPiece({ 3,3 }, true);		// true : 通常の白黒配置, false : 白黒を反転して配置
+
+	/* プレイヤーの登録を行っている */
+	MakePlayer();
+	MakePlayer();
 	player = playerList.begin();
 	return 0;
 }
@@ -121,7 +126,7 @@ int GameScene::GameMain()
 	if ((*player)->TurnAct(*mousePtr, *boardPtr))
 	{
 		boardPtr->SetReverse(mousePtr->GetPoint(), (*player)->pGetID());
-		NextPlayer();
+		NextPlayer();	
 	}
 	mousePtr->Update();
 	DxLib::ClsDrawScreen();

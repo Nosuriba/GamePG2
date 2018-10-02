@@ -15,6 +15,7 @@ Player::Player()
 
 Player::~Player()
 {
+	playerCnt = 0;
 }
 
 void Player::Update()
@@ -32,8 +33,9 @@ bool Player::TurnAct(const MouseCtl& mouse, GameBoard& gBoard)
 	bool rtnFlag = false;
 	if (mouse.GetButton()[PUSH_NOW] & (~mouse.GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 	{
-		if (gBoard.SetPiece(mouse.GetPoint(), id))
+		if (gBoard.CheckReverse(mouse.GetPoint(), id))
 		{
+			gBoard.SetPiece(mouse.GetPoint(), id);
 			rtnFlag = true;
 		}
 	}

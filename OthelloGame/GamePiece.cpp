@@ -27,7 +27,7 @@ void GamePiece::SetState(PIECE_ST pState)
 	this->pState = pState;
 }
 
-void GamePiece::SetReverse(PIECE_ST id)
+void GamePiece::SetReverse(void)
 {
 	if (pState != PIECE_NON)
 	{

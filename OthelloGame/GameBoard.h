@@ -26,7 +26,7 @@ public:
 	void StartPiece(const Vector2& pNum, bool pFlag);			// ピースの初期配置を設定するための関数
 	bool SetPiece(const Vector2& vec, PIECE_ST id);				// 指定した場所にピースを配置するための関数
 	void SetReverse(const Vector2& vec, PIECE_ST id);
-	bool CheckReverse(const Vector2& pNum, PIECE_ST id);
+	bool CheckReverse(const Vector2& vec, PIECE_ST id);
 	bool CheckReverse(const Vector2& ckNum, const Vector2& pNum, PIECE_ST id);
 	void Draw(void);
 private:
@@ -36,6 +36,7 @@ private:
 
 	auto AddObjList(piece_ptr && objPtr);
 	piece_list  pieceList;
+	std::list<Vector2> reverseTbl;
 	std::vector<std::weak_ptr<GamePiece>*> data;
 	std::vector<std::weak_ptr<GamePiece>>  pieceData;
 

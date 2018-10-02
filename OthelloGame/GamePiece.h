@@ -21,7 +21,7 @@ public:
 	~GamePiece();
 	PIECE_ST GetState(void);
 	void SetState(PIECE_ST pState);
-	void SetReverse(PIECE_ST id);
+	void SetReverse(void);
 	void Draw(void);
 private:
 	/*piece_list pieceList;*/

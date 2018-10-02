@@ -43,6 +43,7 @@ private:
 	int UpDate();
 
 	void MakePlayer(void);
+	bool NextPlayer(void);
 
 	int SysInit();
 	int SysDestroy();

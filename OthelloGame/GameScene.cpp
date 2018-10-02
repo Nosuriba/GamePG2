@@ -40,6 +40,18 @@ void GameScene::MakePlayer(void)
 	playerList.push_back(std::make_shared<Player>());
 }
 
+bool GameScene::NextPlayer(void)
+{
+	bool rtnFlag = false;
+
+	player++;
+	if (player == playerList.end())
+	{
+		player = playerList.begin();
+	}
+	return rtnFlag;
+}
+
 int GameScene::SysInit()
 {
 	/* システムの初期化が終わった後、ゲームの初期化をする処理用関数に移行している */
@@ -59,8 +71,6 @@ int GameScene::SysInit()
 	/* プレイヤーの登録を行っている */
 	MakePlayer();
 	MakePlayer();
-
-	player = playerList.begin();
 
 	return 0;
 }
@@ -93,28 +103,26 @@ int GameScene::TitleMain()
 
 int GameScene::GameInit()
 {
-	boardPtr = std::make_unique<GameBoard>();
-	boardPtr->SetPiece({ 3,3 });
 	gScenePtr = &GameScene::GameMain;
+	boardPtr = std::make_unique<GameBoard>();
+	boardPtr->StartPiece({ 3,3 }, false);		// true : 通常の白黒配置, false : 白黒を反転して配置
+	player = playerList.begin();
 	return 0;
 }
 
 int GameScene::GameMain()
 {
+	/* リザルトシーンに移動する(仮実装)*/
 	if (mousePtr->GetButton()[PUSH_NOW] & (~mousePtr->GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
 	{
-		gScenePtr	 = &GameScene::ResultInit;
+		gScenePtr = &GameScene::ResultInit;
 	}
 
-	if ((*player)->ChangePlayer(*mousePtr, *boardPtr))
+	if ((*player)->TurnAct(*mousePtr, *boardPtr))
 	{
-		player++;
-		if (player == playerList.end())
-		{
-			player = playerList.begin();
-		}
+		boardPtr->SetReverse(mousePtr->GetPoint(), (*player)->pGetID());
+		NextPlayer();
 	}
-	/*マウス処理の更新を行う*/
 	mousePtr->Update();
 	DxLib::ClsDrawScreen();
 	DxLib::DrawExtendString(0, 0,1.5f, 1.5f, "ゲームシーンだよ", 0xffffff);

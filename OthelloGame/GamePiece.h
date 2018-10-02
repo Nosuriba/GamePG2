@@ -7,10 +7,10 @@
 /* ピースの状態*/
 enum PIECE_ST
 {
-	PIECE_NON,
+	PIECE_NON,		// 空白
 	PIECE_W,		// 白
 	PIECE_B,		// 黒
-	PIECE_MAX
+	PIECE_MAX		// ピースの最大数
 };
 
 class GamePiece
@@ -21,7 +21,7 @@ public:
 	~GamePiece();
 	PIECE_ST GetState(void);
 	void SetState(PIECE_ST pState);
-	void SetReverse(void);
+	void SetReverse(PIECE_ST id);
 	void Draw(void);
 private:
 	/*piece_list pieceList;*/

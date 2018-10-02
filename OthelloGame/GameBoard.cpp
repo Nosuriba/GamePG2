@@ -40,11 +40,6 @@ bool GameBoard::CommonBoard(Vector2 vec)
 	return true;
 }
 
-void GameBoard::SetReverse(void)
-{
-	
-}
-
 auto GameBoard::AddObjList(piece_ptr && objPtr)
 {
 	pieceList.push_back(objPtr);
@@ -102,25 +97,36 @@ void GameBoard::Update(void)
 	//return false;
 }
 
-void GameBoard::SetPiece(const Vector2 & pNum)
+void GameBoard::StartPiece(const Vector2& pNum, bool pFlag)
 {
+	/* 時間があったら、現在配置しているピースの白黒をbool型の引数によって変更できるようにしたい*/
 	int initPieceST = 0;
 	for (int y = 0; y <= 1; y++)
 	{
 		for (int x = 0; x <= 1; x++)
 		{
 			/* 最初に配置されるピースの状態を設定している */
-			initPieceST = (((x + y) % PIECE_MAX) + 1 < 3 ? initPieceST = ((x + y) % PIECE_MAX) + 1 : initPieceST = PIECE_W);
+			if (pFlag)
+			{
+				initPieceST = ((x + y) < 2 ? initPieceST = ((x + y) % PIECE_MAX) + 1 : initPieceST = PIECE_W);
+			}
+			else
+			{
+				initPieceST = (((x + y) % PIECE_MAX) + 2  < 3 
+							  ? initPieceST = ((x + y) % PIECE_MAX) + 2 
+							  : initPieceST =  (x + y == 2 ? PIECE_B : PIECE_W));
+			}
+
 			pPos = { (pNum.x + x) * PIECE_SIZE, (pNum.y + y) * PIECE_SIZE };
-			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(PIECE_OFFSET_X, PIECE_OFFSET_Y)));
+			auto tmp	= AddObjList(std::make_shared<GamePiece>(pPos, Vector2(PIECE_OFFSET_X, PIECE_OFFSET_Y)));
 			data[pNum.y + y][pNum.x + x] = (*tmp);
-			data[pNum.y + y][pNum.x + x].lock()->SetState((PIECE_ST)initPieceST);			/* (1 + 1 % 3) + 1 = 3 x = 1, y = 1の時の計算結果*/
+			data[pNum.y + y][pNum.x + x].lock()->SetState((PIECE_ST)initPieceST);			
 		}
 	}
 
 }
 
-bool GameBoard::SetPiece(const Vector2& vec, PIECE_ST pState)
+bool GameBoard::SetPiece(const Vector2& vec, PIECE_ST id)
 {
 	bool rtnFlag = false;
 	Vector2 pNum = { (vec.x - BOARD_OFFSET_X),
@@ -137,61 +143,73 @@ bool GameBoard::SetPiece(const Vector2& vec, PIECE_ST pState)
 			rtnFlag = true;
 			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(PIECE_OFFSET_X, PIECE_OFFSET_Y)));
 			data[pNum.y][pNum.x] = (*tmp);
-			data[pNum.y][pNum.x].lock()->SetState(pState);
-			CheckReverse(pNum);			/* 仮実装(未完成) */
+
+			data[pNum.y][pNum.x].lock()->SetState(id);
 		}
-		/*else
-		{
-			data[pNum.y][pNum.x].lock()->SetReverse();
-		}*/
 	}
 
 	return rtnFlag;
 }
 
-void GameBoard::CheckReverse(const Vector2& pNum)
+void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
 {
-	for (auto pCheckPos : pCheckTbl)
+	Vector2 pNum = { (vec.x - BOARD_OFFSET_X),
+					 (vec.y - BOARD_OFFSET_Y) };
+	if (pNum >= Vector2(0, 0) & pNum < Vector2(data.size() * PIECE_SIZE, data.size() * PIECE_SIZE))
 	{
-		/*if (CheckReverse(pCheckPos, pNum) == true);*/
-		CheckReverse(pCheckPos, pNum);
+		pNum /= PIECE_SIZE;
+		if (CheckReverse(pNum, id) == true)
+		{
+			data[pNum.y][pNum.x].lock()->SetReverse(id);
+		}
 	}
+
 }
 
-bool GameBoard::CheckReverse(const Vector2& ckPos, const Vector2& pNum)
+bool GameBoard::CheckReverse(const Vector2& pNum, PIECE_ST id)
+{
+	bool rtnFlag = false;
+
+	for (auto pCheckPos : pCheckTbl)
+	{
+		if (CheckReverse(pCheckPos, pNum, id) == true)
+		{
+			/*SetReverse(pPos + pCheckPos);	*/		// ここを修正する
+			rtnFlag = true;
+		}
+	}
+	return rtnFlag;
+}
+
+bool GameBoard::CheckReverse(const Vector2& ckPos, const Vector2& pNum, PIECE_ST id)
 {
 	bool rtnFlag	= false;
 	Vector2 ckNum	= pNum;
-	Vector2 rNum	= { 0,0 };
-	int reverseCnt	= 0;
-
 	while (rtnFlag)
 	{
 		ckNum += ckPos;
 		/* ボード上でピースが見つかった時、反転ができるかを判定を返す処理*/
-		if (!data[ckNum.y][ckNum.x].expired())
+		if (ckNum >= Vector2(0, 0) & ckNum < Vector2(data.size(), data.size()))
 		{
-			if (data[pNum.y][pNum.x].lock()->GetState() != data[ckNum.y][ckNum.x].lock()->GetState())
+			if (!data[ckNum.y][ckNum.x].expired())
 			{
-				reverseCnt++;
+				/* この処理に修正を入れる可能性あり */
+				if (data[ckNum.y][ckNum.x].lock()->GetState() != id)
+				{
+					rtnFlag = true;
+				}
 			}
 			else
 			{
-				rtnFlag = true;
+				break;
 			}
 		}
 		else
 		{
-			rtnFlag = true;
+			break;
 		}
+		
 	}
-
-	for (int i = 0; i < reverseCnt; i++)
-	{
-		rNum += ckPos;
-		data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->SetReverse();
-	}
-	
 	return rtnFlag;
 }
 

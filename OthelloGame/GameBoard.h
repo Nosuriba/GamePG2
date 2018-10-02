@@ -23,16 +23,16 @@ public:
 	GameBoard(Vector2 vec);
 	~GameBoard();
 	void Update(void);
-	void SetPiece(const Vector2& pNum);						// ピースの初期配置を設定するための関数
-	bool SetPiece(const Vector2& vec, PIECE_ST pState);		// 指定した場所にピースを配置するための関数
-	void CheckReverse(const Vector2& pNum);
-	bool CheckReverse(const Vector2& ckNum, const Vector2& pNum);
+	void StartPiece(const Vector2& pNum, bool pFlag);			// ピースの初期配置を設定するための関数
+	bool SetPiece(const Vector2& vec, PIECE_ST id);				// 指定した場所にピースを配置するための関数
+	void SetReverse(const Vector2& vec, PIECE_ST id);
+	bool CheckReverse(const Vector2& pNum, PIECE_ST id);
+	bool CheckReverse(const Vector2& ckNum, const Vector2& pNum, PIECE_ST id);
 	void Draw(void);
 private:
 
 	/*コンストラクタの共通化用関数*/
 	bool CommonBoard(Vector2 vec);
-	void SetReverse(void);
 
 	auto AddObjList(piece_ptr && objPtr);
 	piece_list  pieceList;
@@ -41,7 +41,7 @@ private:
 
 	Vector2 pPos;
 	/* ピースの方向を確認するための変数 */
-	Vector2 pCheckTbl[8] = { {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1} };	
+	Vector2 pCheckTbl[8] = { {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1} };
 };
 
 int DrawLine(Vector2 sPos, Vector2 ePos, unsigned int color, int thickNess);

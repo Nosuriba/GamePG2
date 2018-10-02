@@ -22,7 +22,12 @@ void Player::Update()
 	
 }
 
-bool Player::ChangePlayer(const MouseCtl& mouse, GameBoard& gBoard)
+PIECE_ST Player::pGetID(void)
+{
+	return id;
+}
+
+bool Player::TurnAct(const MouseCtl& mouse, GameBoard& gBoard)
 {
 	bool rtnFlag = false;
 	if (mouse.GetButton()[PUSH_NOW] & (~mouse.GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)

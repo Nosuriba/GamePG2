@@ -10,7 +10,8 @@ public:
 	Player();
 	~Player();
 	void Update();	
-	bool ChangePlayer(const MouseCtl& mouse, GameBoard& gBoard);
+	PIECE_ST pGetID(void);
+	bool TurnAct(const MouseCtl& mouse, GameBoard& gBoard);
 private:
 	PIECE_ST id;
 	static int playerCnt;

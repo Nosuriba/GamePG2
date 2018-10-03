@@ -44,6 +44,7 @@ private:
 
 	void MakePlayer(void);
 	bool NextPlayer(void);
+	bool AutoPassPlayer(void);
 
 	int SysInit();
 	int SysDestroy();
@@ -63,7 +64,7 @@ private:
 	std::unique_ptr<MouseCtl>  mousePtr;
 	std::unique_ptr<GamePiece> playerPiece;
 
-	std::array <unsigned int, PIECE_MAX> pieceCnt;
+	std::array<unsigned int, PIECE_MAX> pieceCnt;
 	
 	player_list playerList;
 	player_list::iterator player;

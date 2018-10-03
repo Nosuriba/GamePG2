@@ -17,16 +17,14 @@ class GamePiece
 {
 public:
 	GamePiece();
-	GamePiece(Vector2 vec, Vector2 offset);
+	GamePiece(Vector2 vec);
 	~GamePiece();
 	PIECE_ST GetState(void);
 	void SetState(PIECE_ST pState);
 	void SetReverse(void);
 	void Draw(void);
 private:
-	/*piece_list pieceList;*/
 	Vector2 pos;
-	Vector2 offset;
 	PIECE_ST pState;
 };
 

@@ -1,15 +1,15 @@
 #include <DxLib.h>
 #include "GamePiece.h"
+#include "ImageMng.h"
 
 GamePiece::GamePiece()
 {
 }
 
-GamePiece::GamePiece(Vector2 vec, Vector2 offset)
+GamePiece::GamePiece(Vector2 vec)
 {
 	pState		 = PIECE_NON;
 	this->pos	 = vec;
-	this->offset = offset;
 }
 
 
@@ -41,11 +41,12 @@ void GamePiece::Draw(void)
 	/* ピースの状態によって、円の色を変えている */
 	if (pState == PIECE_W)
 	{
-		DxLib::DrawCircle(pos.x + offset.x, pos.y + offset.y, 25, 0xffffff, true);
+		DxLib::DrawGraph(pos.x, pos.y, LpImageMng.ImgGetID("image/player1.png")[0], true);
+		//DxLib::DrawCircle(pos.x + offset.x, pos.y + offset.y, 25, 0xffffff, true);
 	}
 	else if (pState == PIECE_B)
 	{
-		DxLib::DrawCircle(pos.x + offset.x, pos.y + offset.y, 25, 0x000000, true);
+		DxLib::DrawGraph(pos.x, pos.y, LpImageMng.ImgGetID("image/player2.png")[0], true);
 	}
 	else
 	{

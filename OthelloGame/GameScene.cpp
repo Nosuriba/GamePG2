@@ -49,13 +49,30 @@ bool GameScene::NextPlayer(void)
 	{
 		player = playerList.begin();
 	}
+
+
 	return rtnFlag;
+}
+
+bool GameScene::AutoPassPlayer(void)
+{
+	player++;
+	if (player == playerList.end())
+	{
+		player = playerList.begin();
+	}
+
+	if (boardPtr->CheckOutPass((*player)->pGetID()))
+	{
+		return true;
+	}
+	return false;
 }
 
 int GameScene::SysInit()
 {
 	/* システムの初期化が終わった後、ゲームの初期化をする処理用関数に移行している */
-	gScenePtr = &GameScene::GameInit;
+	gScenePtr = &GameScene::TitleInit;
 
 	/* 表示するウィンドウの初期設定を行っている */
 	DxLib::SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 16);
@@ -83,7 +100,8 @@ int GameScene::SysDestroy()
 int GameScene::TitleInit()
 {
 	gScenePtr = &GameScene::TitleMain;
-	playerList.clear();					// 登録されたプレイヤーの情報を全て削除する。
+	/* 登録されたプレイヤーの初期化を行っている */
+	playerList.clear();					
 	return 0;
 }
 
@@ -95,8 +113,8 @@ int GameScene::TitleMain()
 	}
 	mousePtr->Update();	
 	DxLib::ClsDrawScreen();
-	DxLib::DrawGraph(100, 50, LpImageMng.ImgGetID("image/sample2.png")[0], true);
-	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "タイトルシーンだよ", 0xffffff);
+	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/title.jpg")[0], true);
+	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "タイトルシーンだよ", 0x000000);
 	DxLib::ScreenFlip();
 
 	return 0;
@@ -106,7 +124,7 @@ int GameScene::GameInit()
 {
 	gScenePtr = &GameScene::GameMain;
 	boardPtr = std::make_unique<GameBoard>();
-	boardPtr->StartPiece({ 3,3 }, true);		// true : 通常の白黒配置, false : 白黒を反転して配置
+	boardPtr->SetPiece({ 3,3 }, true);		// true : 通常の白黒配置, false : 白黒を反転して配置
 
 	/* プレイヤーの登録を行っている */
 	MakePlayer();
@@ -118,20 +136,31 @@ int GameScene::GameInit()
 int GameScene::GameMain()
 {
 	/* リザルトシーンに移動する(仮実装)*/
-	if (mousePtr->GetButton()[PUSH_NOW] & (~mousePtr->GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
+	/*if (mousePtr->GetButton()[PUSH_NOW] & (~mousePtr->GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
 	{
 		gScenePtr = &GameScene::ResultInit;
 	}
-
+*/
 	if ((*player)->TurnAct(*mousePtr, *boardPtr))
 	{
 		boardPtr->SetReverse(mousePtr->GetPoint(), (*player)->pGetID());
 		NextPlayer();	
 	}
+
+	if (!boardPtr->CheckOutPass((*player)->pGetID()))
+	{
+		if (!AutoPassPlayer())
+		{
+			gScenePtr = &GameScene::ResultInit;
+		}
+	}
 	mousePtr->Update();
 	DxLib::ClsDrawScreen();
+	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
 	DxLib::DrawExtendString(0, 0,1.5f, 1.5f, "ゲームシーンだよ", 0xffffff);
-	
+	/* 現在ターン処理を行っているピースを描画している */
+	DxLib::DrawGraph(0, 50, (*player)->pGetID() == PIECE_W ? LpImageMng.ImgGetID("image/player1.png")[0] 
+														   : LpImageMng.ImgGetID("image/player2.png")[0], true);
 	boardPtr->Draw();
 	DxLib::ScreenFlip();
 	return 0;

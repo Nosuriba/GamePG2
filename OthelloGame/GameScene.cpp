@@ -40,18 +40,15 @@ void GameScene::MakePlayer(void)
 	playerList.push_back(std::make_shared<Player>());
 }
 
-bool GameScene::NextPlayer(void)
+void GameScene::NextPlayer(void)
 {
-	bool rtnFlag = false;
+	/*bool rtnFlag = false;*/
 
 	player++;
 	if (player == playerList.end())
 	{
 		player = playerList.begin();
 	}
-
-
-	return rtnFlag;
 }
 
 bool GameScene::AutoPassPlayer(void)
@@ -62,10 +59,38 @@ bool GameScene::AutoPassPlayer(void)
 		player = playerList.begin();
 	}
 
-	if (boardPtr->CheckOutPass((*player)->pGetID()))
+	if (boardPtr->CheckPutPieceFlag((*player)->pGetID()))
 	{
 		return true;
 	}
+	return false;
+}
+
+void GameScene::PutPieceST(void)
+{
+	pieceW = 0;
+	pieceB = 0;
+
+	/* ピースの色を取得して、それぞれの個数をカウントしている */
+	for (int y = 0; y < boardPtr->GetDataSize().y; y++)
+	{
+		for (int x = 0; x < boardPtr->GetDataSize().x; x++)
+		{
+			if (boardPtr->CheckPutPieceST(x, y) == PIECE_W)
+			{
+				pieceW++;
+			}
+			else if (boardPtr->CheckPutPieceST(x, y) == PIECE_B)
+			{
+				pieceB++;
+			}
+			else{}
+		}
+	}
+}
+
+bool GameScene::WinJudge(void)
+{
 	return false;
 }
 
@@ -84,11 +109,6 @@ int GameScene::SysInit()
 	}
 	DxLib::SetDrawScreen(DX_SCREEN_BACK);
 	mousePtr = std::make_unique<MouseCtl>();
-
-	/* プレイヤーの登録を行っている */
-	/*MakePlayer();
-	MakePlayer();
-*/
 	return 0;
 }
 
@@ -124,8 +144,9 @@ int GameScene::GameInit()
 {
 	gScenePtr = &GameScene::GameMain;
 	boardPtr = std::make_unique<GameBoard>();
-	boardPtr->SetPiece({ 3,3 }, true);		// true : 通常の白黒配置, false : 白黒を反転して配置
-
+	boardPtr->PieceClear();
+	boardPtr->SetPiece({ 3,3 }, true);			// true : 通常の白黒配置, false : 白黒を反転して配置
+	PutPieceST();
 	/* プレイヤーの登録を行っている */
 	MakePlayer();
 	MakePlayer();
@@ -135,19 +156,21 @@ int GameScene::GameInit()
 
 int GameScene::GameMain()
 {
-	/* リザルトシーンに移動する(仮実装)*/
-	/*if (mousePtr->GetButton()[PUSH_NOW] & (~mousePtr->GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
+	if (mousePtr->GetButton()[PUSH_NOW] & (~mousePtr->GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
 	{
 		gScenePtr = &GameScene::ResultInit;
+		boardPtr->PieceClear();
 	}
-*/
+
 	if ((*player)->TurnAct(*mousePtr, *boardPtr))
 	{
 		boardPtr->SetReverse(mousePtr->GetPoint(), (*player)->pGetID());
-		NextPlayer();	
+		PutPieceST();
+		NextPlayer();
+		
 	}
 
-	if (!boardPtr->CheckOutPass((*player)->pGetID()))
+	if (!boardPtr->CheckPutPieceFlag((*player)->pGetID()))
 	{
 		if (!AutoPassPlayer())
 		{
@@ -161,6 +184,8 @@ int GameScene::GameMain()
 	/* 現在ターン処理を行っているピースを描画している */
 	DxLib::DrawGraph(0, 50, (*player)->pGetID() == PIECE_W ? LpImageMng.ImgGetID("image/player1.png")[0] 
 														   : LpImageMng.ImgGetID("image/player2.png")[0], true);
+	DxLib::DrawFormatString(0, 200, 0xfffffff, "白 : %d", pieceW);
+	DxLib::DrawFormatString(0, 230, 0xfffffff, "黒 : %d", pieceB);
 	boardPtr->Draw();
 	DxLib::ScreenFlip();
 	return 0;
@@ -183,10 +208,15 @@ int GameScene::ResultMain()
 	{
 		gScenePtr	 = &GameScene::TitleInit;
 	}
+	/*PutPieceST();*/
+	/*boardPtr->PieceClear();*/
+	boardPtr->ResultPiece(pieceB, pieceW);
 
 	mousePtr->Update();
 	DxLib::ClsDrawScreen();
+	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
 	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f,"リザルトシーンだよ", 0xffffff);
+	boardPtr->Draw();
 	DxLib::ScreenFlip();
 	
 	return 0;

@@ -42,9 +42,14 @@ private:
 
 	int UpDate();
 
+	/* プレイヤー関係の処理*/
 	void MakePlayer(void);
-	bool NextPlayer(void);
+	void NextPlayer(void);
 	bool AutoPassPlayer(void);
+
+	/* ピースが関わっているもの */
+	void PutPieceST(void);
+	bool WinJudge(void);
 
 	int SysInit();
 	int SysDestroy();
@@ -59,12 +64,15 @@ private:
 	int ResultMain();
 	int (GameScene::*gScenePtr)(void);
 
+	int pieceW = 0;
+	int pieceB = 0;
+
 	static std::unique_ptr<GameScene, GameSceneDeleter>	s_Instance;
 	std::unique_ptr<GameBoard> boardPtr;
 	std::unique_ptr<MouseCtl>  mousePtr;
 	std::unique_ptr<GamePiece> playerPiece;
 
-	std::array<unsigned int, PIECE_MAX> pieceCnt;
+	//std::array<PIECE_ST, PIECE_MAX> putPieceST;
 	
 	player_list playerList;
 	player_list::iterator player;

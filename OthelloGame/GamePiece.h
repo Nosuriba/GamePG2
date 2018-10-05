@@ -8,8 +8,8 @@
 enum PIECE_ST
 {
 	PIECE_NON,		// ‹ó”’
-	PIECE_W,		// ”’
 	PIECE_B,		// •
+	PIECE_W,		// ”’
 	PIECE_MAX		// ƒs[ƒX‚ÌÅ‘å”
 };
 

@@ -49,7 +49,8 @@ private:
 
 	/* ƒs[ƒX‚ªŠÖ‚í‚Á‚Ä‚¢‚é‚à‚Ì */
 	void PutPieceST(void);
-	bool WinJudge(void);
+	PIECE_ST WinJudge(int pCntB, int pCntW);
+	void DrawWinner(PIECE_ST pState);
 
 	int SysInit();
 	int SysDestroy();

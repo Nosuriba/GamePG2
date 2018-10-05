@@ -89,9 +89,38 @@ void GameScene::PutPieceST(void)
 	}
 }
 
-bool GameScene::WinJudge(void)
+PIECE_ST GameScene::WinJudge(int pCntB, int pCntW)
 {
-	return false;
+	/* ピースの個数を取得して、個数が多い色の状態を返すようにしている*/
+	if (pCntB < pCntW)
+	{
+		return PIECE_W;
+	}
+	else if (pCntB > pCntW)
+	{
+		return PIECE_B;
+	}
+	else if (pCntB == pCntW)
+	{
+		return PIECE_NON;
+	}
+	return PIECE_NON;
+}
+
+void GameScene::DrawWinner(PIECE_ST pState)
+{
+	if (pState == PIECE_B)
+	{
+		DxLib::DrawExtendString(250, 0, 2.5f, 2.5f, "先手の勝利なり", 0xfffacd);
+	}
+	else if (pState == PIECE_W)
+	{
+		DxLib::DrawExtendString(250, 0, 2.5f, 2.5f, "後手の勝利なり", 0xf0f8ff);
+	}
+	else
+	{
+		DxLib::DrawExtendString(300, 0, 2.5f, 2.5f, "勝負なし", 0xeeee00);
+	}
 }
 
 int GameScene::SysInit()
@@ -134,7 +163,7 @@ int GameScene::TitleMain()
 	mousePtr->Update();	
 	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/title.jpg")[0], true);
-	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "タイトルシーンだよ", 0x000000);
+	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "タイトル", 0x000000);
 	DxLib::ScreenFlip();
 
 	return 0;
@@ -174,18 +203,19 @@ int GameScene::GameMain()
 	{
 		if (!AutoPassPlayer())
 		{
+			boardPtr->PieceClear();
 			gScenePtr = &GameScene::ResultInit;
 		}
 	}
 	mousePtr->Update();
 	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
-	DxLib::DrawExtendString(0, 0,1.5f, 1.5f, "ゲームシーンだよ", 0xffffff);
+	DxLib::DrawExtendString(0, 0,1.5f, 1.5f, "ゲームモード", 0xffffff);
 	/* 現在ターン処理を行っているピースを描画している */
 	DxLib::DrawGraph(0, 50, (*player)->pGetID() == PIECE_W ? LpImageMng.ImgGetID("image/player1.png")[0] 
 														   : LpImageMng.ImgGetID("image/player2.png")[0], true);
-	DxLib::DrawFormatString(0, 200, 0xfffffff, "白 : %d", pieceW);
-	DxLib::DrawFormatString(0, 230, 0xfffffff, "黒 : %d", pieceB);
+	DxLib::DrawExtendFormatString(0, 170,1.3f, 1.3f, 0xfffffff, "白 : %d", pieceW);
+	DxLib::DrawExtendFormatString(0, 200,1.3f, 1.3f, 0xfffffff, "黒 : %d", pieceB);
 	boardPtr->Draw();
 	DxLib::ScreenFlip();
 	return 0;
@@ -208,15 +238,15 @@ int GameScene::ResultMain()
 	{
 		gScenePtr	 = &GameScene::TitleInit;
 	}
-	/*PutPieceST();*/
-	/*boardPtr->PieceClear();*/
 	boardPtr->ResultPiece(pieceB, pieceW);
-
 	mousePtr->Update();
-	DxLib::ClsDrawScreen();
+	
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
-	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f,"リザルトシーンだよ", 0xffffff);
+	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f,"リザルト", 0xffffff);
 	boardPtr->Draw();
+	DrawWinner(WinJudge(pieceB, pieceW));
+	DxLib::DrawExtendFormatString(0, 170, 1.3f, 1.3f, 0xfffffff, "白 : %d", pieceW);
+	DxLib::DrawExtendFormatString(0, 200, 1.3f, 1.3f, 0xfffffff, "黒 : %d", pieceB);
 	DxLib::ScreenFlip();
 	
 	return 0;

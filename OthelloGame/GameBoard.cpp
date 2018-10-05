@@ -138,7 +138,7 @@ void GameBoard::ResultPiece(int pCntB, int pCntW)
 		{
 			auto tmp = AddObjList(std::make_shared<GamePiece>(ChangeTblToScr(Vector2(b % data.size(), b / data.size()))));
 			data[b / data.size()][b % data.size()] = (*tmp);
-			data[b / data.size()][b % data.size()].lock()->SetState(PIECE_W);
+			data[b / data.size()][b % data.size()].lock()->SetState(PIECE_B);
 		}
 	}
 
@@ -148,7 +148,7 @@ void GameBoard::ResultPiece(int pCntB, int pCntW)
 		{
 			auto tmp = AddObjList(std::make_shared<GamePiece>(ChangeTblToScr(Vector2(w % data.size(), w / data.size()))));
 			data[(w / data.size())][w % data.size()] = (*tmp);
-			data[(w / data.size())][w % data.size()].lock()->SetState(PIECE_B);
+			data[(w / data.size())][w % data.size()].lock()->SetState(PIECE_W);
 		}
 	}
 }

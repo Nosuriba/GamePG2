@@ -29,7 +29,7 @@ public:
 	void SetPiece(const Vector2& pNum, bool pFlag);		
 	/* 指定した場所にピースを配置する */
 	bool SetPiece(const Vector2& vec, PIECE_ST id);
-	void ResultPiece(int pCntW, int pCntB);
+	void ResultPiece(int pCntB, int pCntW);
 	void PieceClear(void);
 	/* 反転処理関連の関数*/
 	void SetReverse(const Vector2& vec, PIECE_ST id);

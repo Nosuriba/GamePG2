@@ -1,0 +1,94 @@
+・マウスのボタン処理
+#include <array>
+
+・固定長配列
+std::array<int, PUSH_MAX>  →  名前を　using  mouse_int 　に変更している。mau
+
+
+const Vector2 GetPoint(void)→参照先の情報を変えられないようにする。
+Vector2 GetPoint(void) const→値の情報を変えられないようにする。
+const_cast→　constで中身が変えられない情報を無理やり帰る処理（絶対使うな！！）
+
+GameBoard→Update
+
+・座標の情報を取得して、データの中に格納する情報を設定する。
+vector2型のmPosを作る
+
+・マップIDのおける範囲
+
+if (Vector2(0,0) <= mPos && mPos < boardSize)
+
+Ctl + R 名前の変更(プログラムのスペルミスがあった場合、置換機能を使うより
+		   これを使うといい)
+
+
+/* 要素に対してのアクセスを特化している(itrの削除が行えない) */
+for (auto itr : pieceList)
+{
+	itr->Draw();	[イテレータにautoがかかっている]
+}
+
+for (auto itr = pieceList.begin(); itr != pieceList.end(); itr++)
+{
+	(*itr)->Draw();	[リストにautoがかかっている]
+}
+
+[イテレータにautoがかかっている]
+イテレータの型に対して(要素に対して)、autoをかけている
+
+[リストにautoがかかっている]
+リスト自体にautoをかけている→要素の削除ができない
+
+list→itr→データ
+
+singleTonクラスのポインタをスマートポインタにする
+
+
+・オセロの要素
+①2人が順にコマを置く(置けない時はスキップ)
+
+②相手のコマを1個以上ひっくり返せるか？(ひっくり返せない場合①に移動する)[GameBoard]
+				↓
+・コマを置く(プレイヤー側がゲームボードクラスに伝える)[Player]
+				↓
+・コマをひっくり返す(①に戻る)[Player]
+
+GameScene()→GameBoard()→std::list<std::unique_ptr<Player>> playerList
+
+
+・プレイヤーのクラスを作る
+・ゲームボードにプレイヤークラスのリストを作成
+・コマを交互における状態を作る
+
+・再来週末に通常オセロの提出をする(リザルトの簡易表示を行う)
+
+・enumで作ったプレイヤーの情報を配列に確保することができた。
+
+[変更を行った部分]
+・GameBoardクラスにあるプレイヤーの処理をGameSceneクラス側に持っていた。
+・GameBoardクラスにあるUpdate関数の引数でマウスの情報を取得していたが、
+　Vector2とintの引数に設定し、マウスのクリックした座標, プレイヤーの順番を取得するように変更した。
+・Playerクラス側にピースを置くかの判定用関数を作成した。
+　(bool型で作成し、マウスの左ボタンが押されたときに真の判定を返すようにしている)
+
+[GameSceneクラス側で実装した内容]
+・shared_ptr<Player>　の型でリスト用の変数を作成した　playerList	(shared_ptrはunique_ptrにする可能性あり)
+・SysInitで、playerListのイテレータにPlayerの情報を登録している。	(AddObjList関数を使って登録を行っている)
+・Regist
+・GameMainの中でPlayerクラス側にあるPieceFlagから真の情報が返ってきた時にGameBoardクラスの処理を行うようにしている
+
+
+[Stateパターン]
+・抽象化したクラスがある(PieceState)
+(例) virtual int GetDrawColor(void);
+
+・継承したクラス(PieceBlack)
+	 int GetDrawColor(void) {return 0; }
+
+	 #ifdef _DEBUG
+	 else
+	 {
+	 OutputDebugString("この中に文字を書く\n");
+	 }
+	 #endif
+	 DrawCircle(pos.x, pos.y, 25, color, true);

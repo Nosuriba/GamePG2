@@ -91,7 +91,7 @@ void GameScene::PutPieceST(void)
 
 PIECE_ST GameScene::WinJudge(int pCntB, int pCntW)
 {
-	/* ピースの個数を取得して、個数が多い色の状態を返すようにしている*/
+	/* ピースの個数を比較して、個数が多い色の状態を返すようにしている*/
 	if (pCntB < pCntW)
 	{
 		return PIECE_W;
@@ -111,25 +111,25 @@ void GameScene::DrawWinner(PIECE_ST pState)
 {
 	if (pState == PIECE_B)
 	{
-		DxLib::DrawExtendString(250, 0, 2.5f, 2.5f, "先手の勝利なり", 0xfffacd);
+		DxLib::DrawExtendString(250, 0, 2.5f, 2.5f, "先手[黒]の勝利なり", 0xfffacd);
 	}
 	else if (pState == PIECE_W)
 	{
-		DxLib::DrawExtendString(250, 0, 2.5f, 2.5f, "後手の勝利なり", 0xf0f8ff);
+		DxLib::DrawExtendString(250, 0, 2.5f, 2.5f, "後手[白]の勝利なり", 0xf0f8ff);
 	}
 	else
 	{
-		DxLib::DrawExtendString(300, 0, 2.5f, 2.5f, "勝負なし", 0xeeee00);
+		DxLib::DrawExtendString(300, 0, 2.5f, 2.5f, "決着つかず...", 0xeeee00);
 	}
 }
 
 int GameScene::SysInit()
 {
-	/* システムの初期化が終わった後、ゲームの初期化をする処理用関数に移行している */
+	/* システムの初期化が終わった後、ゲームの初期化を行うようにしている */
 	gScenePtr = &GameScene::TitleInit;
 
-	/* 表示するウィンドウの初期設定を行っている */
 	DxLib::SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 16);
+	/*DxLib::SetWindowIconID();*/
 	DxLib::ChangeWindowMode(true);
 	DxLib::SetWindowText("1701310_北川 潤一 : OthelloGame");
 	if (DxLib_Init() == -1)
@@ -162,8 +162,10 @@ int GameScene::TitleMain()
 	}
 	mousePtr->Update();	
 	DxLib::ClsDrawScreen();
+
+	/* タイトルの描画を行っている */
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/title.jpg")[0], true);
-	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "タイトル", 0x000000);
+	DxLib::DrawExtendString(0, 0, 2.5f, 2.5f, "タイトル", 0xffff00);
 	DxLib::ScreenFlip();
 
 	return 0;
@@ -171,33 +173,30 @@ int GameScene::TitleMain()
 
 int GameScene::GameInit()
 {
-	gScenePtr = &GameScene::GameMain;
-	boardPtr = std::make_unique<GameBoard>();
+	gScenePtr	= &GameScene::GameMain;
+	boardPtr	= std::make_unique<GameBoard>();
+	turnPLpiece = std::make_unique<GamePiece>(Vector2(0,50));	// ターン処理をしているプレイヤーのピースを表示するためのもの
 	boardPtr->PieceClear();
-	boardPtr->SetPiece({ 3,3 }, true);			// true : 通常の白黒配置, false : 白黒を反転して配置
+	boardPtr->SetPiece({ 3,3 }, true);							// true : 通常の白黒配置, false : 白黒を反転して配置
 	PutPieceST();
 	/* プレイヤーの登録を行っている */
 	MakePlayer();
 	MakePlayer();
 	player = playerList.begin();
+	turnPLpiece->SetState((*player)->pGetID());
 	return 0;
 }
 
 int GameScene::GameMain()
 {
-	if (mousePtr->GetButton()[PUSH_NOW] & (~mousePtr->GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
-	{
-		gScenePtr = &GameScene::ResultInit;
-		boardPtr->PieceClear();
-	}
-
 	if ((*player)->TurnAct(*mousePtr, *boardPtr))
 	{
 		boardPtr->SetReverse(mousePtr->GetPoint(), (*player)->pGetID());
 		PutPieceST();
 		NextPlayer();
-		
 	}
+
+	turnPLpiece->SetState((*player)->pGetID());
 
 	if (!boardPtr->CheckPutPieceFlag((*player)->pGetID()))
 	{
@@ -208,15 +207,14 @@ int GameScene::GameMain()
 		}
 	}
 	mousePtr->Update();
+	/* ゲーム中の情報を描画している */
 	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
 	DxLib::DrawExtendString(0, 0,1.5f, 1.5f, "ゲームモード", 0xffffff);
-	/* 現在ターン処理を行っているピースを描画している */
-	DxLib::DrawGraph(0, 50, (*player)->pGetID() == PIECE_W ? LpImageMng.ImgGetID("image/player1.png")[0] 
-														   : LpImageMng.ImgGetID("image/player2.png")[0], true);
 	DxLib::DrawExtendFormatString(0, 170,1.3f, 1.3f, 0xfffffff, "白 : %d", pieceW);
 	DxLib::DrawExtendFormatString(0, 200,1.3f, 1.3f, 0xfffffff, "黒 : %d", pieceB);
 	boardPtr->Draw();
+	turnPLpiece->Draw();
 	DxLib::ScreenFlip();
 	return 0;
 }
@@ -240,7 +238,8 @@ int GameScene::ResultMain()
 	}
 	boardPtr->ResultPiece(pieceB, pieceW);
 	mousePtr->Update();
-	
+
+	/* リザルトの情報を描画している */
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
 	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f,"リザルト", 0xffffff);
 	boardPtr->Draw();

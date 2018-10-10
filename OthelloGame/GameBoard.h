@@ -12,10 +12,6 @@ class Player;
 
 using piece_ptr  = std::shared_ptr<GamePiece>;
 using piece_list = std::list<piece_ptr>;
-
-//using player_ptr  = std::shared_ptr<Player>;
-//using player_list = std::list<player_ptr>;
-
 class GameBoard
 {
 public:
@@ -29,8 +25,10 @@ public:
 	void SetPiece(const Vector2& pNum, bool pFlag);		
 	/* 指定した場所にピースを配置する */
 	bool SetPiece(const Vector2& vec, PIECE_ST id);
+
 	void ResultPiece(int pCntB, int pCntW);
 	void PieceClear(void);
+
 	/* 反転処理関連の関数*/
 	void SetReverse(const Vector2& vec, PIECE_ST id);
 	bool CheckReverse(const Vector2& vec, PIECE_ST id);

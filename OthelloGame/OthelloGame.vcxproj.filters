@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ソース ファイル\Piece">
+      <UniqueIdentifier>{2f086aa7-d599-46c9-876d-a24160e5cc0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Piece">
+      <UniqueIdentifier>{09ff34c0-32b6-4833-9322-5862b08a330a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameScene.cpp">
@@ -30,14 +36,23 @@
     <ClCompile Include="GameBoard.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GamePiece.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="MouseCtl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceState.cpp">
+      <Filter>ソース ファイル\Piece</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePiece.cpp">
+      <Filter>ソース ファイル\Piece</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceWhite.cpp">
+      <Filter>ソース ファイル\Piece</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceBlack.cpp">
+      <Filter>ソース ファイル\Piece</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -53,17 +68,31 @@
     <ClInclude Include="GameBoard.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GamePiece.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="MouseCtl.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="GamePiece.h">
+      <Filter>ヘッダー ファイル\Piece</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceState.h">
+      <Filter>ヘッダー ファイル\Piece</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceBlack.h">
+      <Filter>ヘッダー ファイル\Piece</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceWhite.h">
+      <Filter>ヘッダー ファイル\Piece</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="メモ帳.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="image\GAME_ICON.ico">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
 </Project>

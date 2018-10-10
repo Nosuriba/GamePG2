@@ -3,15 +3,10 @@
 #include <memory>
 #include <list>
 #include "Vector2.h"
+#include "PieceState.h"
 
-/* ピースの状態*/
-enum PIECE_ST
-{
-	PIECE_NON,		// 空白
-	PIECE_B,		// 黒
-	PIECE_W,		// 白
-	PIECE_MAX		// ピースの最大数
-};
+using pState_ptr = std::unique_ptr<PieceState>;
+using pState_list = std::list<pState_ptr>;
 
 class GamePiece
 {
@@ -21,10 +16,9 @@ public:
 	~GamePiece();
 	PIECE_ST GetState(void);
 	void SetState(PIECE_ST pState);
-	void SetReverse(void);
 	void Draw(void);
 private:
+	pState_list  pState;
 	Vector2 pos;
-	PIECE_ST pState;
 };
 

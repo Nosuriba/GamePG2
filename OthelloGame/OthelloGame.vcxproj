@@ -129,6 +129,9 @@
     <ClCompile Include="ImageMng.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MouseCtl.cpp" />
+    <ClCompile Include="PieceBlack.cpp" />
+    <ClCompile Include="PieceState.cpp" />
+    <ClCompile Include="PieceWhite.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
@@ -138,11 +141,17 @@
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="ImageMng.h" />
     <ClInclude Include="MouseCtl.h" />
+    <ClInclude Include="PieceBlack.h" />
+    <ClInclude Include="PieceState.h" />
+    <ClInclude Include="PieceWhite.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="メモ帳.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="image\GAME_ICON.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

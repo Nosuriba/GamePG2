@@ -86,24 +86,27 @@ void GameBoard::SetPiece(const Vector2& pNum, bool pFlag)
 	{
 		for (int x = 0; x <= 1; x++)
 		{
-			/* 最初に配置されるピースの状態を設定している */
-			if (pFlag)
+			if (data[pNum.y + y][pNum.x + x].expired())
 			{
-				initPieceST = (((x + y) % PIECE_MAX) + 2  < 3
-							  ? initPieceST = ((x + y) % PIECE_MAX) + 2
-							  : initPieceST = (x + y == 2 ? PIECE_W : PIECE_B));
-				
-			}
-			else
-			{
-				initPieceST = ((x + y) < 2 ? initPieceST = ((x + y) % PIECE_MAX) + 1 : initPieceST = PIECE_B);
-			}
+				/* 最初に配置されるピースの状態を設定している */
+				if (pFlag)
+				{
+					initPieceST = (((x + y) % PIECE_MAX) + 2 < 3
+						? initPieceST = ((x + y) % PIECE_MAX) + 2
+						: initPieceST = (x + y == 2 ? PIECE_W : PIECE_B));
 
-			/* ピースの配置位置を設定している */
-			pPos = ChangeTblToScr(pNum + Vector2(x, y));
-			auto tmp	= AddObjList(std::make_shared<GamePiece>(pPos));
-			data[pNum.y + y][pNum.x + x] = (*tmp);
-			data[pNum.y + y][pNum.x + x].lock()->SetState((PIECE_ST)initPieceST);			
+				}
+				else
+				{
+					initPieceST = ((x + y) < 2 ? initPieceST = ((x + y) % PIECE_MAX) + 1 : initPieceST = PIECE_B);
+				}
+
+				/* ピースの配置位置を設定している */
+				pPos = ChangeTblToScr(pNum + Vector2(x, y));
+				auto tmp = AddObjList(std::make_shared<GamePiece>(pPos));
+				data[pNum.y + y][pNum.x + x] = (*tmp);
+				data[pNum.y + y][pNum.x + x].lock()->SetState((PIECE_ST)initPieceST);
+			}
 		}
 	}
 
@@ -175,9 +178,10 @@ void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
 				rNum += rPos;
 				if (!data[pNum.y + rNum.y][pNum.x + rNum.x].expired())
 				{
+					/* 配置したピースと違う色が見つかった時、見つかったピースの色を配置したピースの色に変更してあげる*/
 					if (data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->GetState() != id)
 					{
-						data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->SetReverse();
+						data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->SetState(id);
 					}
 					else
 					{

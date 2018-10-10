@@ -5,8 +5,8 @@
 #include <array>
 #include "Vector2.h"
 #include "GamePiece.h"
+#include "PieceState.h"
 
-//class GameScene;
 class GameBoard;
 class MouseCtl;
 class Player;
@@ -71,10 +71,8 @@ private:
 	static std::unique_ptr<GameScene, GameSceneDeleter>	s_Instance;
 	std::unique_ptr<GameBoard> boardPtr;
 	std::unique_ptr<MouseCtl>  mousePtr;
-	std::unique_ptr<GamePiece> playerPiece;
+	std::unique_ptr<GamePiece> turnPLpiece;
 
-	//std::array<PIECE_ST, PIECE_MAX> putPieceST;
-	
 	player_list playerList;
 	player_list::iterator player;
 };

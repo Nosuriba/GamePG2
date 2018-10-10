@@ -43,16 +43,15 @@ void GamePiece::SetState(PIECE_ST pState)
 void GamePiece::Draw(void)
 {
 	unsigned int color = 0xff0000;
-
+	
 	/* ピースの状態によって、ピースの画像を描画している */
 	if ((*pState.begin())->GetState() == PIECE_W)
 	{
-		DxLib::DrawGraph(pos.x, pos.y, LpImageMng.ImgGetID("image/player1.png")[0], true);
-		//DxLib::DrawCircle(pos.x + offset.x, pos.y + offset.y, 25, 0xffffff, true);
+		DxLib::DrawGraph(pos.x, pos.y, LpImageMng.ImgGetID("image/piece/player1.png")[0], true);
 	}
 	else if ((*pState.begin())->GetState() == PIECE_B)
 	{
-		DxLib::DrawGraph(pos.x, pos.y, LpImageMng.ImgGetID("image/player2.png")[0], true);
+		DxLib::DrawGraph(pos.x, pos.y, LpImageMng.ImgGetID("image/piece/player2.png")[0], true);
 	}
 	else
 	{
@@ -60,13 +59,9 @@ void GamePiece::Draw(void)
 }
 
 
-/*color = (*pState).GetDrawColor();
-if (pState)
+/*color = (**pState.begin()).GetDrawColor();
+if ((*pState.begin()))
 {
-Dxlib::drawcircle(pos.x, pos.y, 25, color, true);
-}
-else
-{
-Dxlib::drawcircle(pos.x, pos.y, 25, color, true);
+DxLib::DrawCircle(pos.x, pos.y, 25, color, true);
 }
 */

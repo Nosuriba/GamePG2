@@ -1,14 +1,17 @@
 #pragma once
 
-/* ピースの状態*/
+/* ピースの状態(PIECE_NONの位置をPIECE_MAXの位置に変えたやり方もある)*/
 enum PIECE_ST
 {
-	PIECE_NON,		// 空白
+	PIECE_NON,
 	PIECE_B,		// 黒
 	PIECE_W,		// 白
-	PIECE_MAX		// ピースの最大数
+	PIECE_CHAR1,
+	PIECE_CHAR2,
+	PIECE_CHAR3,
+	PIECE_CHAR4,
+	PIECE_MAX
 };
-
 
 class PieceState
 {

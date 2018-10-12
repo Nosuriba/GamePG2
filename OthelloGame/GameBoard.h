@@ -5,13 +5,8 @@
 #include "Vector2.h"
 #include "GamePiece.h"
 
-//class Vector2;
-//class GamePiece;
-class MouseCtl;
 class Player;
 
-using piece_ptr  = std::shared_ptr<GamePiece>;
-using piece_list = std::list<piece_ptr>;
 class GameBoard
 {
 public:
@@ -20,9 +15,10 @@ public:
 	~GameBoard();
 	void Update(void);
 
-	Vector2 GetDataSize(void);
+	const Vector2& GetDataSize(void);
+	const Vector2& GetBoardSize(void);
 	/* ピースの初期配置を設定して、ピースを配置する */
-	void SetPiece(const Vector2& pNum, bool pFlag);		
+	void StartPiece(const Vector2& pNum, bool pFlag);		
 	/* 指定した場所にピースを配置する */
 	bool SetPiece(const Vector2& vec, PIECE_ST id);
 

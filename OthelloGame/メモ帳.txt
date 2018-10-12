@@ -1,9 +1,17 @@
+・ピースのサイズ確保
+
+/* 一次元でピースを格納するためのサイズを確保した後、
+   横幅分のサイズをポインターの中身に格納している。*/
+
+(イメージ)
+*data[1] = &pieceData[1 * 8];
+
+
 ・マウスのボタン処理
 #include <array>
 
 ・固定長配列
-std::array<int, PUSH_MAX>  →  名前を　using  mouse_int 　に変更している。mau
-
+std::array<int, PUSH_MAX>  →  名前を　using  mouse_int 　に変更している。
 
 const Vector2 GetPoint(void)→参照先の情報を変えられないようにする。
 Vector2 GetPoint(void) const→値の情報を変えられないようにする。
@@ -92,3 +100,19 @@ GameScene()→GameBoard()→std::list<std::unique_ptr<Player>> playerList
 	 }
 	 #endif
 	 DrawCircle(pos.x, pos.y, 25, color, true);
+
+・現状のクラス構成
+
+GameScene→GameBoard→GamePiece(listで管理)→PieceState→(PieceBlack, PieceWhite, PieceChar1,..)
+   |  ↓
+   | Player→PieceTray(listで管理[GamePiece])
+  ↓
+MouseCtl
+
+ImageMng
+
+PieceTrayで最大5個のデータ(ピースの状態)を管理する。
+
+PieceTrayで受け取った情報をGameBoard側に渡す。
+
+

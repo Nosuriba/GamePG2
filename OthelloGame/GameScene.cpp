@@ -37,13 +37,11 @@ int GameScene::UpDate()
 
 void GameScene::MakePlayer(void)
 {
-	playerList.push_back(std::make_shared<Player>());
+	playerList.push_back(std::make_shared<Player>(boardPtr->GetBoardSize()));
 }
 
 void GameScene::NextPlayer(void)
 {
-	/*bool rtnFlag = false;*/
-
 	player++;
 	if (player == playerList.end())
 	{
@@ -175,15 +173,14 @@ int GameScene::GameInit()
 {
 	gScenePtr	= &GameScene::GameMain;
 	boardPtr	= std::make_unique<GameBoard>();
-	turnPLpiece = std::make_unique<GamePiece>(Vector2(0,50));	// ターン処理をしているプレイヤーのピースを表示するためのもの
 	boardPtr->PieceClear();
-	boardPtr->SetPiece({ 3,3 }, true);							// true : 通常の白黒配置, false : 白黒を反転して配置
+	boardPtr->StartPiece({ 3,3 }, true);			// true : 通常の白黒配置, false : 白黒を反転して配置
 	PutPieceST();
 	/* プレイヤーの登録を行っている */
 	MakePlayer();
 	MakePlayer();
 	player = playerList.begin();
-	turnPLpiece->SetState((*player)->pGetID());
+	turnPLpiece = std::make_unique<GamePiece>(Vector2(0, 50), Vector2(0, 0), (*player)->pGetID());
 	return 0;
 }
 

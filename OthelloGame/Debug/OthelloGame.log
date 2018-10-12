@@ -1,2 +1,4 @@
-﻿  GamePiece.cpp
+﻿  GameBoard.cpp
+c:\users\のすりばー\desktop\gamepg2\othellogame\gameboard.cpp(79): warning C4172: ローカル変数またはテンポラリのアドレスを返します
+c:\users\のすりばー\desktop\gamepg2\othellogame\gameboard.cpp(84): warning C4172: ローカル変数またはテンポラリのアドレスを返します
   OthelloGame.vcxproj -> C:\Users\のすりばー\Desktop\GamePG2\OthelloGame\Debug\OthelloGame.exe

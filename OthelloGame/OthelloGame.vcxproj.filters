@@ -54,6 +54,21 @@
     <ClCompile Include="PieceBlack.cpp">
       <Filter>ソース ファイル\Piece</Filter>
     </ClCompile>
+    <ClCompile Include="PieceChar1.cpp">
+      <Filter>ソース ファイル\Piece</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceChar2.cpp">
+      <Filter>ソース ファイル\Piece</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceChar3.cpp">
+      <Filter>ソース ファイル\Piece</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceChar4.cpp">
+      <Filter>ソース ファイル\Piece</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceTray.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameScene.h">
@@ -85,6 +100,21 @@
     </ClInclude>
     <ClInclude Include="PieceWhite.h">
       <Filter>ヘッダー ファイル\Piece</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceChar1.h">
+      <Filter>ヘッダー ファイル\Piece</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceChar2.h">
+      <Filter>ヘッダー ファイル\Piece</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceChar3.h">
+      <Filter>ヘッダー ファイル\Piece</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceChar4.h">
+      <Filter>ヘッダー ファイル\Piece</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceTray.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 #pragma once
 #include "GamePiece.h"
 
+class PieceTray;
 class MouseCtl;
 class GameBoard;
 
@@ -8,6 +9,7 @@ class Player
 {
 public:
 	Player();
+	Player(const Vector2& pCnt);
 	~Player();
 	void Update();	
 	PIECE_ST pGetID(void);
@@ -15,5 +17,6 @@ public:
 private:
 	PIECE_ST id;
 	static int playerCnt;
+	std::unique_ptr<PieceTray> pTray;
 };
 

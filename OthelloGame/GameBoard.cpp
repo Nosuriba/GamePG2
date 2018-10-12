@@ -28,6 +28,7 @@ GameBoard::~GameBoard()
 bool GameBoard::CommonBoard(Vector2 vec)
 {
 	pPos = { 0,0 };
+	/* ピースを格納するためのサイズを設定している */
 	pieceData.resize(vec.y * vec.x);
 	data.resize(vec.y);
 	for (unsigned int i = 0; i < data.size(); i++)
@@ -55,15 +56,16 @@ Vector2 GameBoard::ChangeScrToPos(const Vector2& pPos)
 Vector2 GameBoard::ChangeTblToScr(const Vector2& pNum)
 {
 	/* 演算結果がおかしい場合修正を行う */
-	return Vector2((pNum.x * PIECE_SIZE) + BOARD_OFFSET_X, (pNum.y * PIECE_SIZE) + BOARD_OFFSET_Y);
+	return Vector2((pNum.x * PIECE_SIZE), (pNum.y * PIECE_SIZE));
 }
 
 void GameBoard::PutPieceField(void)
 {
+	Vector2 drawOffset = { BOARD_OFFSET_X, BOARD_OFFSET_Y };
 	/* ピースが置けるを塗りつぶす(仮実装)*/
 	for (auto pNum : putPieceTbl)
 	{
-		DrawBox(ChangeTblToScr(pNum), ChangeTblToScr(pNum) + Vector2(PIECE_SIZE, PIECE_SIZE), 0xc8c800, true);
+		DrawBox(ChangeTblToScr(pNum) + drawOffset, ChangeTblToScr(pNum) + Vector2(PIECE_SIZE, PIECE_SIZE) + drawOffset, 0xc8c800, true);
 	}
 	putPieceTbl.clear();
 }
@@ -73,12 +75,17 @@ void GameBoard::Update(void)
 	
 }
 
-Vector2 GameBoard::GetDataSize(void)
+const Vector2& GameBoard::GetDataSize(void)
 {
-	return Vector2(data.size(), data.size());
+	return Vector2((int)(pieceData.size() / data.size()), (int)(data.size()));
 }
 
-void GameBoard::SetPiece(const Vector2& pNum, bool pFlag)
+const Vector2& GameBoard::GetBoardSize(void)
+{
+	return Vector2((int)(pieceData.size() / data.size()), (int)(data.size()));
+}
+
+void GameBoard::StartPiece(const Vector2& pNum, bool pFlag)
 {
 	/* 時間があったら、現在配置しているピースの白黒をbool型の引数によって変更できるようにしたい*/
 	int initPieceST = 0;
@@ -103,9 +110,8 @@ void GameBoard::SetPiece(const Vector2& pNum, bool pFlag)
 
 				/* ピースの配置位置を設定している */
 				pPos = ChangeTblToScr(pNum + Vector2(x, y));
-				auto tmp = AddObjList(std::make_shared<GamePiece>(pPos));
+				auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), (PIECE_ST)initPieceST));
 				data[pNum.y + y][pNum.x + x] = (*tmp);
-				data[pNum.y + y][pNum.x + x].lock()->SetState((PIECE_ST)initPieceST);
 			}
 		}
 	}
@@ -124,9 +130,8 @@ bool GameBoard::SetPiece(const Vector2& vec, PIECE_ST id)
 		if (data[pNum.y][pNum.x].expired())
 		{
 			rtnFlag = true;
-			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos));
+			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), id));
 			data[pNum.y][pNum.x] = (*tmp);
-			data[pNum.y][pNum.x].lock()->SetState(id);
 		}
 	}
 
@@ -135,13 +140,14 @@ bool GameBoard::SetPiece(const Vector2& vec, PIECE_ST id)
 
 void GameBoard::ResultPiece(int pCntB, int pCntW)
 {
+	Vector2 pPos = {0,0};
 	for (int b = 0; b < pCntB; b++)
 	{
 		if (data[b / data.size()][b % data.size()].expired())
 		{
-			auto tmp = AddObjList(std::make_shared<GamePiece>(ChangeTblToScr(Vector2(b % data.size(), b / data.size()))));
+			pPos = ChangeTblToScr(Vector2(b % data.size(), b / data.size()));
+			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), PIECE_B));
 			data[b / data.size()][b % data.size()] = (*tmp);
-			data[b / data.size()][b % data.size()].lock()->SetState(PIECE_B);
 		}
 	}
 
@@ -149,9 +155,9 @@ void GameBoard::ResultPiece(int pCntB, int pCntW)
 	{
 		if (data[(w / data.size())][w % data.size()].expired())
 		{
-			auto tmp = AddObjList(std::make_shared<GamePiece>(ChangeTblToScr(Vector2(w % data.size(), w / data.size()))));
+			pPos = ChangeTblToScr(Vector2(w % data.size(), w / data.size()));
+			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), PIECE_W));
 			data[(w / data.size())][w % data.size()] = (*tmp);
-			data[(w / data.size())][w % data.size()].lock()->SetState(PIECE_W);
 		}
 	}
 }
@@ -218,7 +224,6 @@ bool GameBoard::CheckReverse(const Vector2& vec, PIECE_ST id)
 				}
 			}
 		}
-
 	}
 	return rtnFlag;
 }

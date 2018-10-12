@@ -3,6 +3,7 @@
 #include "MouseCtl.h"
 #include "GameBoard.h"
 #include "GamePiece.h"
+#include "PieceTray.h"
 
 int Player::playerCnt = 0;
 
@@ -11,6 +12,15 @@ Player::Player()
 	/* 各プレイヤーに色の指定を行っている */
 	playerCnt++;
 	id = (PIECE_ST)playerCnt;
+	// pTray = std::make_unique<PieceTray>(id);
+}
+
+Player::Player(const Vector2& pCnt)
+{
+	/* 各プレイヤーに色の指定を行っている */
+	playerCnt++;
+	id = (PIECE_ST)playerCnt;
+	pTray = std::make_unique<PieceTray>(id, pCnt);
 }
 
 Player::~Player()

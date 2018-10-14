@@ -26,6 +26,8 @@ public:
 		return *s_Instance;
 	}
 	void Run();
+	/*Vector2 GetScreenSize(void);*/	// ゲーム画面のサイズを取得するための関数（これを使ってボードの種類を行っている）
+	Vector2 GetActiveBoardSize(void);
 private:
 
 	/* GameSceneクラスのdeleterを設定している */
@@ -63,6 +65,7 @@ private:
 	int GameDestroy();
 	int ResultInit();
 	int ResultMain();
+
 	int (GameScene::*gScenePtr)(void);
 
 	int pieceW = 0;

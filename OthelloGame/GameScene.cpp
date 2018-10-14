@@ -30,6 +30,11 @@ void GameScene::Run()
 	/*GameSceneDeleter(s_Instance);*/
 }
 
+Vector2 GameScene::GetActiveBoardSize(void)
+{
+	return boardPtr->GetBoardSize();
+}
+
 int GameScene::UpDate()
 {
 	return 0;
@@ -37,7 +42,7 @@ int GameScene::UpDate()
 
 void GameScene::MakePlayer(void)
 {
-	playerList.push_back(std::make_shared<Player>(boardPtr->GetBoardSize()));
+	playerList.push_back(std::make_shared<Player>());
 }
 
 void GameScene::NextPlayer(void)

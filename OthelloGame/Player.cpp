@@ -12,15 +12,7 @@ Player::Player()
 	/* 各プレイヤーに色の指定を行っている */
 	playerCnt++;
 	id = (PIECE_ST)playerCnt;
-	// pTray = std::make_unique<PieceTray>(id);
-}
-
-Player::Player(const Vector2& pCnt)
-{
-	/* 各プレイヤーに色の指定を行っている */
-	playerCnt++;
-	id = (PIECE_ST)playerCnt;
-	pTray = std::make_unique<PieceTray>(id, pCnt);
+	pTray = std::make_unique<PieceTray>(id, Vector2(0,0));
 }
 
 Player::~Player()

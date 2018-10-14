@@ -9,7 +9,6 @@ class Player
 {
 public:
 	Player();
-	Player(const Vector2& pCnt);
 	~Player();
 	void Update();	
 	PIECE_ST pGetID(void);

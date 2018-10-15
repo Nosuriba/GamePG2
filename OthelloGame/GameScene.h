@@ -26,7 +26,7 @@ public:
 		return *s_Instance;
 	}
 	void Run();
-	/*Vector2 GetScreenSize(void);*/	// ゲーム画面のサイズを取得するための関数（これを使ってボードの種類を行っている）
+	Vector2 GetScreenSize(void);	// ゲーム画面のサイズを取得するための関数
 	Vector2 GetActiveBoardSize(void);
 private:
 
@@ -49,8 +49,10 @@ private:
 	void NextPlayer(void);
 	bool AutoPassPlayer(void);
 
-	/* ピースが関わっているもの */
+	/* ボードに配置されたピースの個数をカウントしている */
 	void PutPieceST(void);
+
+	/* 勝利したプレイヤーを判定している */
 	PIECE_ST WinJudge(int pCntB, int pCntW);
 	void DrawWinner(PIECE_ST pState);
 

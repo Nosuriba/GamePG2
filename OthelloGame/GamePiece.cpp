@@ -1,4 +1,4 @@
-#include <DxLib.h>
+//#include <DxLib.h>
 #include "GamePiece.h"
 #include "ImageMng.h"
 #include "PieceWhite.h"
@@ -58,6 +58,11 @@ bool GamePiece::SetPos(const Vector2 & pos)
 	this->pos = pos;
 	return true;
 }
+#define PIECE_SIZE 64		/* ‰æ‘œ‚Å•`‰æ‚ğ‚µ‚Ä‚¢‚é‚Ì‚ÅA‚±‚±‚ÌC³‚ğs‚¤‚æ‚¤‚É‚·‚é*/
+int GamePiece::GetSize(void)
+{
+	return PIECE_SIZE;
+}
 
 bool GamePiece::SetDrawOffset(const Vector2 & drawOffset)
 {
@@ -83,6 +88,13 @@ void GamePiece::Draw(void)
 	{
 	}
 }
+
+int DrawBox(Vector2 sPos, Vector2 ePos, unsigned int color, int fillFlag)
+{
+	DxLib::DrawBox(sPos.x, sPos.y, ePos.x, ePos.y, color, fillFlag);
+	return 0;
+}
+
 
 
 /*color = (**pState.begin()).GetDrawColor();

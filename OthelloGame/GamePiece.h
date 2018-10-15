@@ -1,4 +1,5 @@
 #pragma once
+#include <DxLib.h>
 #include <vector>
 #include <memory>
 #include <list>
@@ -22,6 +23,7 @@ public:
 	PIECE_ST GetState(void);
 	void SetState(PIECE_ST pState);
 	bool SetPos(const Vector2& pos);
+	int GetSize(void);
 	bool SetDrawOffset(const Vector2& drawOffset);
 	void Draw(void);
 private:
@@ -29,4 +31,6 @@ private:
 	Vector2		 pos;
 	Vector2		 drawOffset;
 };
+
+int DrawBox(Vector2 sPos, Vector2 ePos, unsigned int color, int fillFlag);
 

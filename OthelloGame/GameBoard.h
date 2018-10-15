@@ -17,6 +17,7 @@ public:
 
 	const Vector2& GetDataSize(void);
 	const Vector2& GetBoardSize(void);
+
 	/* ピースの初期配置を設定して、ピースを配置する */
 	void StartPiece(const Vector2& pNum, bool pFlag);		
 	/* 指定した場所にピースを配置する */
@@ -30,7 +31,7 @@ public:
 	bool CheckReverse(const Vector2& vec, PIECE_ST id);
 	bool CheckReverse(const Vector2& ckNum, const Vector2& pNum, PIECE_ST id);
 
-	/* ピースの置ける位置があるかどうかの検索 */
+	/* ピースが置けるかの検索 */
 	bool CheckPutPieceFlag(PIECE_ST id);
 	PIECE_ST CheckPutPieceST(int x, int y);
 	void Draw(void);
@@ -48,6 +49,7 @@ private:
 	void PutPieceField(void);
 
 	piece_list  pieceList;
+	/* ピース処理関係のメンバ変数 */
 	std::list<Vector2> reverseTbl;
 	std::list<Vector2> putPieceTbl;
 	std::vector<std::weak_ptr<GamePiece>*> data;
@@ -59,4 +61,4 @@ private:
 };
 
 int DrawLine(Vector2 sPos, Vector2 ePos, unsigned int color, int thickNess);
-int DrawBox (Vector2 sPos, Vector2 ePos, unsigned int color, int fillFlag);
+//int DrawBox (Vector2 sPos, Vector2 ePos, unsigned int color, int fillFlag);

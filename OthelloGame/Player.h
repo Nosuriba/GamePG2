@@ -10,7 +10,8 @@ class Player
 public:
 	Player();
 	~Player();
-	void Update();	
+	void Update();
+	bool Draw(void);
 	PIECE_ST pGetID(void);
 	bool TurnAct(const MouseCtl& mouse, GameBoard& gBoard);
 private:

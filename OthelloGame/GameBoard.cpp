@@ -365,8 +365,8 @@ int DrawLine(Vector2 sPos, Vector2 ePos, unsigned int color, int thickNess)
 	return 0;
 }
 
-int DrawBox(Vector2 sPos, Vector2 ePos, unsigned int color, int fillFlag)
-{
-	DxLib::DrawBox(sPos.x, sPos.y, ePos.x, ePos.y, color, fillFlag);
-	return 0;
-}
+//int DrawBox(Vector2 sPos, Vector2 ePos, unsigned int color, int fillFlag)
+//{
+//	DxLib::DrawBox(sPos.x, sPos.y, ePos.x, ePos.y, color, fillFlag);
+//	return 0;
+//}

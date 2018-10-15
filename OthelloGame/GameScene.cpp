@@ -30,6 +30,11 @@ void GameScene::Run()
 	/*GameSceneDeleter(s_Instance);*/
 }
 
+Vector2 GameScene::GetScreenSize(void)
+{
+	return Vector2(SCREEN_SIZE_X, SCREEN_SIZE_Y);
+}
+
 Vector2 GameScene::GetActiveBoardSize(void)
 {
 	return boardPtr->GetBoardSize();
@@ -197,7 +202,6 @@ int GameScene::GameMain()
 		PutPieceST();
 		NextPlayer();
 	}
-
 	turnPLpiece->SetState((*player)->pGetID());
 
 	if (!boardPtr->CheckPutPieceFlag((*player)->pGetID()))
@@ -209,14 +213,18 @@ int GameScene::GameMain()
 		}
 	}
 	mousePtr->Update();
-	/* ƒQ[ƒ€’†‚Ìî•ñ‚ð•`‰æ‚µ‚Ä‚¢‚é */
 	DxLib::ClsDrawScreen();
+	/* ƒQ[ƒ€’†‚Ìî•ñ‚ð•`‰æ‚µ‚Ä‚¢‚é */
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
-	DxLib::DrawExtendString(0, 0,1.5f, 1.5f, "ƒQ[ƒ€ƒ‚[ƒh", 0xffffff);
-	DxLib::DrawExtendFormatString(0, 170,1.3f, 1.3f, 0xfffffff, "”’ : %d", pieceW);
-	DxLib::DrawExtendFormatString(0, 200,1.3f, 1.3f, 0xfffffff, "• : %d", pieceB);
+	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "ƒQ[ƒ€ƒ‚[ƒh", 0xffffff);
+	DxLib::DrawExtendFormatString(0, 170, 1.3f, 1.3f, 0xfffffff, "”’ : %d", pieceW);
+	DxLib::DrawExtendFormatString(0, 200, 1.3f, 1.3f, 0xfffffff, "• : %d", pieceB);
 	boardPtr->Draw();
-	turnPLpiece->Draw();
+	for (auto data : playerList)
+	{
+		(*data).Draw();
+	}
+	/*turnPLpiece->Draw();*/
 	DxLib::ScreenFlip();
 	return 0;
 }

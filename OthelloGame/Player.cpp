@@ -12,7 +12,7 @@ Player::Player()
 	/* 各プレイヤーに色の指定を行っている */
 	playerCnt++;
 	id = (PIECE_ST)playerCnt;
-	pTray = std::make_unique<PieceTray>(id, Vector2(0,0));
+	pTray = std::make_unique<PieceTray>(id);
 }
 
 Player::~Player()
@@ -22,7 +22,17 @@ Player::~Player()
 
 void Player::Update()
 {
-	
+}
+
+bool Player::Draw(void)
+{
+	/* pTrayの中身が入っていれば描画を行う */
+	if (pTray)
+	{
+		(*pTray).Draw();
+		return true;
+	}
+	return false;
 }
 
 PIECE_ST Player::pGetID(void)

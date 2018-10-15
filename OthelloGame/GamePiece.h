@@ -23,7 +23,7 @@ public:
 	PIECE_ST GetState(void);
 	void SetState(PIECE_ST pState);
 	bool SetPos(const Vector2& pos);
-	int GetSize(void);
+	int  GetSize(void);
 	bool SetDrawOffset(const Vector2& drawOffset);
 	void Draw(void);
 private:

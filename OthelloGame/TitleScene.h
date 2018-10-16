@@ -6,5 +6,7 @@ class TitleScene :
 public:
 	TitleScene();
 	~TitleScene();
+	virtual int Update();
+	virtual void Draw();
 };
 

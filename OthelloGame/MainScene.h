@@ -6,5 +6,7 @@ class MainScene :
 public:
 	MainScene();
 	~MainScene();
+	virtual int Update();
+	virtual void Draw();
 };
 

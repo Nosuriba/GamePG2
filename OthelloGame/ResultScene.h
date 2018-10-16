@@ -6,5 +6,7 @@ class ResultScene :
 public:
 	ResultScene();
 	~ResultScene();
+	virtual int Update();
+	virtual void Draw();
 };
 

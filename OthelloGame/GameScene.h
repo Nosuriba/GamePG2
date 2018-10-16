@@ -44,15 +44,15 @@ private:
 
 	int UpDate();
 
-	/* プレイヤー関係の処理*/
+	/* プレイヤー関係の処理 (ゲーム)*/
 	void MakePlayer(void);
 	void NextPlayer(void);
 	bool AutoPassPlayer(void);
 
-	/* ボードに配置されたピースの個数をカウントしている */
+	/* ボードに配置されたピースの個数をカウントしている(ゲーム) */
 	void PutPieceST(void);
 
-	/* 勝利したプレイヤーを判定している */
+	/* 勝利したプレイヤーを判定している(タイトル) */
 	PIECE_ST WinJudge(int pCntB, int pCntW);
 	void DrawWinner(PIECE_ST pState);
 
@@ -70,6 +70,7 @@ private:
 
 	int (GameScene::*gScenePtr)(void);
 
+	/* ゲームとタイトル */
 	int pieceW = 0;
 	int pieceB = 0;
 
@@ -81,3 +82,6 @@ private:
 	player_list playerList;
 	player_list::iterator player;
 };
+
+/* ゲームシーンクラスに必要な関数や変数は残しておき、
+	移動しても大丈夫なものはそれぞれのシーンの情報を渡すようにする*/

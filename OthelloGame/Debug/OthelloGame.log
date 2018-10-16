@@ -1,2 +1,5 @@
-﻿  SceneState.cpp
+﻿  TitleScene.cpp
+  ResultScene.cpp
+  MainScene.cpp
+  コードを生成中...
   OthelloGame.vcxproj -> C:\Users\のすりばー\Desktop\GamePG2\OthelloGame\Debug\OthelloGame.exe

@@ -28,15 +28,22 @@ PieceTray::~PieceTray()
 bool PieceTray::Draw(void)
 {
 	int cnt = 0;
+
+	if (turnFlag)
+	{
+		/* Vector2 + intの演算子のオーバーロードを作っておく(作った)*/
+		DrawBox(pos - 5, pos + Vector2(70, 320) + 5, 0xeeeeee, true);
+	}
+
 	DrawBox(pos, pos + Vector2(70, 320), 0x00aa00, true);
 
 	for (auto data : pieceList)
 	{
-		if (cnt < 4)
+		/* トレイの上に配置するピースの描画を行っている */
+		if (cnt < 5)
 		{
 			cnt++;
-			/* ピースのサイズ取得などの部分を修正しておく */
-			(*data).SetPos(Vector2(0, ((*data).GetSize()) * cnt));
+			(*data).SetPos(Vector2(0, ((*data).GetSize() * cnt) - (*data).GetSize()));
 			(*data).Draw();
 		}
 		
@@ -44,9 +51,14 @@ bool PieceTray::Draw(void)
 	return true;
 }
 
+bool PieceTray::SetTurnFlag(bool flag)
+{
+	turnFlag = flag;
+	return turnFlag;
+}
+
 bool PieceTray::AddPiece(void)
 {
 	pieceList.push_back(std::make_shared<GamePiece>(Vector2(0,0), pos, pState));
-
 	return true;
 }

@@ -128,6 +128,7 @@
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="ImageMng.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="MouseCtl.cpp" />
     <ClCompile Include="PieceBlack.cpp" />
     <ClCompile Include="PieceChar1.cpp" />
@@ -138,6 +139,9 @@
     <ClCompile Include="PieceTray.cpp" />
     <ClCompile Include="PieceWhite.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ResultScene.cpp" />
+    <ClCompile Include="SceneState.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +149,7 @@
     <ClInclude Include="GamePiece.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="ImageMng.h" />
+    <ClInclude Include="MainScene.h" />
     <ClInclude Include="MouseCtl.h" />
     <ClInclude Include="PieceBlack.h" />
     <ClInclude Include="PieceChar1.h" />
@@ -155,6 +160,9 @@
     <ClInclude Include="PieceTray.h" />
     <ClInclude Include="PieceWhite.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="ResultScene.h" />
+    <ClInclude Include="SceneState.h" />
+    <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <ItemGroup>

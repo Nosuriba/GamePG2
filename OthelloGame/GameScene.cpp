@@ -52,21 +52,18 @@ void GameScene::MakePlayer(void)
 
 void GameScene::NextPlayer(void)
 {
+	(*player)->SetTurn(false);
 	player++;
 	if (player == playerList.end())
 	{
 		player = playerList.begin();
 	}
+	(*player)->SetTurn(true);
 }
 
 bool GameScene::AutoPassPlayer(void)
 {
-	player++;
-	if (player == playerList.end())
-	{
-		player = playerList.begin();
-	}
-
+	NextPlayer();
 	if (boardPtr->CheckPutPieceFlag((*player)->pGetID()))
 	{
 		return true;
@@ -203,6 +200,7 @@ int GameScene::GameMain()
 		NextPlayer();
 	}
 	turnPLpiece->SetState((*player)->pGetID());
+	/* pTrayの情報を参照できるようにする */
 
 	if (!boardPtr->CheckPutPieceFlag((*player)->pGetID()))
 	{
@@ -254,6 +252,7 @@ int GameScene::ResultMain()
 	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f,"リザルト", 0xffffff);
 	boardPtr->Draw();
 	DrawWinner(WinJudge(pieceB, pieceW));
+	/* ピースの個数を描画している部分を修正しておく(関数化しておくのもありかも)*/
 	DxLib::DrawExtendFormatString(0, 170, 1.3f, 1.3f, 0xfffffff, "白 : %d", pieceW);
 	DxLib::DrawExtendFormatString(0, 200, 1.3f, 1.3f, 0xfffffff, "黒 : %d", pieceB);
 	DxLib::ScreenFlip();

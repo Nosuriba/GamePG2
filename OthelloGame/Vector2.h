@@ -35,12 +35,17 @@ public:
 };
 
 /* ƒxƒNƒgƒ‹“¯m‚Ì‰‰Z */
-// ‰ÁZ
+/* Vector2 + Vector2 */
 Vector2 operator+(const Vector2& i, const Vector2& j);
-// Œ¸Z
+/* Vector2 + int */
+Vector2 operator+(const Vector2& i, int j);
+/* Vector2 - Vector2 */
 Vector2 operator-(const Vector2& i, const Vector2& j);
-// æZ
+/* Vector2 - int */
+Vector2 operator-(const Vector2& i, int j);
+/* Vector2 * int */
 Vector2 operator*(const Vector2& i, int k);
+/* int * Vector2 */
 Vector2 operator*(int k, const Vector2& i);
 // œZ
 Vector2 operator/(const Vector2& i, int k);

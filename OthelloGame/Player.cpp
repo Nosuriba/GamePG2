@@ -42,14 +42,19 @@ PIECE_ST Player::pGetID(void)
 
 bool Player::TurnAct(const MouseCtl& mouse, GameBoard& gBoard)
 {
-	bool rtnFlag = false;
+	(*pTray).SetTurnFlag(true);
 	if (mouse.GetButton()[PUSH_NOW] & (~mouse.GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 	{
 		if (gBoard.CheckReverse(mouse.GetPoint(), id))
 		{
 			gBoard.SetPiece(mouse.GetPoint(), id);
-			rtnFlag = true;
+			return true;
 		}
 	}
-	return rtnFlag;
+	return false;
+}
+
+bool Player::SetTurn(bool flag)
+{
+	return (*pTray).SetTurnFlag(flag);
 }

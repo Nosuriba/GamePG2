@@ -122,12 +122,31 @@ Vector2 operator+(const Vector2 & i, const Vector2 & j)
 	return vec;
 }
 
+Vector2 operator+(const Vector2 & i, int j)
+{
+	Vector2 vec;
+	vec.x = i.x + j;
+	vec.y = i.y + j;
+
+	return vec;
+}
+
 Vector2 operator-(const Vector2 & i, const Vector2 & j)
 {
 	Vector2 vec;
 
 	vec.x = i.x - j.x;
 	vec.y = i.y - j.y;
+
+	return vec;
+}
+
+Vector2 operator-(const Vector2 & i, int j)
+{
+	Vector2 vec;
+
+	vec.x = i.x - j;
+	vec.y = i.y - j;
 
 	return vec;
 }

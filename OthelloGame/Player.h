@@ -14,6 +14,7 @@ public:
 	bool Draw(void);
 	PIECE_ST pGetID(void);
 	bool TurnAct(const MouseCtl& mouse, GameBoard& gBoard);
+	bool SetTurn(bool flag);
 private:
 	PIECE_ST id;
 	static int playerCnt;

@@ -4,6 +4,7 @@
 #include "MouseCtl.h"
 #include "Player.h"
 #include "ImageMng.h"
+#include "SceneState.h"
 
 #define SCREEN_SIZE_X (800)
 #define SCREEN_SIZE_Y (600)
@@ -187,7 +188,6 @@ int GameScene::GameInit()
 	MakePlayer();
 	MakePlayer();
 	player = playerList.begin();
-	turnPLpiece = std::make_unique<GamePiece>(Vector2(0, 50), Vector2(0, 0), (*player)->pGetID());
 	return 0;
 }
 
@@ -199,7 +199,6 @@ int GameScene::GameMain()
 		PutPieceST();
 		NextPlayer();
 	}
-	turnPLpiece->SetState((*player)->pGetID());
 	/* pTray‚Ìî•ñ‚ðŽQÆ‚Å‚«‚é‚æ‚¤‚É‚·‚é */
 
 	if (!boardPtr->CheckPutPieceFlag((*player)->pGetID()))

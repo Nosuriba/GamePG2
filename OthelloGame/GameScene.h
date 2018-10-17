@@ -10,6 +10,7 @@
 class GameBoard;
 class MouseCtl;
 class Player;
+class SceneState;
 
 #define LpGameScene (GameScene::GetInstance())
 
@@ -70,6 +71,9 @@ private:
 
 	int (GameScene::*gScenePtr)(void);
 
+	/* 基底クラス側で、取得用と渡す用の関数を作って
+	　 ゲームモードの終了時に渡してあげて、リザルトで取得するようにする 
+	   (修正する可能性あり)*/
 	/* ゲームとタイトル */
 	int pieceW = 0;
 	int pieceB = 0;
@@ -77,7 +81,7 @@ private:
 	static std::unique_ptr<GameScene, GameSceneDeleter>	s_Instance;
 	std::unique_ptr<GameBoard> boardPtr;
 	std::unique_ptr<MouseCtl>  mousePtr;
-	std::unique_ptr<GamePiece> turnPLpiece;
+	std::unique_ptr<SceneState> gScene;
 
 	player_list playerList;
 	player_list::iterator player;

@@ -9,11 +9,11 @@ class TitleScene :
 public:
 	TitleScene();
 	~TitleScene();
-	virtual int Update();
-	virtual void Draw();
+	bool Update();
+	void Draw();
 private:
 	int TitleInit();
-	int TitleMain();
+	bool TitleMain();
 
 	std::unique_ptr<MouseCtl> mousePtr;
 };

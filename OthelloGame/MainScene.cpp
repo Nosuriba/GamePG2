@@ -13,7 +13,7 @@ MainScene::~MainScene()
 {
 }
 
-int MainScene::Update()
+bool MainScene::Update()
 {
 	return 0;
 }

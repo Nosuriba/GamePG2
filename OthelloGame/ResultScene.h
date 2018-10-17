@@ -11,8 +11,8 @@ class ResultScene :
 public:
 	ResultScene();
 	~ResultScene();
-	virtual int Update();
-	virtual void Draw();
+	bool Update();
+	void Draw();
 	
 private:
 	PIECE_ST WinJudge(int pCntB, int pCntW);

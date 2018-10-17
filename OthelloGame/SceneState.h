@@ -8,7 +8,7 @@ class SceneState
 {
 public:
 	virtual ~SceneState() = 0;
-	virtual int Update()  = 0;
+	virtual bool Update()  = 0;
 	virtual void Draw()   = 0;
 protected:
 	/* リザルトシーンに渡すためのピースの個数 (修正する可能性あり) */

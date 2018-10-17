@@ -45,29 +45,32 @@ private:
 
 	int UpDate();
 
-	/* プレイヤー関係の処理 (ゲーム)*/
-	void MakePlayer(void);
-	void NextPlayer(void);
-	bool AutoPassPlayer(void);
+	///* プレイヤー関係の処理 (ゲーム)*/
+	//void MakePlayer(void);
+	//void NextPlayer(void);
+	//bool AutoPassPlayer(void);
 
-	/* ボードに配置されたピースの個数をカウントしている(ゲーム) */
-	void PutPieceST(void);
+	///* ボードに配置されたピースの個数をカウントしている(ゲーム) */
+	//void PutPieceST(void);
 
-	/* 勝利したプレイヤーを判定している(タイトル) */
-	PIECE_ST WinJudge(int pCntB, int pCntW);
-	void DrawWinner(PIECE_ST pState);
+	///* 勝利したプレイヤーを判定している(タイトル) */
+	//PIECE_ST WinJudge(int pCntB, int pCntW);
+	//void DrawWinner(PIECE_ST pState);
 
 	int SysInit();
 	int SysDestroy();
 
 	/* ゲームシーン関係の関数 */
-	int TitleInit();
+	int TitleUpdate();
+	int MainUpdate();
+	int ResultUpdate();
+	/*int TitleInit();
 	int TitleMain();
 	int GameInit();
 	int GameMain();
 	int GameDestroy();
 	int ResultInit();
-	int ResultMain();
+	int ResultMain();*/
 
 	int (GameScene::*gScenePtr)(void);
 

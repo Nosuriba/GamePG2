@@ -11,7 +11,7 @@ ResultScene::~ResultScene()
 {
 }
 
-int ResultScene::Update()
+bool ResultScene::Update()
 {
 	return 0;
 }

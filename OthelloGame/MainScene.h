@@ -14,8 +14,8 @@ class MainScene :
 public:
 	MainScene();
 	~MainScene();
-	virtual int Update();
-	virtual void Draw();
+	bool Update();
+	void Draw();
 private:
 	int GameInit();
 	int GameMain();

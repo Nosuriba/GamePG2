@@ -1,2 +1,4 @@
-﻿  GameScene.cpp
+﻿cl : コマンド ライン warning D9028: 簡易リビルド時のエラーです、通常のビルドに戻します
+  TitleScene.cpp
+c:\users\のすりばー\desktop\gamepg2\othellogame\titlescene.cpp(19): warning C4717: 'TitleScene::Update': すべてのコントロールのパス、関数を回帰するとランタイム スタック オーバーフローが発生します。
   OthelloGame.vcxproj -> C:\Users\のすりばー\Desktop\GamePG2\OthelloGame\Debug\OthelloGame.exe

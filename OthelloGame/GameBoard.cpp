@@ -8,7 +8,7 @@
 #define BOARD_OFFSET_X	((PIECE_SIZE * 2) + (PIECE_SIZE / 4))
 #define BOARD_OFFSET_Y	(PIECE_SIZE)
 #define DEF_BOARD_CNT	(8)
-/* 盤面のサイズが変わる可能性があるので、この設定に修正が入る可能性がある*/
+/* サイズの変更があれば変える可能性あり*/
 #define BOARD_SIZE		(PIECE_SIZE * DEF_BOARD_CNT)
 
 GameBoard::GameBoard()
@@ -28,7 +28,7 @@ GameBoard::~GameBoard()
 bool GameBoard::CommonBoard(Vector2 vec)
 {
 	pPos = { 0,0 };
-	/* ピースを格納するためのサイズを設定している */
+	/* ピースを格納するためのサイズを取得している */
 	pieceData.resize(vec.y * vec.x);
 	data.resize(vec.y);
 	for (unsigned int i = 0; i < data.size(); i++)
@@ -48,31 +48,27 @@ auto GameBoard::AddObjList(piece_ptr && objPtr)
 	return itr;
 }
 
+/* 画面サイズをクリックした座標に変換している */
 Vector2 GameBoard::ChangeScrToPos(const Vector2& pPos)
 {
 	return Vector2((pPos.x - BOARD_OFFSET_X), (pPos.y - BOARD_OFFSET_Y));
 }
 
+/* データサイズを画面サイズに変換している*/
 Vector2 GameBoard::ChangeTblToScr(const Vector2& pNum)
 {
-	/* 演算結果がおかしい場合修正を行う */
 	return Vector2((pNum.x * PIECE_SIZE), (pNum.y * PIECE_SIZE));
 }
 
 void GameBoard::PutPieceField(void)
 {
 	Vector2 drawOffset = { BOARD_OFFSET_X, BOARD_OFFSET_Y };
-	/* ピースが置けるを塗りつぶす(仮実装)*/
+	/* ピースが置ける位置の描画をしている */
 	for (auto pNum : putPieceTbl)
 	{
 		DrawBox(ChangeTblToScr(pNum) + drawOffset + 1, ChangeTblToScr(pNum) + Vector2(PIECE_SIZE, PIECE_SIZE) + drawOffset - 1, 0xc8c800, true);
 	}
 	putPieceTbl.clear();
-}
-
-void GameBoard::Update(void)
-{
-	
 }
 
 Vector2 GameBoard::GetDataSize(void)
@@ -143,10 +139,11 @@ PutPiece GameBoard::GetPieceCnt(void)
 	return piece;
 }
 
-void GameBoard::ResultPiece(int pCntB, int pCntW)
+void GameBoard::ResultPiece(PutPiece piece)
 {
-	Vector2 pPos = {0,0};
-	for (int b = 0; b < pCntB; b++)
+	pPos = {0,0};
+	/* 黒ピースの並び替えを行っている */
+	for (int b = 0; b < piece.b; b++)
 	{
 		if (data[b / data.size()][b % data.size()].expired())
 		{
@@ -155,8 +152,8 @@ void GameBoard::ResultPiece(int pCntB, int pCntW)
 			data[b / data.size()][b % data.size()] = (*tmp);
 		}
 	}
-
-	for (int w = pCntB; w < pCntB + pCntW; w++)
+	/* 白ピースの並び替えを行っている*/
+	for (int w = piece.b; w < piece.b + piece.w; w++)
 	{
 		if (data[(w / data.size())][w % data.size()].expired())
 		{
@@ -216,6 +213,7 @@ bool GameBoard::CheckReverse(const Vector2& vec, PIECE_ST id)
 	bool rtnFlag = false;
 	Vector2 pNum = ChangeScrToPos(vec);
 
+	/* クリックした位置にピースが配置できるかの確認を行っている */
 	if (pNum >= Vector2(0, 0) & pNum < Vector2(data.size() * PIECE_SIZE, data.size() * PIECE_SIZE))
 	{
 		pNum /= PIECE_SIZE;

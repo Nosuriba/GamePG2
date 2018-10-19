@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneState.h"
+#include "GamePiece.h"
 
 class GameBoard;
 class Player;
@@ -24,15 +25,15 @@ private:
 	void NextPlayer(void);
 	bool AutoPassPlayer(void);
 
-	void PutPieceST(void);
+	/* 配置されたピースの個数をカウントするための関数 */
+	void PutPieceCnt(void);
 
 	Vector2 boardSize;
+	PutPiece piece;
 
 	player_list playerList;
 	player_list::iterator player;
 	std::shared_ptr<GameBoard> boardPtr;
 
-	int pieceW;
-	int pieceB;
 };
 

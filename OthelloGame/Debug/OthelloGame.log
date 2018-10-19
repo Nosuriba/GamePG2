@@ -1,15 +1,10 @@
-﻿  SceneState.cpp
-  ResultScene.cpp
-  コードを生成中...
-  コンパイル中...
-  main.cpp
-c:\users\のすりばー\desktop\gamepg2\othellogame\main.cpp : fatal error C1041: プログラム データベース 'C:\Users\のすりばー\Desktop\GamePG2\OthelloGame\Debug\vc141.idb' を開けません。複数の CL.EXE が同じ .PDB ファイルに書き込む場合、/FS を使用してください。
+﻿  main.cpp
   TitleScene.cpp
-  Player.cpp
+  ResultScene.cpp
   PieceTray.cpp
   MainScene.cpp
   GameScene.cpp
-  GamePiece.cpp
-  GameBoard.cpp
   コードを生成中...
-cl : コマンド ライン warning D9028: 簡易リビルド時のエラーです、通常のビルドに戻します
+  スキップ中... (関連する変更は検出されませんでした)
+  GameBoard.cpp
+  OthelloGame.vcxproj -> C:\Users\のすりばー\Desktop\GamePG2\OthelloGame\Debug\OthelloGame.exe

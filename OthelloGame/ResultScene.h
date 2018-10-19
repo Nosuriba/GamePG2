@@ -3,6 +3,7 @@
 #include "GamePiece.h"
 
 class GameBoard;
+class MouseCtl;
 
 class ResultScene :
 	public SceneState
@@ -12,11 +13,14 @@ public:
 	~ResultScene();
 	void Init();
 	unique_scene Update(unique_scene own, MouseCtl& mouse);
-	
 private:
-	PutPiece piece = {0,0};
-	PIECE_ST WinJudge(int pCntB, int pCntW);
+	
+	/* èüé“ÇîªíËÇ∑ÇÈÇΩÇﬂÇÃä÷êî */
+	PIECE_ST WinJudge(PutPiece piece);
 	void DrawWinner(PIECE_ST pState);
+
+	PutPiece piece = { 0,0 };
+
 	std::shared_ptr<GameBoard> boardPtr;
 };
 

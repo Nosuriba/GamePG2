@@ -4,18 +4,19 @@
 class PieceTray
 {
 public:
-	PieceTray();
 	PieceTray(PIECE_ST pState, Vector2 boardSize);
 	~PieceTray();
-	bool Draw(void);
+	/* ターン処理を行っているプレイヤーの情報を取得している */
 	bool SetTurnFlag(bool flag);
+	bool Draw(void);
 private:
 	bool AddPiece(void);
+	
 	piece_list pieceList;
+	PIECE_ST pState = PIECE_NON;
 
-	PIECE_ST pState;
 	Vector2  pos;
-	Vector2  pCnt;
+	
 	bool	 turnFlag;
 };
 

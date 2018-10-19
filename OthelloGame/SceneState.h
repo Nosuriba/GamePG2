@@ -4,8 +4,8 @@
 #include <DxLib.h>
 #include "ImageMng.h"
 
-class MouseCtl;
 class SceneState;
+class MouseCtl;
 
 using unique_scene = std::unique_ptr<SceneState>;
 

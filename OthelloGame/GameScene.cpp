@@ -1,9 +1,6 @@
 #include <DxLib.h>
 #include "GameScene.h"
-#include "GameBoard.h"
 #include "MouseCtl.h"
-#include "Player.h"
-#include "ImageMng.h"
 #include "TitleScene.h"
 
 #define SCREEN_SIZE_X (800)

@@ -1,10 +1,10 @@
 #pragma once
 #include "SceneState.h"
 
-class TitleScene :
-	public SceneState
+class MouseCtl;
+
+struct TitleScene : SceneState
 {
-public:
 	TitleScene();
 	~TitleScene();
 	void Init();

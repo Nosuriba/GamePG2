@@ -1,6 +1,5 @@
 #pragma once
 #include <array>
-
 #include "Vector2.h"
 
 enum M_PUSH

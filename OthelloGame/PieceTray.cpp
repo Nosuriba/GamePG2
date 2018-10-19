@@ -6,12 +6,12 @@ PieceTray::PieceTray()
 	pState = PIECE_NON;
 }
 
-PieceTray::PieceTray(PIECE_ST pState)
+PieceTray::PieceTray(PIECE_ST pState, Vector2 boardSize)
 {
 	/* プレイヤーがトレイに所持しているピースの座標 */
 	this->pos = Vector2( 30, 100 ) + (Vector2(LpGameScene.GetScreenSize().x - 130, 0) * (pState == PIECE_B ? 0 : 1));
 	this->pState = pState;
-	int pieceMax = (LpGameScene.GetActiveBoardSize().x * LpGameScene.GetActiveBoardSize().y) / 2;
+	int pieceMax = (boardSize.x * boardSize.y) / 2;
 
 	/* プレイヤーが所持するピースの個数を追加している */
 	for (int p = 0; p < pieceMax; p++)

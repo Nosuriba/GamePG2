@@ -7,12 +7,12 @@
 
 int Player::playerCnt = 0;
 
-Player::Player()
+Player::Player(Vector2 boardSize)
 {
 	/* 各プレイヤーに色の指定を行っている */
 	playerCnt++;
 	id = (PIECE_ST)playerCnt;
-	pTray = std::make_unique<PieceTray>(id);
+	pTray = std::make_unique<PieceTray>(id, boardSize);
 }
 
 Player::~Player()

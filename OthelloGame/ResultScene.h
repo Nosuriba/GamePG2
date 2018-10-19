@@ -2,26 +2,21 @@
 #include "SceneState.h"
 #include "GamePiece.h"
 
-class MouseCtl;
 class GameBoard;
 
 class ResultScene :
 	public SceneState
 {
 public:
-	ResultScene();
+	ResultScene(std::shared_ptr<GameBoard> boradPtr);
 	~ResultScene();
-	bool Update();
-	void Draw();
+	void Init();
+	unique_scene Update(unique_scene own, MouseCtl& mouse);
 	
 private:
+	PutPiece piece = {0,0};
 	PIECE_ST WinJudge(int pCntB, int pCntW);
 	void DrawWinner(PIECE_ST pState);
-
-	int ResultInit();
-	int ResultMain();
-	std::unique_ptr<MouseCtl> mousePtr;
-	std::unique_ptr<GameBoard> boardPtr;
-
+	std::shared_ptr<GameBoard> boardPtr;
 };
 

@@ -1,11 +1,15 @@
 #include "MainScene.h"
+#include "ResultScene.h"
 #include "GamePiece.h"
 #include "GameBoard.h"
+#include "GameScene.h"
 #include "Player.h"
 #include "MouseCtl.h"
 
 MainScene::MainScene()
 {
+	boardPtr = std::make_shared<GameBoard>();
+	MainScene::Init();
 }
 
 
@@ -13,18 +17,62 @@ MainScene::~MainScene()
 {
 }
 
-bool MainScene::Update()
+void MainScene::Init()
 {
-	return 0;
+	boardPtr->StartPiece({ 3,3 }, true);			// true : ’Êí‚Ì”’•”z’u, false : ”’•‚ð”½“]‚µ‚Ä”z’u
+	boardSize = boardPtr->GetDataSize();
+	PutPieceST();
+	SetBoardSize();
+	/* ƒvƒŒƒCƒ„[‚Ì“o˜^‚ðs‚Á‚Ä‚¢‚é */
+	MakePlayer();
+	MakePlayer();
+	player = playerList.begin();
 }
 
-void MainScene::Draw()
+void MainScene::SetBoardSize(void)
 {
+	
+}
+
+unique_scene MainScene::Update(unique_scene own,  MouseCtl& mouse)
+{
+	if ((*player)->TurnAct(mouse, *boardPtr))
+	{
+		boardPtr->SetReverse(mouse.GetPoint(), (*player)->pGetID());
+		PutPieceST();
+		NextPlayer();
+	}
+
+	if (!boardPtr->CheckPutPieceFlag((*player)->pGetID()))
+	{
+		if (!AutoPassPlayer())
+		{
+			boardPtr->SetPieceCnt({ pieceB, pieceW });
+			boardPtr->PieceClear();
+			return std::make_unique<ResultScene>(boardPtr);
+		}
+	}
+	mouse.Update();
+	DxLib::ClsDrawScreen();
+	/* ƒQ[ƒ€’†‚Ìî•ñ‚ð•`‰æ‚µ‚Ä‚¢‚é */
+	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
+	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "ƒQ[ƒ€ƒ‚[ƒh", 0xffffff);
+	DxLib::DrawExtendFormatString(0, 170, 1.3f, 1.3f, 0xfffffff, "”’ : %d", pieceW);
+	DxLib::DrawExtendFormatString(0, 200, 1.3f, 1.3f, 0xfffffff, "• : %d", pieceB);
+	boardPtr->Draw();
+	boardPtr->PutPieceField();
+	for (auto data : playerList)
+	{
+		(*data).Draw();
+	}
+	/*turnPLpiece->Draw();*/
+	DxLib::ScreenFlip();
+	return std::move(own);
 }
 
 void MainScene::MakePlayer(void)
 {
-	playerList.push_back(std::make_shared<Player>());
+	playerList.push_back(std::make_shared<Player>(boardSize));
 }
 
 void MainScene::NextPlayer(void)
@@ -69,52 +117,4 @@ void MainScene::PutPieceST(void)
 			else {}
 		}
 	}
-}
-
-int MainScene::GameInit()
-{
-	/*gScenePtr = &GameScene::GameMain;*/
-	boardPtr = std::make_unique<GameBoard>();
-	boardPtr->PieceClear();
-	boardPtr->StartPiece({ 3,3 }, true);			// true : ’Êí‚Ì”’•”z’u, false : ”’•‚ð”½“]‚µ‚Ä”z’u
-	PutPieceST();
-	/* ƒvƒŒƒCƒ„[‚Ì“o˜^‚ðs‚Á‚Ä‚¢‚é */
-	MakePlayer();
-	MakePlayer();
-	player = playerList.begin();
-	return 0;
-}
-
-int MainScene::GameMain()
-{
-	if ((*player)->TurnAct(*mousePtr, *boardPtr))
-	{
-		boardPtr->SetReverse(mousePtr->GetPoint(), (*player)->pGetID());
-		PutPieceST();
-		NextPlayer();
-	}
-
-	if (!boardPtr->CheckPutPieceFlag((*player)->pGetID()))
-	{
-		if (!AutoPassPlayer())
-		{
-			boardPtr->PieceClear();
-			/*gScenePtr = &GameScene::ResultInit;*/
-		}
-	}
-	mousePtr->Update();
-	DxLib::ClsDrawScreen();
-	/* ƒQ[ƒ€’†‚Ìî•ñ‚ð•`‰æ‚µ‚Ä‚¢‚é */
-	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
-	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "ƒQ[ƒ€ƒ‚[ƒh", 0xffffff);
-	DxLib::DrawExtendFormatString(0, 170, 1.3f, 1.3f, 0xfffffff, "”’ : %d", pieceW);
-	DxLib::DrawExtendFormatString(0, 200, 1.3f, 1.3f, 0xfffffff, "• : %d", pieceB);
-	boardPtr->Draw();
-	for (auto data : playerList)
-	{
-		(*data).Draw();
-	}
-	/*turnPLpiece->Draw();*/
-	DxLib::ScreenFlip();
-	return 0;
 }

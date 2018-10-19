@@ -1,22 +1,17 @@
 #include "ResultScene.h"
+#include "TitleScene.h"
 #include "MouseCtl.h"
 #include "GameBoard.h"
 
-ResultScene::ResultScene()
+ResultScene::ResultScene(std::shared_ptr<GameBoard> gBoard)
 {
+	/* ここsharedで動かしてみる(動いたらuniqueに変えておく)*/
+	boardPtr = gBoard;
+	piece	 = boardPtr->GetPieceCnt();
 }
 
 
 ResultScene::~ResultScene()
-{
-}
-
-bool ResultScene::Update()
-{
-	return 0;
-}
-
-void ResultScene::Draw()
 {
 }
 
@@ -54,32 +49,30 @@ void ResultScene::DrawWinner(PIECE_ST pState)
 	}
 }
 
-int ResultScene::ResultInit()
+
+
+void ResultScene::Init()
 {
-	/*gScenePtr = &GameScene::ResultMain;*/
-	return 0;
 }
 
-int ResultScene::ResultMain()
+unique_scene ResultScene::Update(unique_scene own, MouseCtl& mouse)
 {
-	if (mousePtr->GetButton()[PUSH_NOW] & (~mousePtr->GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
+	if (mouse.GetButton()[PUSH_NOW] & (~mouse.GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
 	{
-		/*playerList.clear();*/
-		/*gScenePtr = &GameScene::TitleInit;*/
+		return std::make_unique<TitleScene>();
 	}
-	boardPtr->ResultPiece(pieceB, pieceW);
-	mousePtr->Update();
+	boardPtr->ResultPiece(piece.b, piece.w);
+	/* マウスのクリックが押した瞬間になっていないので、そこの修正を行う*/
+	mouse.Update();
 
 	/* リザルトの情報を描画している */
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
 	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "リザルト", 0xffffff);
 	boardPtr->Draw();
-	DrawWinner(WinJudge(pieceB, pieceW));
-	/* ピースの個数を描画している部分を修正しておく(関数化しておくのもありかも)*/
-	DxLib::DrawExtendFormatString(0, 170, 1.3f, 1.3f, 0xfffffff, "白 : %d", pieceW);
-	DxLib::DrawExtendFormatString(0, 200, 1.3f, 1.3f, 0xfffffff, "黒 : %d", pieceB);
+	DrawWinner(WinJudge(piece.b, piece.w));
+	DxLib::DrawExtendFormatString(0, 170, 1.3f, 1.3f, 0xfffffff, "白 : %d", piece.w);
+	DxLib::DrawExtendFormatString(0, 200, 1.3f, 1.3f, 0xfffffff, "黒 : %d", piece.b);
 	DxLib::ScreenFlip();
 
-	return 0;
+	return std::move(own);
 }
-

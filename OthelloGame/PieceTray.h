@@ -5,7 +5,7 @@ class PieceTray
 {
 public:
 	PieceTray();
-	PieceTray(PIECE_ST pState);
+	PieceTray(PIECE_ST pState, Vector2 boardSize);
 	~PieceTray();
 	bool Draw(void);
 	bool SetTurnFlag(bool flag);

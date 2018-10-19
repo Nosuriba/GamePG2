@@ -6,11 +6,11 @@
 #include "Vector2.h"
 #include "GamePiece.h"
 #include "PieceState.h"
+#include "SceneState.h"
 
 class GameBoard;
 class MouseCtl;
 class Player;
-class SceneState;
 
 #define LpGameScene (GameScene::GetInstance())
 
@@ -28,9 +28,8 @@ public:
 	}
 	void Run();
 	Vector2 GetScreenSize(void);	// ゲーム画面のサイズを取得するための関数
-	Vector2 GetActiveBoardSize(void);
 private:
-
+	
 	/* GameSceneクラスのdeleterを設定している */
 	struct GameSceneDeleter
 	{
@@ -44,47 +43,15 @@ private:
 	~GameScene();
 
 	int UpDate();
-
-	///* プレイヤー関係の処理 (ゲーム)*/
-	//void MakePlayer(void);
-	//void NextPlayer(void);
-	//bool AutoPassPlayer(void);
-
-	///* ボードに配置されたピースの個数をカウントしている(ゲーム) */
-	//void PutPieceST(void);
-
-	///* 勝利したプレイヤーを判定している(タイトル) */
-	//PIECE_ST WinJudge(int pCntB, int pCntW);
-	//void DrawWinner(PIECE_ST pState);
-
 	int SysInit();
 	int SysDestroy();
-
-	/* ゲームシーン関係の関数 */
-	int TitleUpdate();
-	int MainUpdate();
-	int ResultUpdate();
-	/*int TitleInit();
-	int TitleMain();
-	int GameInit();
-	int GameMain();
-	int GameDestroy();
-	int ResultInit();
-	int ResultMain();*/
-
-	int (GameScene::*gScenePtr)(void);
-
-	/* 基底クラス側で、取得用と渡す用の関数を作って
-	　 ゲームモードの終了時に渡してあげて、リザルトで取得するようにする 
-	   (修正する可能性あり)*/
-	/* ゲームとタイトル */
 	int pieceW = 0;
 	int pieceB = 0;
 
 	static std::unique_ptr<GameScene, GameSceneDeleter>	s_Instance;
 	std::unique_ptr<GameBoard> boardPtr;
 	std::unique_ptr<MouseCtl>  mousePtr;
-	std::unique_ptr<SceneState> gScene;
+	unique_scene gScene;
 
 	player_list playerList;
 	player_list::iterator player;

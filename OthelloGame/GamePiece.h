@@ -14,6 +14,13 @@ using piece_list = std::list<piece_ptr>;
 using pState_ptr = std::unique_ptr<PieceState>;
 using pState_list = std::list<pState_ptr>;
 
+typedef struct
+{
+	int b;
+	int w;
+}PutPiece;
+
+
 class GamePiece
 {
 public:

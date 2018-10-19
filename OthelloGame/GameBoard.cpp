@@ -65,7 +65,7 @@ void GameBoard::PutPieceField(void)
 	/* ƒs[ƒX‚ª’u‚¯‚é‚ð“h‚è‚Â‚Ô‚·(‰¼ŽÀ‘•)*/
 	for (auto pNum : putPieceTbl)
 	{
-		DrawBox(ChangeTblToScr(pNum) + drawOffset, ChangeTblToScr(pNum) + Vector2(PIECE_SIZE, PIECE_SIZE) + drawOffset, 0xc8c800, true);
+		DrawBox(ChangeTblToScr(pNum) + drawOffset + 1, ChangeTblToScr(pNum) + Vector2(PIECE_SIZE, PIECE_SIZE) + drawOffset - 1, 0xc8c800, true);
 	}
 	putPieceTbl.clear();
 }
@@ -75,14 +75,9 @@ void GameBoard::Update(void)
 	
 }
 
-const Vector2& GameBoard::GetDataSize(void)
+Vector2 GameBoard::GetDataSize(void)
 {
-	return Vector2((int)(pieceData.size() / data.size()), (int)(data.size()));
-}
-
-const Vector2& GameBoard::GetBoardSize(void)
-{
-	return Vector2((int)(pieceData.size() / data.size()), (int)(data.size()));
+	return Vector2((pieceData.size() / data.size()), data.size());
 }
 
 void GameBoard::StartPiece(const Vector2& pNum, bool pFlag)
@@ -136,6 +131,16 @@ bool GameBoard::SetPiece(const Vector2& vec, PIECE_ST id)
 	}
 
 	return rtnFlag;
+}
+
+void GameBoard::SetPieceCnt(PutPiece piece)
+{
+	this->piece = piece;
+}
+
+PutPiece GameBoard::GetPieceCnt(void)
+{
+	return piece;
 }
 
 void GameBoard::ResultPiece(int pCntB, int pCntW)
@@ -329,7 +334,6 @@ void GameBoard::Draw()
 	/* ”Õ–Ê‚Ì•`‰æ */
 	DrawBox(sPos, ePos, 0x106010, true);
 
-	PutPieceField();
 
 	sPos = { BOARD_OFFSET_X, BOARD_OFFSET_Y };
 	ePos = { BOARD_SIZE + BOARD_OFFSET_X, BOARD_SIZE };

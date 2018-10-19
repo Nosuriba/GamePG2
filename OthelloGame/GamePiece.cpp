@@ -58,6 +58,7 @@ bool GamePiece::SetPos(const Vector2 & pos)
 	this->pos = pos;
 	return true;
 }
+
 #define PIECE_SIZE 64		/* ‰æ‘œ‚Å•`‰æ‚ğ‚µ‚Ä‚¢‚é‚Ì‚ÅA‚±‚±‚ÌC³‚ğs‚¤‚æ‚¤‚É‚·‚é*/
 int GamePiece::GetSize(void)
 {

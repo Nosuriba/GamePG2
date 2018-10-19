@@ -14,11 +14,10 @@ class MainScene :
 public:
 	MainScene();
 	~MainScene();
-	bool Update();
-	void Draw();
+	void Init();
+	unique_scene Update(unique_scene own,  MouseCtl& mouse);	
 private:
-	int GameInit();
-	int GameMain();
+	void SetBoardSize(void);
 
 	/* プレイヤー関係の処理 (ゲーム)*/
 	void MakePlayer(void);
@@ -27,10 +26,11 @@ private:
 
 	void PutPieceST(void);
 
+	Vector2 boardSize;
+
 	player_list playerList;
 	player_list::iterator player;
-	std::unique_ptr<GameBoard> boardPtr;
-	std::unique_ptr<MouseCtl> mousePtr;
+	std::shared_ptr<GameBoard> boardPtr;
 
 	int pieceW;
 	int pieceB;

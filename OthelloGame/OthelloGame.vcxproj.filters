@@ -87,6 +87,9 @@
     <ClCompile Include="GameScene.cpp">
       <Filter>ソース ファイル\GameScene</Filter>
     </ClCompile>
+    <ClCompile Include="dataTbl.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImageMng.h">
@@ -145,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="PieceState.h">
       <Filter>ヘッダー ファイル\Piece</Filter>
+    </ClInclude>
+    <ClInclude Include="dataTbl.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

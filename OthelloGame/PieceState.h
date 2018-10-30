@@ -13,9 +13,8 @@ enum PIECE_ST
 	PIECE_MAX
 };
 
-class PieceState
+struct PieceState
 {
-public:
 	virtual ~PieceState();
 	virtual PIECE_ST GetState(void) = 0;
 	virtual unsigned int GetDrawColor(void) = 0;

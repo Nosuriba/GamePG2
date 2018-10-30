@@ -39,7 +39,7 @@ bool GameBoard::CommonBoard(Vector2 vec)
 	return true;
 }
 
-auto GameBoard::AddObjList(piece_ptr && objPtr)
+auto GameBoard::AddObjList(piece_shared && objPtr)
 {
 	pieceList.push_back(objPtr);
 	auto itr = pieceList.end();
@@ -90,9 +90,8 @@ void GameBoard::StartPiece(const Vector2& pNum, bool pFlag)
 				if (pFlag)
 				{
 					initPieceST = (((x + y) % PIECE_MAX) + 2 < 3
-						? initPieceST = ((x + y) % PIECE_MAX) + 2
-						: initPieceST = (x + y == 2 ? PIECE_W : PIECE_B));
-
+								? initPieceST = ((x + y) % PIECE_MAX) + 2
+								: initPieceST = (x + y == 2 ? PIECE_W : PIECE_B));
 				}
 				else
 				{
@@ -171,17 +170,16 @@ void GameBoard::PieceClear(void)
 
 void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
 {
-	/* 配列→スクリーンサイズ, スクリーンサイズ→配列に変換するための関数を必ず作っておく*/
-	bool    reverseFlag = true;
-	Vector2 pNum = ChangeScrToPos(vec);
-	Vector2 rNum = { 0,0 };
+	Vector2 pNum	= ChangeScrToPos(vec);
+	Vector2 rNum	= { 0,0 };
+	int reverseCnt  = 0;
 
 	if (pNum >= Vector2(0, 0) & pNum < Vector2(data.size() * PIECE_SIZE, data.size() * PIECE_SIZE))
 	{
 		pNum /= PIECE_SIZE;
 		for (auto rPos : reverseTbl)
 		{
-			while (reverseFlag)
+			while (!data[pNum.y + rNum.y][pNum.x + rNum.x].expired())
 			{
 				rNum += rPos;
 				if (!data[pNum.y + rNum.y][pNum.x + rNum.x].expired())
@@ -189,20 +187,22 @@ void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
 					/* 配置したピースと違う色が見つかった時、見つかったピースの色を配置したピースの色に変更してあげる*/
 					if (data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->GetState() != id)
 					{
+						reverseCnt++;
+						data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->SetOldState(reverseCnt);
 						data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->SetState(id);
 					}
 					else
 					{
-						reverseFlag = false;
+						break;
 					}
 				}
 				else
 				{
-					reverseFlag = false;
+					break;
 				}
 			}
+			reverseCnt = 0;
 			rNum = { 0,0 };
-			reverseFlag = true;
 		}
 		reverseTbl.clear();
 	}
@@ -233,6 +233,7 @@ bool GameBoard::CheckReverse(const Vector2& vec, PIECE_ST id)
 
 bool GameBoard::CheckReverse(const Vector2& ckPos, const Vector2& pNum, PIECE_ST id)
 {
+	/* コードが汚いからリファクタリングしておく*/
 	bool	rtnFlag = false;
 	Vector2 ckNum = pNum;
 

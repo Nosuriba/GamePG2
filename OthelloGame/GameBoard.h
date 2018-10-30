@@ -46,7 +46,7 @@ private:
 	/*コンストラクタの共通化用関数*/
 	bool CommonBoard(Vector2 vec);
 
-	auto AddObjList(piece_ptr && objPtr);
+	auto AddObjList(piece_shared && objPtr);
 
 	/* 画面のサイズ、データのサイズを変換するための関数 */
 	Vector2 ChangeScrToPos(const Vector2& pPos);
@@ -59,7 +59,7 @@ private:
 	PutPiece piece = { 0,0 };
 
 	/* ピースの処理を行うために必要な変数 */
-	piece_list  pieceList;
+	piece_sharedList  pieceList;
 	std::list<Vector2> reverseTbl;
 	std::list<Vector2> putPieceTbl;
 

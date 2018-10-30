@@ -1,7 +1,7 @@
 #include "PieceTray.h"
 #include "GameScene.h"
 
-PieceTray::PieceTray(PIECE_ST pState, Vector2 boardSize)
+PieceTray::PieceTray(PIECE_ST pState, const Vector2& boardSize)
 {
 	/* プレイヤーがトレイに所持しているピースの座標 */
 	this->pos = Vector2( 30, 100 ) + (Vector2(LpGameScene.GetScreenSize().x - 130, 0) * (pState == PIECE_B ? 0 : 1));

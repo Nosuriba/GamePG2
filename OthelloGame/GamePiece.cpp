@@ -7,10 +7,14 @@
 #include "PieceChar3.h"
 #include "PieceChar4.h"
 
+#define REVERSE_INV_CNT (20)
+
 GamePiece::GamePiece(const Vector2& pos, const Vector2& drawOffset, PIECE_ST pState)
 {
 	this->pos		 = pos;
 	this->drawOffset = drawOffset;
+	reverseCnt		 = 0;
+	animCnt			 = 0;
 	SetState(pState);
 }
 
@@ -30,6 +34,13 @@ PIECE_ST GamePiece::GetState(void)
 	return PIECE_NON;
 }
 
+void GamePiece::SetOldState(int reverseCnt)
+{
+	animCnt = 0;
+	this->reverseCnt = reverseCnt;
+	oldState = (**pState.begin()).GetState();
+}
+
 void GamePiece::SetState(PIECE_ST pState)
 {
 	/* リストの中身が空でない時、先頭の要素を削除している */
@@ -37,7 +48,6 @@ void GamePiece::SetState(PIECE_ST pState)
 	{
 		this->pState.pop_front();
 	}
-
 	/* 引数で渡された情報を使用して、リストの先頭に
 	　 インスタンスを行っている */
 	if (pState == PIECE_W)
@@ -68,17 +78,26 @@ bool GamePiece::SetDrawOffset(const Vector2 & drawOffset)
 	return true;
 }
 
+bool GamePiece::Update(void)
+{
+	/* アニメーションの部分が終わった時trueの情報を返すようにする */
+	return (animCnt > REVERSE_INV_CNT * reverseCnt ? true : false);
+}
+
 void GamePiece::Draw(void)
 {
-	unsigned int color = 0xff0000;
-	
-	/* ピースの状態によって、描画するピースを設定している */
-	if ((**pState.begin()).GetState() == PIECE_W)
+	PIECE_ST state = (**pState.begin()).GetState();
+	animCnt++;
+	state = (animCnt > REVERSE_INV_CNT * reverseCnt
+		  ? state = (**pState.begin()).GetState()
+		  : state = oldState);
+	/* ピースの状態によって、描画するピースの色を設定している */
+	if (state == PIECE_W)
 	{
 		DxLib::DrawGraph(pos.x + drawOffset.x, pos.y + drawOffset.y, LpImageMng.ImgGetID("image/piece/player1.png")[0], true);
 		/*DxLib::DrawGraph(pos.x, pos.y, LpImageMng.ImgGetID("image/piece/charPiece1.png")[0], true);*/
 	}
-	else if ((**pState.begin()).GetState() == PIECE_B)
+	else if (state == PIECE_B)
 	{
 		DxLib::DrawGraph(pos.x + drawOffset.x, pos.y + drawOffset.y, LpImageMng.ImgGetID("image/piece/player2.png")[0], true);
 	}
@@ -87,7 +106,7 @@ void GamePiece::Draw(void)
 	}
 }
 
-int DrawBox(Vector2 sPos, Vector2 ePos, unsigned int color, int fillFlag)
+int DrawBox(const Vector2& sPos, const Vector2& ePos, unsigned int color, int fillFlag)
 {
 	DxLib::DrawBox(sPos.x, sPos.y, ePos.x, ePos.y, color, fillFlag);
 	return 0;

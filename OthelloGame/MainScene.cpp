@@ -32,8 +32,9 @@ void MainScene::SetBoardSize(void)
 	
 }
 
-unique_scene MainScene::Update(unique_scene own,  MouseCtl& mouse)
+unique_scene MainScene::Update(unique_scene own, MouseCtl& mouse)
 {
+	(**player).SetTurn(true);
 	if ((**player).TurnAct(mouse, *boardPtr))
 	{
 		(*boardPtr).SetReverse(mouse.GetPoint(), (**player).pGetID());
@@ -86,6 +87,7 @@ void MainScene::NextPlayer(void)
 
 bool MainScene::AutoPassPlayer(void)
 {
+	/* ƒ‰ƒ€ƒ_Ž®‚ðŽÀ‘•‚µ‚½ŒãŒÂX‚Ì•”•ª‚ðÁ‚·*/
 	NextPlayer();
 	if ((*boardPtr).CheckPutPieceFlag((*player)->pGetID()))
 	{

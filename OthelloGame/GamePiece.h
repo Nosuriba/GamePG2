@@ -8,19 +8,20 @@
 
 class GamePiece;
 
-using piece_ptr = std::shared_ptr<GamePiece>;
-using piece_list = std::list<piece_ptr>;
+using piece_shared = std::shared_ptr<GamePiece>;
+using piece_sharedList = std::list<piece_shared>;
 
-using pState_ptr = std::unique_ptr<PieceState>;
-using pState_list = std::list<pState_ptr>;
+using pState_unique = std::unique_ptr<PieceState>;
+using pState_uniqueList = std::list<pState_unique>;
 
-/* {黒ピースの個数, 白ピースの個数}*/
+/* {黒ピース, 白ピース}*/
 typedef struct
 {
 	int b;		// 黒
 	int w;		// 白
 }PutPiece;
 
+/* 反転処理がスキップできるように設定をしておく */
 
 class GamePiece
 {
@@ -30,6 +31,7 @@ public:
 	
 	/* pState_listの中身に対して操作を行うもの*/
 	PIECE_ST GetState(void);
+	void SetOldState(int reverseCnt);
 	void SetState(PIECE_ST pState);
 	
 	/* ピースの受け皿に必要な情報を受け渡しするためのもの */
@@ -37,13 +39,17 @@ public:
 	bool SetPos(const Vector2& pos);
 	bool SetDrawOffset(const Vector2& drawOffset);
 
+	bool Update(void);
 	void Draw(void);
 private:
-	pState_list  pState;
-	Vector2		 pos;
-	Vector2		 drawOffset;
+	pState_uniqueList pState;
+	PIECE_ST oldState;
+	Vector2	 pos;
+	Vector2	 drawOffset;
+	int		 reverseCnt;
+	int		 animCnt;
 };
 
 /* DxLib::DrawBoxをオーバーロードしたもの*/
-int DrawBox(Vector2 sPos, Vector2 ePos, unsigned int color, int fillFlag);
+int DrawBox(const Vector2& sPos, const Vector2& ePos, unsigned int color, int fillFlag);
 

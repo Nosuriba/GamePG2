@@ -2,10 +2,6 @@
 #include "ImageMng.h"
 #include "PieceWhite.h"
 #include "PieceBlack.h"
-#include "PieceChar1.h"
-#include "PieceChar2.h"
-#include "PieceChar3.h"
-#include "PieceChar4.h"
 
 GamePiece::GamePiece(const Vector2& pos, const Vector2& drawOffset, PIECE_ST pState)
 {

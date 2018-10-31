@@ -132,10 +132,6 @@
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="MouseCtl.cpp" />
     <ClCompile Include="PieceBlack.cpp" />
-    <ClCompile Include="PieceChar1.cpp" />
-    <ClCompile Include="PieceChar2.cpp" />
-    <ClCompile Include="PieceChar3.cpp" />
-    <ClCompile Include="PieceChar4.cpp" />
     <ClCompile Include="PieceState.cpp" />
     <ClCompile Include="PieceTray.cpp" />
     <ClCompile Include="PieceWhite.cpp" />
@@ -154,10 +150,6 @@
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="MouseCtl.h" />
     <ClInclude Include="PieceBlack.h" />
-    <ClInclude Include="PieceChar1.h" />
-    <ClInclude Include="PieceChar2.h" />
-    <ClInclude Include="PieceChar3.h" />
-    <ClInclude Include="PieceChar4.h" />
     <ClInclude Include="PieceState.h" />
     <ClInclude Include="PieceTray.h" />
     <ClInclude Include="PieceWhite.h" />

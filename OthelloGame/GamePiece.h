@@ -31,23 +31,24 @@ public:
 	
 	/* pState_listの中身に対して操作を行うもの*/
 	PIECE_ST GetState(void);
-	void SetOldState(int reverseCnt);
-	void SetState(PIECE_ST pState);
+	void SetState(PIECE_ST pState, int reserveCnt);
 	
 	/* ピースの受け皿に必要な情報を受け渡しするためのもの */
 	int  GetSize(void);
 	bool SetPos(const Vector2& pos);
 	bool SetDrawOffset(const Vector2& drawOffset);
 
-	bool Update(void);
+	void ResetAnim(int reverseCnt);
+	
+	void Update(void);
 	void Draw(void);
 private:
 	pState_uniqueList pState;
 	PIECE_ST oldState;
+	PIECE_ST state;
 	Vector2	 pos;
 	Vector2	 drawOffset;
 	int		 reverseCnt;
-	int		 animCnt;
 };
 
 /* DxLib::DrawBoxをオーバーロードしたもの*/

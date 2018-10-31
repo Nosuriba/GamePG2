@@ -39,7 +39,9 @@ public:
 	/* ピースが置けるかの検索を行う関数 */
 	bool CheckPutPieceFlag(PIECE_ST id);
 	PIECE_ST CheckPutPieceST(int x, int y);
-	void PutPieceField(void);
+
+	bool ModeFlag(void);
+	void Update(void);
 	void Draw(void);
 private:
 
@@ -48,14 +50,21 @@ private:
 
 	auto AddObjList(piece_shared && objPtr);
 
+	void ReverseSkip(void);
+	void SetMoveCnt(int reverseCnt);
+	void PutPieceField(void);
+
 	/* 画面のサイズ、データのサイズを変換するための関数 */
 	Vector2 ChangeScrToPos(const Vector2& pPos);
 	Vector2 ChangeTblToScr(const Vector2& pNum);
 
 	/* ピースの方向を確認するための変数 */
 	Vector2 pCheckTbl[8] = { { 1,0 },{ 1,1 },{ 0,1 },{ -1,1 },{ -1,0 },{ -1,-1 },{ 0,-1 },{ 1,-1 } };
-
 	Vector2 pPos;
+
+	int sceneCnt;
+
+	/* ピースの個数カウント用 */
 	PutPiece piece = { 0,0 };
 
 	/* ピースの処理を行うために必要な変数 */

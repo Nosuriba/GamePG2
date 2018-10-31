@@ -7,21 +7,20 @@
 #include "PieceChar3.h"
 #include "PieceChar4.h"
 
-#define REVERSE_INV_CNT (20)
-
 GamePiece::GamePiece(const Vector2& pos, const Vector2& drawOffset, PIECE_ST pState)
 {
 	this->pos		 = pos;
 	this->drawOffset = drawOffset;
+	oldState		 = pState;
 	reverseCnt		 = 0;
-	animCnt			 = 0;
-	SetState(pState);
+	SetState(pState, 0);
 }
 
 
 GamePiece::~GamePiece()
 {
 }
+
 
 PIECE_ST GamePiece::GetState(void)
 {
@@ -34,18 +33,14 @@ PIECE_ST GamePiece::GetState(void)
 	return PIECE_NON;
 }
 
-void GamePiece::SetOldState(int reverseCnt)
+void GamePiece::SetState(PIECE_ST pState, int reserveCnt)
 {
-	animCnt = 0;
-	this->reverseCnt = reverseCnt;
-	oldState = (**pState.begin()).GetState();
-}
+	this->reverseCnt = reserveCnt;
 
-void GamePiece::SetState(PIECE_ST pState)
-{
 	/* リストの中身が空でない時、先頭の要素を削除している */
 	if (this->pState.size() > 0)
 	{
+		oldState = (**GamePiece::pState.begin()).GetState();
 		this->pState.pop_front();
 	}
 	/* 引数で渡された情報を使用して、リストの先頭に
@@ -78,28 +73,47 @@ bool GamePiece::SetDrawOffset(const Vector2 & drawOffset)
 	return true;
 }
 
-bool GamePiece::Update(void)
+void GamePiece::ResetAnim(int reverseCnt)
 {
-	/* アニメーションの部分が終わった時trueの情報を返すようにする */
-	return (animCnt > REVERSE_INV_CNT * reverseCnt ? true : false);
+	this->reverseCnt = reverseCnt;
+}
+
+void GamePiece::Update(void)
+{
+	if (reverseCnt < 0)
+	{
+		return;
+	}
+	reverseCnt--;
 }
 
 void GamePiece::Draw(void)
 {
-	PIECE_ST state = (**pState.begin()).GetState();
-	animCnt++;
-	state = (animCnt > REVERSE_INV_CNT * reverseCnt
-		  ? state = (**pState.begin()).GetState()
-		  : state = oldState);
+	/* アニメーション用の変数 */
+	int invCnt = (reverseCnt / 20);
+	int animCnt = (reverseCnt / 2) % 10;
+	double drawSize = (1.0 - (animCnt * 0.1)) - invCnt;
+
+	if (drawSize < 0.0)
+	{
+		drawSize = 0.0;
+	}
+
+	state = (reverseCnt < 0
+		  ?  state = (**pState.begin()).GetState()
+		  :  state = oldState);
+
 	/* ピースの状態によって、描画するピースの色を設定している */
 	if (state == PIECE_W)
 	{
-		DxLib::DrawGraph(pos.x + drawOffset.x, pos.y + drawOffset.y, LpImageMng.ImgGetID("image/piece/player1.png")[0], true);
+		DxLib::DrawRotaGraph(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2), drawSize, 0.0, 
+							 LpImageMng.ImgGetID("image/piece/player1.png")[0], true);
 		/*DxLib::DrawGraph(pos.x, pos.y, LpImageMng.ImgGetID("image/piece/charPiece1.png")[0], true);*/
 	}
 	else if (state == PIECE_B)
 	{
-		DxLib::DrawGraph(pos.x + drawOffset.x, pos.y + drawOffset.y, LpImageMng.ImgGetID("image/piece/player2.png")[0], true);
+		DxLib::DrawRotaGraph(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2), drawSize, 0.0, 
+							 LpImageMng.ImgGetID("image/piece/player2.png")[0], true);
 	}
 	else
 	{

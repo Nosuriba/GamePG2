@@ -48,7 +48,6 @@ bool PieceTray::Draw(void)
 			(*data).SetPos(Vector2(0, ((*data).GetSize() * cnt) - (*data).GetSize()));
 			(*data).Draw();
 		}
-
 	}
 	return true;
 }

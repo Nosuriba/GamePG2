@@ -35,36 +35,43 @@ void MainScene::SetBoardSize(void)
 unique_scene MainScene::Update(unique_scene own, MouseCtl& mouse)
 {
 	(**player).SetTurn(true);
-	if ((**player).TurnAct(mouse, *boardPtr))
-	{
-		(*boardPtr).SetReverse(mouse.GetPoint(), (**player).pGetID());
-		PutPieceCnt();
-		NextPlayer();
-	}
-
-	if (!(*boardPtr).CheckPutPieceFlag((**player).pGetID()))
-	{
-		if (!AutoPassPlayer())
-		{
-			(*boardPtr).SetPieceCnt(piece);
-			(*boardPtr).PieceClear();
-			return std::make_unique<ResultScene>(boardPtr);
-		}
-	}
-	mouse.Update();
-	DxLib::ClsDrawScreen();
 	/* ƒQ[ƒ€’†‚Ìî•ñ‚ð•`‰æ‚µ‚Ä‚¢‚é */
+	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
 	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "ƒQ[ƒ€ƒ‚[ƒh", 0xffffff);
 	DxLib::DrawExtendFormatString(700, 450, 1.5f, 1.5f, 0xeeee00, "”’: %d", piece.w);
 	DxLib::DrawExtendFormatString(25, 450, 1.5f, 1.5f, 0xeeee00, "•: %d", piece.b);
 	(*boardPtr).Draw();
-	(*boardPtr).PutPieceField();
+
 	for (auto data : playerList)
 	{
 		(*data).Draw();
 	}
-	/*turnPLpiece->Draw();*/
+
+	if ((*boardPtr).ModeFlag())
+	{
+		if ((**player).TurnAct(mouse, *boardPtr))
+		{
+			(*boardPtr).SetReverse(mouse.GetPoint(), (**player).pGetID());
+			PutPieceCnt();
+			NextPlayer();
+		}
+	}
+
+	if ((*boardPtr).ModeFlag())
+	{
+		if (!(*boardPtr).CheckPutPieceFlag((**player).pGetID()))
+		{
+			if (!AutoPassPlayer())
+			{
+				(*boardPtr).SetPieceCnt(piece);
+				(*boardPtr).PieceClear();
+				return std::make_unique<ResultScene>(boardPtr);
+			}
+		}
+	}
+	mouse.Update();
+	(*boardPtr).Update();
 	DxLib::ScreenFlip();
 	return std::move(own);
 }

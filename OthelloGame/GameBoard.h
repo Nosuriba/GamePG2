@@ -40,7 +40,7 @@ public:
 	bool CheckPutPieceFlag(PIECE_ST id);
 	PIECE_ST CheckPutPieceST(int x, int y);
 
-	bool ModeFlag(void);
+	bool InvFlag(void);
 	void Update(void);
 	void Draw(void);
 private:
@@ -51,7 +51,7 @@ private:
 	auto AddObjList(piece_shared && objPtr);
 
 	void ReverseSkip(void);
-	void SetMoveCnt(int reverseCnt);
+	void SetInvCnt(int reverseCnt);
 	void PutPieceField(void);
 
 	/* 画面のサイズ、データのサイズを変換するための関数 */
@@ -62,7 +62,8 @@ private:
 	Vector2 pCheckTbl[8] = { { 1,0 },{ 1,1 },{ 0,1 },{ -1,1 },{ -1,0 },{ -1,-1 },{ 0,-1 },{ 1,-1 } };
 	Vector2 pPos;
 
-	int sceneCnt;
+	/* */
+	int invCnt;
 
 	/* ピースの個数カウント用 */
 	PutPiece piece = { 0,0 };

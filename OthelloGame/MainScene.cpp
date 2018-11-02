@@ -48,7 +48,7 @@ unique_scene MainScene::Update(unique_scene own, MouseCtl& mouse)
 		(*data).Draw();
 	}
 
-	if ((*boardPtr).ModeFlag())
+	if ((*boardPtr).InvFlag())
 	{
 		if ((**player).TurnAct(mouse, *boardPtr))
 		{
@@ -58,7 +58,7 @@ unique_scene MainScene::Update(unique_scene own, MouseCtl& mouse)
 		}
 	}
 
-	if ((*boardPtr).ModeFlag())
+	if ((*boardPtr).InvFlag())
 	{
 		if (!(*boardPtr).CheckPutPieceFlag((**player).pGetID()))
 		{

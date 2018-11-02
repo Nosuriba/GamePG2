@@ -68,6 +68,7 @@ unique_scene ResultScene::Update(unique_scene own, MouseCtl& mouse)
 	(*boardPtr).ResultPiece(piece);
 	
 	/* リザルトの情報を描画している */
+	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
 	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "リザルト", 0xffffff);
 	(*boardPtr).Draw();

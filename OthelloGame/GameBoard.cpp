@@ -29,8 +29,8 @@ GameBoard::~GameBoard()
 
 bool GameBoard::CommonBoard(Vector2 vec)
 {
-	pPos = { 0,0 };
-	sceneCnt	 = 0;
+	pPos	 = { 0,0 };
+	invCnt	 = 0;
 	/* ピースを格納するためのサイズを取得している */
 	pieceData.resize(vec.y * vec.x);
 	data.resize(vec.y);
@@ -190,7 +190,7 @@ void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
 					if (data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->GetState() != id)
 					{
 						reverseCnt++;
-						data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->SetState(id, (reverseCnt * REVERSE_INV_CNT));
+						data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->SetState(id, reverseCnt * REVERSE_INV_CNT);
 					}
 					else
 					{
@@ -202,7 +202,8 @@ void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
 					break;
 				}
 			}
-			GameBoard::SetMoveCnt(reverseCnt * REVERSE_INV_CNT);
+			/* */
+			GameBoard::SetInvCnt(reverseCnt * REVERSE_INV_CNT);
 			reverseCnt = 0;
 			rNum = { 0,0 };
 		}
@@ -331,9 +332,9 @@ PIECE_ST GameBoard::CheckPutPieceST(int x, int y)
 	return PIECE_NON;
 }
 
-void GameBoard::SetMoveCnt(int reverseCnt)
+void GameBoard::SetInvCnt(int reverseCnt)
 {
-	sceneCnt = (sceneCnt > reverseCnt ? sceneCnt : reverseCnt);
+	invCnt = (invCnt > reverseCnt ? invCnt : reverseCnt);
 }
 
 void GameBoard::ReverseSkip(void)
@@ -351,9 +352,9 @@ void GameBoard::ReverseSkip(void)
 	}
 }
 
-bool GameBoard::ModeFlag(void)
+bool GameBoard::InvFlag(void)
 {
-	if (sceneCnt < 0)
+	if (invCnt < 0)
 	{
 		PutPieceField();
 		return true;
@@ -363,11 +364,11 @@ bool GameBoard::ModeFlag(void)
 
 void GameBoard::Update(void)
 {
-	if (sceneCnt < 0)
+	if (invCnt < 0)
 	{
 		return;
 	}
-	sceneCnt--;
+	invCnt--;
 }
 
 void GameBoard::Draw()

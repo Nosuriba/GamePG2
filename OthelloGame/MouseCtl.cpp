@@ -22,13 +22,15 @@ mouse_int MouseCtl::GetButton(void) const
 	return mButton;
 }
 
-void MouseCtl::Update(void)
+void MouseCtl::Update(PL_TYPE type)
 {
-	/* クリックをする前に、押したクリックの情報を
-	   古いクリックの情報に渡している */
-	mButton[PUSH_OLD] = mButton[PUSH_NOW];
-	mButton[PUSH_NOW] = DxLib::GetMouseInput();
-
+	// プレイヤーのターンの時にマウスのクリックを更新する
+	if (type == PL_TYPE::PL_MAN)
+	{
+		mButton[PUSH_OLD] = mButton[PUSH_NOW];
+		mButton[PUSH_NOW] = DxLib::GetMouseInput();
+	}
+	
 	// ボタンを押した位置の座標を取得している 
 	DxLib::GetMousePoint(&pos.x, &pos.y);
 }

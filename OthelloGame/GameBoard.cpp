@@ -210,6 +210,7 @@ void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
 			rNum = { 0,0 };
 		}
 		reverseTbl.clear();
+		putPieceTbl.clear();
 	}
 }
 
@@ -290,6 +291,7 @@ bool GameBoard::CheckReverse(const Vector2& ckPos, const Vector2& pNum, PIECE_ST
 bool GameBoard::CheckPutPieceFlag(PIECE_ST id)
 {
 	bool rtnFlag = false;
+
 	for (unsigned int y = 0; y < data.size(); y++)
 	{
 		for (unsigned int x = 0; x < data.size(); x++)
@@ -331,6 +333,12 @@ PIECE_ST GameBoard::CheckPutPieceST(int x, int y)
 		else{}
 	}
 	return PIECE_ST::PIECE_NON;
+}
+
+Vector2 GameBoard::PutPieceCpu(void)
+{
+	Vector2 pNum = putPieceTbl.front();
+	return ChangeTblToScr(pNum) + Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y);
 }
 
 void GameBoard::SetInvCnt(int reverseCnt)

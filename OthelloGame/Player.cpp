@@ -7,11 +7,12 @@
 
 int Player::playerCnt = 0;
 
-Player::Player(Vector2 boardSize)
+Player::Player(Vector2 boardSize, PL_TYPE type)
 {
 	// 各プレイヤーに色の指定を行っている 
 	playerCnt++;
 	id = (PIECE_ST)playerCnt;
+	pType = type;
 	pTray = std::make_unique<PieceTray>(id, boardSize);
 }
 
@@ -40,17 +41,37 @@ PIECE_ST Player::pGetID(void)
 	return id;
 }
 
-bool Player::TurnAct(const MouseCtl& mouse, GameBoard& gBoard)
+PL_TYPE Player::pGetType(void)
+{
+	return pType;
+}
+
+bool Player::TurnAct(const MouseCtl& mouse, GameBoard& gBoard, PL_TYPE type)
 {
 	(*pTray).SetTurnFlag(true);
-	if (mouse.GetButton()[PUSH_NOW] & (~mouse.GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
+	if (type == PL_TYPE::PL_MAN)
 	{
-		if (gBoard.CheckReverse(mouse.GetPoint(), id))
+		if (mouse.GetButton()[PUSH_NOW] & (~mouse.GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 		{
-			gBoard.SetPiece(mouse.GetPoint(), id);
-			return true;
+			if (gBoard.CheckReverse(mouse.GetPoint(), id))
+			{
+				gBoard.SetPiece(mouse.GetPoint(), id);
+				return true;
+			}
 		}
 	}
+	else
+	{
+		if (gBoard.CheckPutPieceFlag(id))
+		{
+			if (gBoard.CheckReverse(gBoard.PutPieceCpu(), id))
+			{
+				gBoard.SetPiece(gBoard.PutPieceCpu(), id);
+				return true;
+			}
+		}
+	}
+	
 	return false;
 }
 

@@ -50,15 +50,13 @@ void ResultScene::DrawWinner(PIECE_ST pState)
 	}
 }
 
-
-
 void ResultScene::Init()
 {
 }
 
 unique_scene ResultScene::Update(unique_scene own, MouseCtl& mouse)
 {
-	mouse.Update();
+	mouse.Update(PL_TYPE::PL_MAN);
 
 	// 右クリックをした時、タイトルのシーンに移行している
 	if (mouse.GetButton()[PUSH_NOW] & (~mouse.GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)

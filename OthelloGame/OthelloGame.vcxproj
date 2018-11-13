@@ -137,6 +137,7 @@
     <ClCompile Include="PieceTray.cpp" />
     <ClCompile Include="PieceWhite.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerType.cpp" />
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="SceneState.cpp" />
     <ClCompile Include="TitleScene.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="PieceTray.h" />
     <ClInclude Include="PieceWhite.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerType.h" />
     <ClInclude Include="ResultScene.h" />
     <ClInclude Include="SceneState.h" />
     <ClInclude Include="TitleScene.h" />

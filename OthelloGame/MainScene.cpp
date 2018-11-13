@@ -4,8 +4,9 @@
 #include "Player.h"
 #include "MouseCtl.h"
 
-MainScene::MainScene()
+MainScene::MainScene(PL_TYPE plType)
 {
+	this->plType = plType;
 	boardPtr = std::make_shared<GameBoard>();
 	MainScene::Init();
 }
@@ -22,8 +23,8 @@ void MainScene::Init()
 	PutPieceCnt();
 	SetBoardSize();
 	/* プレイヤーの登録を行っている */
-	MakePlayer();
-	MakePlayer();
+	MakePlayer(PL_TYPE::PL_MAN);
+	MakePlayer(plType);
 	player = playerList.begin();
 }
 
@@ -39,7 +40,7 @@ unique_scene MainScene::Update(unique_scene own, MouseCtl& mouse)
 	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
 	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "ゲームモード", 0xffffff);
-	DxLib::DrawExtendString(95, 20, 1.9, 1.9f, "左クリックでコマが置けるよ", 0xffff00);
+	DxLib::DrawExtendString(200, 20, 1.9, 1.9f, "左クリックでコマが置けるよ", 0xffff00);
 	DxLib::DrawExtendFormatString(700, 450, 1.5f, 1.5f, 0xeeee00, "白: %d", piece.w);
 	DxLib::DrawExtendFormatString(25, 450, 1.5f, 1.5f, 0xeeee00, "黒: %d", piece.b);
 	(*boardPtr).Draw();
@@ -49,16 +50,27 @@ unique_scene MainScene::Update(unique_scene own, MouseCtl& mouse)
 		(*data).Draw();
 	}
 
+	// プレイヤーのターン処理を行っている
 	if ((*boardPtr).InvFlag())
 	{
-		if ((**player).TurnAct(mouse, *boardPtr))
+		if ((**player).TurnAct(mouse, *boardPtr, (**player).pGetType()))
 		{
-			(*boardPtr).SetReverse(mouse.GetPoint(), (**player).pGetID());
-			PutPieceCnt();
-			NextPlayer();
+			if ((**player).pGetType() == PL_TYPE::PL_MAN)
+			{
+				(*boardPtr).SetReverse(mouse.GetPoint(), (**player).pGetID());
+				PutPieceCnt();
+				NextPlayer();
+			}
+			else
+			{
+				(*boardPtr).SetReverse((*boardPtr).PutPieceCpu(), (**player).pGetID());
+				PutPieceCnt();
+				NextPlayer();
+			}
 		}
 	}
 
+	// プレイヤーのパス処理とゲームを継続するかの管理をしている
 	if ((*boardPtr).InvFlag())
 	{
 		if (!(*boardPtr).CheckPutPieceFlag((**player).pGetID()))
@@ -71,15 +83,15 @@ unique_scene MainScene::Update(unique_scene own, MouseCtl& mouse)
 			}
 		}
 	}
-	mouse.Update();
+	mouse.Update(PL_TYPE::PL_MAN);
 	(*boardPtr).Update();
 	DxLib::ScreenFlip();
 	return std::move(own);
 }
 
-void MainScene::MakePlayer(void)
+void MainScene::MakePlayer(PL_TYPE type)
 {
-	playerList.push_back(std::make_shared<Player>(boardSize));
+	playerList.push_back(std::make_shared<Player>(boardSize, type));
 }
 
 void MainScene::NextPlayer(void)
@@ -97,7 +109,7 @@ bool MainScene::AutoPassPlayer(void)
 {
 	/* ラムダ式を実装した後個々の部分を消す*/
 	NextPlayer();
-	if ((*boardPtr).CheckPutPieceFlag((*player)->pGetID()))
+	if ((*boardPtr).CheckPutPieceFlag((**player).pGetID()))
 	{
 		return true;
 	}

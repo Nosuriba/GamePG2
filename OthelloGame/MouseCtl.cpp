@@ -24,11 +24,11 @@ mouse_int MouseCtl::GetButton(void) const
 
 void MouseCtl::Update(void)
 {
-	/* ボタンを押す前に、現在押したボタンの情報を
-	古いボタンの情報に渡している */
+	/* クリックをする前に、押したクリックの情報を
+	   古いクリックの情報に渡している */
 	mButton[PUSH_OLD] = mButton[PUSH_NOW];
 	mButton[PUSH_NOW] = DxLib::GetMouseInput();
 
-	/* ボタンを押した位置の座標を取得している */
+	// ボタンを押した位置の座標を取得している 
 	DxLib::GetMousePoint(&pos.x, &pos.y);
 }

@@ -1,5 +1,6 @@
-#include "GamePiece.h"
 #include "ImageMng.h"
+#include "GamePiece.h"
+#include "PieceST.h"
 #include "PieceWhite.h"
 #include "PieceBlack.h"
 
@@ -20,20 +21,20 @@ GamePiece::~GamePiece()
 
 PIECE_ST GamePiece::GetState(void)
 {
-	/* 先頭の要素に入っているピースの状態を返している */
+	 // 先頭の要素に入っているピースの状態を返している 
 	if (*(pState.begin()))
 	{
 		return (**pState.begin()).GetState();
 	}
 
-	return PIECE_NON;
+	return PIECE_ST::PIECE_NON;
 }
 
 void GamePiece::SetState(PIECE_ST pState, int reserveCnt)
 {
 	this->reverseCnt = reserveCnt;
 
-	/* リストの中身が空でない時、先頭の要素を削除している */
+	// リストの中身が空でない時、先頭の要素を削除している
 	if (this->pState.size() > 0)
 	{
 		oldState = (**GamePiece::pState.begin()).GetState();
@@ -41,7 +42,7 @@ void GamePiece::SetState(PIECE_ST pState, int reserveCnt)
 	}
 	/* 引数で渡された情報を使用して、リストの先頭に
 	　 インスタンスを行っている */
-	if (pState == PIECE_W)
+	if (pState == PIECE_ST::PIECE_W)
 	{
 		this->pState.push_front(std::make_unique<PieceWhite>());
 	}
@@ -99,14 +100,14 @@ void GamePiece::Draw(void)
 		  ?  state = (**pState.begin()).GetState()
 		  :  state = oldState);
 
-	/* ピースの状態によって、描画するピースの色を設定している */
-	if (state == PIECE_W)
+	 // ピースの状態によって、描画するピースの色を設定している 
+	if (state == PIECE_ST::PIECE_W)
 	{
 		DxLib::DrawRotaGraph(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2), drawSize, 0.0, 
 							 LpImageMng.ImgGetID("image/piece/player1.png")[0], true);
 		/*DxLib::DrawGraph(pos.x, pos.y, LpImageMng.ImgGetID("image/piece/charPiece1.png")[0], true);*/
 	}
-	else if (state == PIECE_B)
+	else if (state == PIECE_ST::PIECE_B)
 	{
 		DxLib::DrawRotaGraph(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2), drawSize, 0.0, 
 							 LpImageMng.ImgGetID("image/piece/player2.png")[0], true);

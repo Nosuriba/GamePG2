@@ -13,7 +13,7 @@ PieceWhite::~PieceWhite()
 
 PIECE_ST PieceWhite::GetState(void)
 {
-	return PIECE_W;
+	return PIECE_ST::PIECE_W;
 }
 
 unsigned int PieceWhite::GetDrawColor(void)

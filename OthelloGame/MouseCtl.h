@@ -9,7 +9,7 @@ enum M_PUSH
 	PUSH_MAX
 };
 
-/* マウスの情報を固定長配列で格納するための型 */
+// マウスの情報を固定長配列で格納するための型 
 using mouse_int = std::array<int, PUSH_MAX>;
 
 class MouseCtl

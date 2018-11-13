@@ -11,13 +11,13 @@ public:
 
 	int x, y;
 
-	/* ‘ã“ü‰‰ŽZŽq */
+	// ‘ã“ü‰‰ŽZŽq 
 	Vector2& operator = (const Vector2& vec);
 
-	/* “Y‚¦Žš‰‰ŽZŽq(”z—ñ) */
+	// “Y‚¦Žš‰‰ŽZŽq(”z—ñ) 
 	int operator[](int j);
 
-	/* ”äŠr‰‰ŽZŽq */
+	// ”äŠr‰‰ŽZŽq 
 	bool operator == (const Vector2& vec) const;
 	bool operator != (const Vector2& vec) const;
 	bool operator >  (const Vector2& vec) const;
@@ -25,7 +25,7 @@ public:
 	bool operator >= (const Vector2& vec) const;
 	bool operator <= (const Vector2& vec) const;
 
-	/* ’P€‰‰ŽZŽq */
+	// ’P€‰‰ŽZŽq 
 	Vector2& operator += (const Vector2& vec);
 	Vector2& operator -= (const Vector2& vec);
 	Vector2& operator *= (int k);
@@ -34,20 +34,20 @@ public:
 	Vector2 operator -() const;
 };
 
-/* ƒxƒNƒgƒ‹“¯Žm‚Ì‰‰ŽZ */
-/* Vector2 + Vector2 */
+// ƒxƒNƒgƒ‹“¯Žm‚Ì‰‰ŽZ 
+// Vector2 + Vector2 
 Vector2 operator+(const Vector2& i, const Vector2& j);
-/* Vector2 + int */
+// Vector2 + int 
 Vector2 operator+(const Vector2& i, int j);
-/* Vector2 - Vector2 */
+// Vector2 - Vector2 
 Vector2 operator-(const Vector2& i, const Vector2& j);
-/* Vector2 - int */
+// Vector2 - int 
 Vector2 operator-(const Vector2& i, int j);
-/* Vector2 * int */
+// Vector2 * int 
 Vector2 operator*(const Vector2& i, int k);
-/* int * Vector2 */
+// int * Vector2 
 Vector2 operator*(int k, const Vector2& i);
-// œŽZ
+// Vector2 / int
 Vector2 operator/(const Vector2& i, int k);
 
 

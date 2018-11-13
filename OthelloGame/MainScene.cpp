@@ -39,6 +39,7 @@ unique_scene MainScene::Update(unique_scene own, MouseCtl& mouse)
 	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
 	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "ゲームモード", 0xffffff);
+	DxLib::DrawExtendString(95, 20, 1.9, 1.9f, "左クリックでコマが置けるよ", 0xffff00);
 	DxLib::DrawExtendFormatString(700, 450, 1.5f, 1.5f, 0xeeee00, "白: %d", piece.w);
 	DxLib::DrawExtendFormatString(25, 450, 1.5f, 1.5f, 0xeeee00, "黒: %d", piece.b);
 	(*boardPtr).Draw();
@@ -111,11 +112,11 @@ void MainScene::PutPieceCnt(void)
 	{
 		for (int x = 0; x < boardPtr->GetDataSize().x; x++)
 		{
-			if ((*boardPtr).CheckPutPieceST(x, y) == PIECE_W)
+			if ((*boardPtr).CheckPutPieceST(x, y) == PIECE_ST::PIECE_W)
 			{
 				piece.w++;
 			}
-			else if ((*boardPtr).CheckPutPieceST(x, y) == PIECE_B)
+			else if ((*boardPtr).CheckPutPieceST(x, y) == PIECE_ST::PIECE_B)
 			{
 				piece.b++;
 			}

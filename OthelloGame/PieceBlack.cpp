@@ -11,7 +11,7 @@ PieceBlack::~PieceBlack()
 
 PIECE_ST PieceBlack::GetState(void)
 {
-	return PIECE_B;
+	return PIECE_ST::PIECE_B;
 }
 
 unsigned int PieceBlack::GetDrawColor(void)

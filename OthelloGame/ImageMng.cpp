@@ -2,7 +2,6 @@
 #include <DxLib.h>
 #include "ImageMng.h"
 
-/* 静的なメンバ変数の定義 */
 std::unique_ptr<ImageMng, ImageMng::ImageMngDeleter> ImageMng::s_Instance(new ImageMng());
 
 ImageMng::ImageMng()
@@ -15,7 +14,7 @@ ImageMng::~ImageMng()
 
 const VEC_INT ImageMng::ImgGetID(std::string fileName)
 {
-	/* 画像IDのハンドルが見つからなかった時、画像読み込みを行う(分割なし) */
+	 // 画像IDのハンドルが見つからなかった時、画像読み込みを行う(分割なし) 
 	if (imgMap.find(fileName) == imgMap.end())
 	{
 		imgMap[fileName].resize(1);
@@ -27,7 +26,7 @@ const VEC_INT ImageMng::ImgGetID(std::string fileName)
 
 const VEC_INT ImageMng::ImgGetID(std::string fileName, Vector2 divCnt, Vector2 divSize, Vector2 chipOffset)
 {
-	/* 画像IDのハンドルが見つからなかった時、画像読み込みを行う(分割あり) */
+	 // 画像IDのハンドルが見つからなかった時、画像読み込みを行う(分割あり) 
 	if (imgMap.find(fileName) == imgMap.end())
 	{
 		imgMap[fileName].resize(divCnt.x * divCnt.y);

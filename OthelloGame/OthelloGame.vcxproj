@@ -141,6 +141,8 @@
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="SceneState.cpp" />
     <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="TypeCpu.cpp" />
+    <ClCompile Include="TypeMan.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +163,8 @@
     <ClInclude Include="ResultScene.h" />
     <ClInclude Include="SceneState.h" />
     <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="TypeCpu.h" />
+    <ClInclude Include="TypeMan.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <ItemGroup>

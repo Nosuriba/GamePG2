@@ -2,6 +2,8 @@
 #include "ResultScene.h"
 #include "GameBoard.h"
 #include "Player.h"
+#include "TypeMan.h"
+#include "TypeCpu.h"
 #include "MouseCtl.h"
 
 MainScene::MainScene(PL_TYPE plType)
@@ -22,7 +24,7 @@ void MainScene::Init()
 	boardSize = (*boardPtr).GetDataSize();
 	PutPieceCnt();
 	SetBoardSize();
-	/* プレイヤーの登録を行っている */
+	// プレイヤーの登録を行っている
 	MakePlayer(PL_TYPE::PL_MAN);
 	MakePlayer(plType);
 	player = playerList.begin();
@@ -33,66 +35,18 @@ void MainScene::SetBoardSize(void)
 	
 }
 
-unique_scene MainScene::Update(unique_scene own, MouseCtl& mouse)
-{
-	(**player).SetTurn(true);
-	/* ゲーム中の情報を描画している */
-	DxLib::ClsDrawScreen();
-	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
-	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "ゲームモード", 0xffffff);
-	DxLib::DrawExtendString(200, 20, 1.9, 1.9f, "左クリックでコマが置けるよ", 0xffff00);
-	DxLib::DrawExtendFormatString(700, 450, 1.5f, 1.5f, 0xeeee00, "白: %d", piece.w);
-	DxLib::DrawExtendFormatString(25, 450, 1.5f, 1.5f, 0xeeee00, "黒: %d", piece.b);
-	(*boardPtr).Draw();
-
-	for (auto data : playerList)
-	{
-		(*data).Draw();
-	}
-
-	// プレイヤーのターン処理を行っている
-	if ((*boardPtr).InvFlag())
-	{
-		if ((**player).TurnAct(mouse, *boardPtr, (**player).pGetType()))
-		{
-			if ((**player).pGetType() == PL_TYPE::PL_MAN)
-			{
-				(*boardPtr).SetReverse(mouse.GetPoint(), (**player).pGetID());
-				PutPieceCnt();
-				NextPlayer();
-			}
-			else
-			{
-				(*boardPtr).SetReverse((*boardPtr).PutPieceCpu(), (**player).pGetID());
-				PutPieceCnt();
-				NextPlayer();
-			}
-		}
-	}
-
-	// プレイヤーのパス処理とゲームを継続するかの管理をしている
-	if ((*boardPtr).InvFlag())
-	{
-		if (!(*boardPtr).CheckPutPieceFlag((**player).pGetID()))
-		{
-			if (!AutoPassPlayer())
-			{
-				(*boardPtr).SetPieceCnt(piece);
-				(*boardPtr).PieceClear();
-				return std::make_unique<ResultScene>(boardPtr);
-			}
-		}
-	}
-	mouse.Update(PL_TYPE::PL_MAN);
-	(*boardPtr).Update();
-	DxLib::ScreenFlip();
-	return std::move(own);
-}
-
 void MainScene::MakePlayer(PL_TYPE type)
 {
-	playerList.push_back(std::make_shared<Player>(boardSize, type));
+	if (type == PL_TYPE::PL_MAN)
+	{
+		playerList.push_back(std::make_shared<TypeMan>(boardSize, type));
+	}
+	else
+	{
+		playerList.push_back(std::make_shared<TypeCpu>(boardSize, type));
+	}
 }
+
 
 void MainScene::NextPlayer(void)
 {
@@ -136,3 +90,60 @@ void MainScene::PutPieceCnt(void)
 		}
 	}
 }
+
+unique_scene MainScene::Update(unique_scene own, MouseCtl& mouse)
+{
+	(**player).SetTurn(true);
+	/* ゲーム中の情報を描画している */
+	DxLib::ClsDrawScreen();
+	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
+	DxLib::DrawExtendString(0, 0, 1.5f, 1.5f, "ゲームモード", 0xffffff);
+	DxLib::DrawExtendString(200, 20, 1.9, 1.9f, "左クリックでコマが置けるよ", 0xffff00);
+	DxLib::DrawExtendFormatString(700, 450, 1.5f, 1.5f, 0xeeee00, "白: %d", piece.w);
+	DxLib::DrawExtendFormatString(25, 450, 1.5f, 1.5f, 0xeeee00, "黒: %d", piece.b);
+	(*boardPtr).Draw();
+
+	for (auto data : playerList)
+	{
+		(*data).Draw();
+	}
+
+	// プレイヤーのターン処理を行っている
+	if ((*boardPtr).InvFlag())
+	{
+		if ((**player).TurnAct(mouse, *boardPtr))
+		{
+			if ((**player).pGetType() == PL_TYPE::PL_MAN)
+			{
+				(*boardPtr).SetReverse(mouse.GetPoint(), (**player).pGetID());
+				PutPieceCnt();
+				NextPlayer();
+			}
+			else
+			{
+				(*boardPtr).SetReverse((*boardPtr).PutPieceCpu(), (**player).pGetID());
+				PutPieceCnt();
+				NextPlayer();
+			}
+		}
+	}
+
+	// プレイヤーのパス処理とゲームを継続するかの管理をしている
+	if ((*boardPtr).InvFlag())
+	{
+		if (!(*boardPtr).CheckPutPieceFlag((**player).pGetID()))
+		{
+			if (!AutoPassPlayer())
+			{
+				(*boardPtr).SetPieceCnt(piece);
+				(*boardPtr).PieceClear();
+				return std::make_unique<ResultScene>(boardPtr);
+			}
+		}
+	}
+	mouse.Update(PL_TYPE::PL_MAN);
+	(*boardPtr).Update();
+	DxLib::ScreenFlip();
+	return std::move(own);
+}
+

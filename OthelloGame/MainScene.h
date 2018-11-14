@@ -18,8 +18,6 @@ public:
 	~MainScene();
 	void Init();
 	unique_scene Update(unique_scene own,  MouseCtl& mouse);
-	
-
 private:
 	void SetBoardSize(void);
 

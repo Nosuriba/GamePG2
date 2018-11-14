@@ -25,6 +25,12 @@
     <Filter Include="ソース ファイル\GameScene">
       <UniqueIdentifier>{842091b2-c9ee-4586-8948-19dbcf90cfce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Player">
+      <UniqueIdentifier>{c435c89d-53c4-496c-8179-02a6e39d4238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Player">
+      <UniqueIdentifier>{e4e421b0-ec11-4c9c-8985-690c4c9bd87e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ImageMng.cpp">
@@ -40,9 +46,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="MouseCtl.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="PieceState.cpp">
@@ -78,11 +81,20 @@
     <ClCompile Include="dataTbl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="PieceST.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Player.cpp">
+      <Filter>ソース ファイル\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeCpu.cpp">
+      <Filter>ソース ファイル\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeMan.cpp">
+      <Filter>ソース ファイル\Player</Filter>
     </ClCompile>
     <ClCompile Include="PlayerType.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceST.cpp">
+      <Filter>ソース ファイル\Piece</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -96,9 +108,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="MouseCtl.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="GamePiece.h">
@@ -135,10 +144,19 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="PieceST.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Piece</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ヘッダー ファイル\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeCpu.h">
+      <Filter>ヘッダー ファイル\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeMan.h">
+      <Filter>ヘッダー ファイル\Player</Filter>
     </ClInclude>
     <ClInclude Include="PlayerType.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

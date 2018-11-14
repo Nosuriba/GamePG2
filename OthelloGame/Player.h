@@ -11,17 +11,18 @@ class Player
 public:
 	Player(Vector2 boardSize, PL_TYPE type);
 	~Player();
-	void Update();
 	bool Draw(void);
-	PIECE_ST pGetID(void);
 	PL_TYPE pGetType(void);
-	bool TurnAct(const MouseCtl& mouse, GameBoard& gBoard, PL_TYPE type);
+
+	// ƒNƒ‰ƒX‚ÌŒp³‘¤‚Å‚»‚ê‚¼‚êİ’è‚ğ•ÏX‚µ‚Ä‚¢‚é
+	virtual PIECE_ST pGetID(void) = 0;
+	virtual bool TurnAct(const MouseCtl& mouse, GameBoard& gBoard) = 0;
 	bool SetTurn(bool flag);
-private:
+protected:
 	Vector2 boardSize = { 0,0 };
-	PIECE_ST id;
+	static PIECE_ST id;
 	PL_TYPE pType;
-	static int playerCnt;
 	std::unique_ptr<PieceTray> pTray;
+private:
 };
 

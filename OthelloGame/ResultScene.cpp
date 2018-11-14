@@ -13,18 +13,22 @@ ResultScene::~ResultScene()
 {
 }
 
+void ResultScene::Init()
+{
+}
+
 PIECE_ST ResultScene::WinJudge(PutPiece piece)
 {
-	/* ピースの個数を比較して、個数が多いピースの状態を返すようにしている*/
-	if (piece.b < piece.w)
+	
+	if (piece.b < piece.w)			// 白の勝利
 	{
 		return PIECE_ST::PIECE_W;
 	}
-	else if (piece.b > piece.w)
+	else if (piece.b > piece.w)		// 黒の勝利
 	{
 		return PIECE_ST::PIECE_B;
 	}
-	else if (piece.b == piece.w)
+	else if (piece.b == piece.w)	// 引き分け
 	{
 		return PIECE_ST::PIECE_NON;
 	}
@@ -33,8 +37,7 @@ PIECE_ST ResultScene::WinJudge(PutPiece piece)
 
 void ResultScene::DrawWinner(PIECE_ST pState)
 {
-	/* 引数で勝者のピースの状態を取得し、
-	   描画を行っている */
+	// 勝者を描画している
 	if (pState == PIECE_ST::PIECE_B)
 	{
 		DxLib::DrawExtendString(240, 0, 2.5f, 2.5f, "先手[黒]の勝利なり", 0xfffacd);
@@ -45,13 +48,9 @@ void ResultScene::DrawWinner(PIECE_ST pState)
 	}
 	else
 	{
-		/* 勝者が決まらなかった時の描画 */
+		// 引き分けの時に描画を行う
 		DxLib::DrawExtendString(300, 0, 2.5f, 2.5f, "決着つかず...", 0xeeee00);
 	}
-}
-
-void ResultScene::Init()
-{
 }
 
 unique_scene ResultScene::Update(unique_scene own, MouseCtl& mouse)
@@ -65,15 +64,15 @@ unique_scene ResultScene::Update(unique_scene own, MouseCtl& mouse)
 	}
 	// ピースの並び替えを行っている 
 	(*boardPtr).ResultPiece(piece);
-	
+
 	// リザルトの情報を描画している 
 	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
 	(*boardPtr).Draw();
 	DrawWinner(WinJudge(piece));
-	DxLib::DrawExtendString(100, 480, 1.9, 1.9f, "右クリックを押すとタイトル画面に戻るよ", 0x0000cd);
+	DxLib::DrawExtendString(60, 300, 2.2f, 2.2f, "右クリックを押すとタイトル画面に戻るよ", 0xffff00);
 	DxLib::DrawExtendFormatString(700, 450, 1.5f, 1.5f, 0xeeee00, "白: %d", piece.w);
-	DxLib::DrawExtendFormatString(25, 450, 1.5f, 1.5f, 0xeeee00, "黒: %d", piece.b);
+	DxLib::DrawExtendFormatString(25 , 450, 1.5f, 1.5f, 0xeeee00, "黒: %d", piece.b);
 	DxLib::ScreenFlip();
 
 	return std::move(own);

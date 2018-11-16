@@ -1,35 +1,21 @@
+#include <DxLib.h>
 #include "TypeMan.h"
-#include "GameBoard.h"
-#include "MouseCtl.h"
-#include "PieceTray.h"
 
-
-TypeMan::TypeMan(Vector2 boardSize, PL_TYPE type) : Player(boardSize, type)
+TypeMan::TypeMan()
 {
-	TypeMan::id = ++(Player::id);
-	pType = type;
-	pTray = std::make_unique<PieceTray>(id, boardSize);
 }
 
 TypeMan::~TypeMan()
 {
 }
 
-PIECE_ST TypeMan::pGetID(void)
+PL_TYPE TypeMan::GetType(void)
 {
-	return TypeMan::id;
+	return PL_TYPE::MAN;
 }
 
-bool TypeMan::TurnAct(const MouseCtl & mouse, GameBoard & gBoard)
+void TypeMan::Update(mouse_int mButton, Vector2 pos)
 {
-	(*pTray).SetTurnFlag(true);
-	if (mouse.GetButton()[PUSH_NOW] & (~mouse.GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
-	{
-		if (gBoard.CheckReverse(mouse.GetPoint(), id))
-		{
-			gBoard.SetPiece(mouse.GetPoint(), id);
-			return true;
-		}
-	}
-	return false;
+	mButton[PUSH_NOW] = DxLib::GetMouseInput();
+	DxLib::GetMousePoint(&pos.x, &pos.y);
 }

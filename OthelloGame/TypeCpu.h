@@ -1,15 +1,12 @@
 #pragma once
-#include "Player.h"
-
+#include "PlayerType.h"
 class TypeCpu :
-	public Player
+	public PlayerType
 {
 public:
-	TypeCpu(Vector2 boardSize, PL_TYPE type);
+	TypeCpu();
 	~TypeCpu();
-	PIECE_ST pGetID(void);
-	bool TurnAct(const MouseCtl& mouse, GameBoard& gBoard);
-private:
-	PIECE_ST id;
+	PL_TYPE GetType(void);
+	void Update(mouse_int mButton, Vector2 pos);
 };
 

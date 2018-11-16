@@ -27,7 +27,7 @@ PIECE_ST GamePiece::GetState(void)
 		return (**pState.begin()).GetState();
 	}
 
-	return PIECE_ST::PIECE_NON;
+	return PIECE_ST::NON;
 }
 
 void GamePiece::SetState(PIECE_ST pState, int reserveCnt)
@@ -42,7 +42,7 @@ void GamePiece::SetState(PIECE_ST pState, int reserveCnt)
 	}
 	/* 引数で渡された情報を使用して、リストの先頭に
 	　 インスタンスを行っている */
-	if (pState == PIECE_ST::PIECE_W)
+	if (pState == PIECE_ST::W)
 	{
 		this->pState.push_front(std::make_unique<PieceWhite>());
 	}
@@ -101,13 +101,13 @@ void GamePiece::Draw(void)
 		  :  state = oldState);
 
 	 // ピースの状態によって、描画するピースの色を設定している 
-	if (state == PIECE_ST::PIECE_W)
+	if (state == PIECE_ST::W)
 	{
 		DxLib::DrawRotaGraph(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2), drawSize, 0.0, 
 							 LpImageMng.ImgGetID("image/piece/player1.png")[0], true);
 		/*DxLib::DrawGraph(pos.x, pos.y, LpImageMng.ImgGetID("image/piece/charPiece1.png")[0], true);*/
 	}
-	else if (state == PIECE_ST::PIECE_B)
+	else if (state == PIECE_ST::B)
 	{
 		DxLib::DrawRotaGraph(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2), drawSize, 0.0, 
 							 LpImageMng.ImgGetID("image/piece/player2.png")[0], true);

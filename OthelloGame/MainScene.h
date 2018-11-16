@@ -1,7 +1,7 @@
 #pragma once
-#include "PlayerType.h"
 #include "SceneState.h"
 #include "GamePiece.h"
+#include "MouseCtl.h"
 
 class GameBoard;
 class Player;
@@ -17,12 +17,12 @@ public:
 	MainScene(PL_TYPE plType);
 	~MainScene();
 	void Init();
-	unique_scene Update(unique_scene own,  MouseCtl& mouse);
+	unique_scene Update(unique_scene own, mouse_shared sysMouse);
 private:
 	void SetBoardSize(void);
 
 	/* プレイヤー関係の処理 (ゲーム)*/
-	void MakePlayer(PL_TYPE type);
+	void MakePlayer();
 	void NextPlayer(void);
 	bool AutoPassPlayer(void);
 
@@ -35,6 +35,7 @@ private:
 
 	player_list playerList;
 	player_list::iterator player;
+	mouse_array mouseCtl;
 	std::shared_ptr<GameBoard> boardPtr;
 
 };

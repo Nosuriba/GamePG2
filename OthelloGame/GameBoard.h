@@ -17,10 +17,11 @@ public:
 	// ピースのサイズを取得する関数 
 	Vector2 GetDataSize(void);
 	
-	// ピースの初期配置を設定して、ピースを配置する関数 
-	void StartPiece(const Vector2& pNum, bool pFlag);
+	//// ピースの初期配置を設定して、ピースを配置する関数 
+	//void StartPiece(const Vector2& pNum, bool pFlag);
 
 	// 指定した場所にピースを配置する関数 
+	void SetPiece(int x, int y, PIECE_ST state);
 	bool SetPiece(const Vector2& vec, PIECE_ST id);
 
 	// 配置されたピースの個数を受け渡し用 

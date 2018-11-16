@@ -3,17 +3,17 @@
 
 PIECE_ST begin(PIECE_ST)
 {
-	return PIECE_ST::PIECE_NON;
+	return PIECE_ST::B;
 }
 
 PIECE_ST end(PIECE_ST)
 {
-	return PIECE_ST::PIECE_MAX;
+	return PIECE_ST::MAX;
 }
 
-PIECE_ST operator*(PIECE_ST state)
+int operator*(PIECE_ST state)
 {
-	return state;
+	return static_cast<int>(state);
 }
 
 PIECE_ST operator++(PIECE_ST & state)

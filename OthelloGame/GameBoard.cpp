@@ -80,37 +80,45 @@ Vector2 GameBoard::GetDataSize(void)
 	return Vector2((pieceData.size() / data.size()), data.size());
 }
 
-void GameBoard::StartPiece(const Vector2& pNum, bool pFlag)
-{
-	int initPieceST = 0;
-	int pWhite = static_cast<int>(PIECE_ST::PIECE_W);
-	int pBlack = static_cast<int>(PIECE_ST::PIECE_B);
-	int pMax = static_cast<int>(PIECE_ST::PIECE_MAX);
-	for (int y = 0; y <= 1; y++)
-	{
-		for (int x = 0; x <= 1; x++)
-		{
-			if (data[pNum.y + y][pNum.x + x].expired())
-			{
-				// 最初に配置されるピースの状態を設定している 
-				if (pFlag)
-				{
-					initPieceST = (((x + y) % pMax) + 2 < 3
-								? initPieceST = ((x + y) % pMax) + 2
-								: initPieceST = (x + y == 2 ? pWhite : pBlack));
-				}
-				else
-				{
-					initPieceST = ((x + y) < 2 ? initPieceST = ((x + y) % pMax) + 1 : initPieceST = pBlack);
-				}
-				// ピースの配置位置を設定している 
-				pPos = ChangeTblToScr(pNum + Vector2(x, y));
-				auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), (PIECE_ST)initPieceST));
-				data[pNum.y + y][pNum.x + x] = (*tmp);
-			}
-		}
-	}
+//void GameBoard::StartPiece(const Vector2& pNum, bool pFlag)
+//{
+//	int initPieceST = 0;
+//	int pWhite = static_cast<int>(PIECE_ST::W);
+//	int pBlack = static_cast<int>(PIECE_ST::B);
+//	int pMax = static_cast<int>(PIECE_ST::MAX);
+//	for (int y = 0; y <= 1; y++)
+//	{
+//		for (int x = 0; x <= 1; x++)
+//		{
+//			if (data[pNum.y + y][pNum.x + x].expired())
+//			{
+//				// 最初に配置されるピースの状態を設定している 
+//				if (pFlag)
+//				{
+//					initPieceST = (((x + y) % pMax) < 1
+//								? initPieceST = ((x + y) % pMax)
+//								: initPieceST = (x + y == 1 ? pWhite : pBlack));
+//				}
+//				else
+//				{
+//					initPieceST = ((x + y) < 1 ? initPieceST = ((x + y) % pMax) + 1 : initPieceST = pBlack);
+//				}
+//				// ピースの配置位置を設定している 
+//				pPos = ChangeTblToScr(pNum + Vector2(x, y));
+//				auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), (PIECE_ST)initPieceST));
+//				data[pNum.y + y][pNum.x + x] = (*tmp);
+//			}
+//		}
+//	}
+//
+//}
 
+void GameBoard::SetPiece(int x, int y, PIECE_ST state)
+{
+	// ピースの配置位置を設定している 
+	pPos = ChangeTblToScr(Vector2(x, y));
+	auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), state));
+	data[y][x] = (*tmp);
 }
 
 bool GameBoard::SetPiece(const Vector2& vec, PIECE_ST id)
@@ -152,7 +160,7 @@ void GameBoard::ResultPiece(PutPiece piece)
 		if (data[b / data.size()][b % data.size()].expired())
 		{
 			pPos = ChangeTblToScr(Vector2(b % data.size(), b / data.size()));
-			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), PIECE_ST::PIECE_B));
+			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), PIECE_ST::B));
 			data[b / data.size()][b % data.size()] = (*tmp);
 		}
 	}
@@ -162,7 +170,7 @@ void GameBoard::ResultPiece(PutPiece piece)
 		if (data[(w / data.size())][w % data.size()].expired())
 		{
 			pPos = ChangeTblToScr(Vector2(w % data.size(), w / data.size()));
-			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), PIECE_ST::PIECE_W));
+			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), PIECE_ST::W));
 			data[(w / data.size())][w % data.size()] = (*tmp);
 		}
 	}
@@ -322,17 +330,17 @@ PIECE_ST GameBoard::CheckPutPieceST(int x, int y)
 	// 盤面にピースが配置されていた時、ピースの色を取得するようにしている 
 	if (!data[y][x].expired())
 	{
-		if (data[y][x].lock()->GetState() == PIECE_ST::PIECE_W)
+		if (data[y][x].lock()->GetState() == PIECE_ST::W)
 		{
-			return PIECE_ST::PIECE_W;
+			return PIECE_ST::W;
 		}
-		else if (data[y][x].lock()->GetState() == PIECE_ST::PIECE_B)
+		else if (data[y][x].lock()->GetState() == PIECE_ST::B)
 		{
-			return PIECE_ST::PIECE_B;
+			return PIECE_ST::B;
 		}
 		else{}
 	}
-	return PIECE_ST::PIECE_NON;
+	return PIECE_ST::NON;
 }
 
 Vector2 GameBoard::PutPieceCpu(void)

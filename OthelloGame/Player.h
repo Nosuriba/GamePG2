@@ -1,6 +1,5 @@
 #pragma once
 #include "GamePiece.h"
-#include "PlayerType.h"
 
 class PieceTray;
 class MouseCtl;
@@ -9,20 +8,16 @@ class GameBoard;
 class Player
 {
 public:
-	Player(Vector2 boardSize, PL_TYPE type);
+	Player(Vector2 boardSize);
 	~Player();
 	bool Draw(void);
-	PL_TYPE pGetType(void);
-
-	// ÉNÉâÉXÇÃåpè≥ë§Ç≈ÇªÇÍÇºÇÍê›íËÇïœçXÇµÇƒÇ¢ÇÈ
-	virtual PIECE_ST pGetID(void) = 0;
-	virtual bool TurnAct(const MouseCtl& mouse, GameBoard& gBoard) = 0;
+	PIECE_ST pGetID(void);
+	bool TurnAct(std::array<std::shared_ptr<MouseCtl>, static_cast<int>(PIECE_ST::MAX)> mouse, GameBoard& gBoard);
 	bool SetTurn(bool flag);
-protected:
-	Vector2 boardSize = { 0,0 };
-	static PIECE_ST id;
-	PL_TYPE pType;
-	std::unique_ptr<PieceTray> pTray;
 private:
+	static int playerCnt;
+	Vector2 boardSize = { 0,0 };
+	PIECE_ST id;
+	std::unique_ptr<PieceTray> pTray;
 };
 

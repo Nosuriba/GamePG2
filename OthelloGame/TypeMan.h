@@ -1,15 +1,12 @@
 #pragma once
-#include "Player.h"
-
+#include "PlayerType.h"
 class TypeMan :
-	public Player
+	public PlayerType
 {
 public:
-	TypeMan(Vector2 boardSize, PL_TYPE type);
+	TypeMan();
 	~TypeMan();
-	PIECE_ST pGetID(void);
-	bool TurnAct(const MouseCtl& mouse, GameBoard& gBoard);
-public:
-	PIECE_ST id;
+	PL_TYPE GetType(void);
+	void Update(mouse_int mButton, Vector2 pos);
 };
 

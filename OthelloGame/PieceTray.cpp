@@ -4,7 +4,7 @@
 PieceTray::PieceTray(PIECE_ST pState, const Vector2& boardSize)
 {
 	// プレイヤーがトレイに所持しているピースの座標 
-	this->pos = Vector2( 30, 100 ) + (Vector2(LpGameScene.GetScreenSize().x - 130, 0) * (pState == PIECE_ST::PIECE_B ? 0 : 1));
+	this->pos = Vector2( 30, 100 ) + (Vector2(LpGameScene.GetScreenSize().x - 130, 0) * (pState == PIECE_ST::B ? 0 : 1));
 	this->pState = pState;
 	int pieceMax = (boardSize.x * boardSize.y) / 2;
 

@@ -1,15 +1,11 @@
 #pragma once
+#include "MouseCtl.h"
 
-// ÉvÉåÉCÉÑÅ[ÇÃéÌóﬁ
-enum class PL_TYPE
+class PlayerType
 {
-	PL_MAN,
-	PL_CPU,
-	PL_MAX
+public:
+	virtual ~PlayerType();
+	virtual PL_TYPE GetType(void) = 0;
+	virtual void Update(mouse_int mButton, Vector2 pos) = 0;
 };
 
-PL_TYPE begin(PL_TYPE);
-PL_TYPE end(PL_TYPE);
-PL_TYPE operator*(PL_TYPE type);
-PL_TYPE operator++(PL_TYPE type);
-PL_TYPE operator--(PL_TYPE type);

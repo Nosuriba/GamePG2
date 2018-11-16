@@ -13,7 +13,7 @@ private:
 	bool AddPiece(void);
 	
 	piece_sharedList pieceList;
-	PIECE_ST pState = PIECE_ST::PIECE_NON;
+	PIECE_ST pState = PIECE_ST::NON;
 
 	Vector2  pos;
 	

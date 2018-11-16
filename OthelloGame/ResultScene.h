@@ -12,7 +12,7 @@ public:
 	ResultScene(std::shared_ptr<GameBoard> boradPtr);
 	~ResultScene();
 	void Init();
-	unique_scene Update(unique_scene own, MouseCtl& mouse);
+	unique_scene Update(unique_scene own, mouse_shared sysMouse);
 private:
 	
 	/* ŸÒ‚ğ”»’è‚·‚é‚½‚ß‚ÌŠÖ” */

@@ -4,7 +4,7 @@
 
 TitleScene::TitleScene()
 {
-	plType = PL_TYPE::PL_CPU;
+	plType = PL_TYPE::CPU;
 	TitleScene::Init();
 }
 
@@ -17,18 +17,17 @@ void TitleScene::Init()
 {
 }
 
-unique_scene TitleScene::Update(unique_scene own, MouseCtl& mouse)
+unique_scene TitleScene::Update(unique_scene own, mouse_shared sysMouse)
 {
-	mouse.Update(PL_TYPE::PL_MAN);
-
+	(*sysMouse).GetPlType();
 	// 左クリックをした時、対戦モードの切り替えを行っている
-	if (mouse.GetButton()[PUSH_NOW] & (~mouse.GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
+	if ((*sysMouse).GetButton()[PUSH_NOW] & (~(*sysMouse).GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 	{
-		plType = (plType == PL_TYPE::PL_MAN ? plType = PL_TYPE::PL_CPU : plType = PL_TYPE::PL_MAN);
+		plType = (plType == PL_TYPE::MAN ? plType = PL_TYPE::CPU : plType = PL_TYPE::MAN);
 	}
 
 	 // 右クリックをした時、ゲームメインのシーンに移行する 
-	if (mouse.GetButton()[PUSH_NOW] & (~mouse.GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
+	if ((*sysMouse).GetButton()[PUSH_NOW] & (~(*sysMouse).GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
 	{
 		return std::make_unique<MainScene>(plType);
 	}
@@ -40,7 +39,7 @@ unique_scene TitleScene::Update(unique_scene own, MouseCtl& mouse)
 	DxLib::DrawExtendString(120, 450, 1.8, 1.8f, "右クリックを押すとゲームが始まるよ", 0xffff00);
 
 	// 対戦モードの情報を描画している
-	if (plType == PL_TYPE::PL_CPU)
+	if (plType == PL_TYPE::CPU)
 	{
 		DxLib::DrawExtendString(100, 270, 3.0f, 3.0f, "Player    VS    CPU", 0xff0000);
 	}

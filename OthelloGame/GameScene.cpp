@@ -2,11 +2,11 @@
 #include "GameScene.h"
 #include "MouseCtl.h"
 #include "TitleScene.h"
+#include "PieceST.h"
 
 #define SCREEN_SIZE_X (800)
 #define SCREEN_SIZE_Y (600)
 
-/* 静的なメンバ変数の定義 */
 std::unique_ptr<GameScene, GameScene::GameSceneDeleter> GameScene::s_Instance(new GameScene());
 
 GameScene::GameScene()
@@ -24,8 +24,10 @@ void GameScene::Run()
 	gScene = std::make_unique<TitleScene>();
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
-		gScene = (*gScene).Update(std::move(gScene), *mousePtr);
+		(*sysMouse).Update();
+		gScene = (*gScene).Update(std::move(gScene), sysMouse);
 	}
+
 }
 
 Vector2 GameScene::GetScreenSize(void)
@@ -40,7 +42,7 @@ int GameScene::UpDate()
 
 int GameScene::SysInit()
 {
-	/* システムの初期化が終わった後、ゲームの初期化を行うようにしている */
+	// システムの初期化が終わった後、ゲームの初期化を行うようにしている 
 	DxLib::SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 16);
 	/*DxLib::SetWindowIconID();*/
 	DxLib::ChangeWindowMode(true);
@@ -50,7 +52,10 @@ int GameScene::SysInit()
 		return false;
 	}
 	DxLib::SetDrawScreen(DX_SCREEN_BACK);
-	mousePtr = std::make_unique<MouseCtl>();
+
+	sysMouse = std::make_shared<MouseCtl>();
+	(*sysMouse).SetPlType(PL_TYPE::MAN);
+
 	return 0;
 }
 

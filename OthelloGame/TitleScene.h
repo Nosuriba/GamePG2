@@ -1,15 +1,13 @@
 #pragma once
 #include "SceneState.h"
-#include "PlayerType.h"
-
-class MouseCtl;
+#include "MouseCtl.h"
 
 struct TitleScene : SceneState
 {
 	TitleScene();
 	~TitleScene();
 	void Init();
-	unique_scene Update(unique_scene own, MouseCtl& mouse);
+	unique_scene Update(unique_scene own, mouse_shared sysMouse);
 	PL_TYPE plType;
 };
 

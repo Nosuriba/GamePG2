@@ -1,33 +1,22 @@
 #include "TypeCpu.h"
-#include "GameBoard.h"
-#include "MouseCtl.h"
-#include "PieceTray.h"
 
-TypeCpu::TypeCpu(Vector2 boardSize, PL_TYPE type) : Player(boardSize, type)
+
+
+TypeCpu::TypeCpu()
 {
-	TypeCpu::id = ++(Player::id);
-	pType = type;
-	pTray = std::make_unique<PieceTray>(id, boardSize);
 }
+
 
 TypeCpu::~TypeCpu()
 {
 }
 
-PIECE_ST TypeCpu::pGetID(void)
+PL_TYPE TypeCpu::GetType(void)
 {
-	return TypeCpu::id;
+	return PL_TYPE::CPU;
 }
 
-bool TypeCpu::TurnAct(const MouseCtl & mouse, GameBoard & gBoard)
+void TypeCpu::Update(mouse_int mButton, Vector2 pos)
 {
-	if (gBoard.CheckPutPieceFlag(id))
-	{
-		if (gBoard.CheckReverse(gBoard.PutPieceCpu(), id))
-		{
-			gBoard.SetPiece(gBoard.PutPieceCpu(), id);
-			return true;
-		}
-	}
-	return false;
+
 }

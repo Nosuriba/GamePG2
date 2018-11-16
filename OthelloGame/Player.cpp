@@ -5,15 +5,18 @@
 #include "GamePiece.h"
 #include "PieceTray.h"
 
-PIECE_ST Player::id = PIECE_ST::PIECE_NON;
+int Player::playerCnt = 0;
 
-Player::Player(Vector2 boardSize, PL_TYPE type)
+Player::Player(Vector2 boardSize)
 {
+	id = (PIECE_ST)playerCnt;
+	playerCnt++;
+	pTray = std::make_unique<PieceTray>(id, boardSize);
 }
 
 Player::~Player()
 {
-	id = PIECE_ST::PIECE_NON;
+	playerCnt = 0;
 }
 
 bool Player::Draw(void)
@@ -27,9 +30,20 @@ bool Player::Draw(void)
 	return false;
 }
 
-PL_TYPE Player::pGetType(void)
+PIECE_ST Player::pGetID(void)
 {
-	return pType;
+	return id;
+}
+
+bool Player::TurnAct(std::array<std::shared_ptr<MouseCtl>, static_cast<int>(PIECE_ST::MAX)> mouse, GameBoard & gBoard)
+{
+	(*pTray).SetTurnFlag(true);
+	if (gBoard.CheckReverse((*mouse[static_cast<int>(id)]).GetPoint(), id))
+	{
+		gBoard.SetPiece((*mouse[static_cast<int>(id)]).GetPoint(), id);
+		return true;
+	}
+	return false;
 }
 
 bool Player::SetTurn(bool flag)

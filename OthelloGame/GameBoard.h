@@ -30,7 +30,6 @@ public:
 
 	// リザルトでピースの並びを整えるための関数 
 	void ResultPiece(PutPiece piece);
-	void PieceClear(void);
 
 	// 反転処理を行うための関数 
 	void SetReverse(const Vector2& vec, PIECE_ST id);
@@ -40,7 +39,7 @@ public:
 	// ピースが置けるかの検索を行う関数 
 	bool CheckPutPieceFlag(PIECE_ST id);
 	PIECE_ST CheckPutPieceST(int x, int y);
-	Vector2 PutPieceCpu(void);
+	Vector2 PutPieceCpu();
 
 	bool InvFlag(void);
 	void Update(void);

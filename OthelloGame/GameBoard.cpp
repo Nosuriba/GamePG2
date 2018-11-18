@@ -144,6 +144,7 @@ bool GameBoard::SetPiece(const Vector2& vec, PIECE_ST id)
 void GameBoard::SetPieceCnt(PutPiece piece)
 {
 	this->piece = piece;
+	pieceList.clear();
 }
 
 PutPiece GameBoard::GetPieceCnt(void)
@@ -174,11 +175,6 @@ void GameBoard::ResultPiece(PutPiece piece)
 			data[(w / data.size())][w % data.size()] = (*tmp);
 		}
 	}
-}
-
-void GameBoard::PieceClear(void)
-{
-	pieceList.clear();
 }
 
 void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
@@ -343,7 +339,7 @@ PIECE_ST GameBoard::CheckPutPieceST(int x, int y)
 	return PIECE_ST::NON;
 }
 
-Vector2 GameBoard::PutPieceCpu(void)
+Vector2 GameBoard::PutPieceCpu()
 {
 	Vector2 pNum = putPieceTbl.front();
 	return ChangeTblToScr(pNum) + Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y);

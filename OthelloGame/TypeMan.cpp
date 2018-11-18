@@ -14,8 +14,8 @@ PL_TYPE TypeMan::GetType(void)
 	return PL_TYPE::MAN;
 }
 
-void TypeMan::Update(mouse_int mButton, Vector2 pos)
+void TypeMan::Update(int& data, Vector2& pos, std::weak_ptr<GameBoard> boardPtr)
 {
-	mButton[PUSH_NOW] = DxLib::GetMouseInput();
+	data = DxLib::GetMouseInput();
 	DxLib::GetMousePoint(&pos.x, &pos.y);
 }

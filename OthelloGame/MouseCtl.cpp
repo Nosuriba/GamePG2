@@ -1,17 +1,13 @@
 #include <DxLib.h>
 #include "MouseCtl.h"
 #include "Vector2.h"
+#include "GameBoard.h"
 #include "TypeMan.h"
 #include "TypeCpu.h"
 
 MouseCtl::MouseCtl()
 {
 	pos = { 0,0 };
-}
-
-MouseCtl::MouseCtl(PL_TYPE type)
-{
-	
 }
 
 
@@ -31,6 +27,10 @@ mouse_int MouseCtl::GetButton(void) const
 
 PL_TYPE MouseCtl::GetPlType(void)
 {
+	if (!plType)
+	{
+		return PL_TYPE::SYS;
+	}
 	return (*plType).GetType();
 }
 
@@ -48,19 +48,22 @@ void MouseCtl::SetPlType(PL_TYPE type)
 
 void MouseCtl::Update()
 {
+	mButton[PUSH_OLD] = mButton[PUSH_NOW];
+	mButton[PUSH_NOW] = DxLib::GetMouseInput();
+	DxLib::GetMousePoint(&pos.x, &pos.y);
+}
+
+void MouseCtl::Update(std::shared_ptr<GameBoard> boardPtr)
+{
 	// プレイヤーのターンの時にマウスのクリックを更新する
-	if ((*plType).GetType() == PL_TYPE::MAN)
+	if (!((*plType).GetType() == PL_TYPE::SYS))
 	{
 		mButton[PUSH_OLD] = mButton[PUSH_NOW];
-		mButton[PUSH_NOW] = DxLib::GetMouseInput();
-		//(*plType).Update(mButton, pos);
+		(*plType).Update(mButton[PUSH_NOW], pos, boardPtr);
+
 	}
 	else
 	{
-		mButton[PUSH_NOW] = 0;
-		pos = { 0,0 };
+		Update();
 	}
-	
-	// ボタンを押した位置の座標を取得している 
-	//DxLib::GetMousePoint(&pos.x, &pos.y);
 }

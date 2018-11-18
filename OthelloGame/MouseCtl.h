@@ -3,6 +3,7 @@
 #include "Vector2.h"
 
 class PlayerType;
+class GameBoard;
 
 enum M_PUSH
 {
@@ -16,6 +17,7 @@ enum class PL_TYPE
 {
 	MAN,
 	CPU,
+	SYS,
 	MAX
 };
 
@@ -26,17 +28,18 @@ class MouseCtl
 {
 public:
 	MouseCtl();
-	MouseCtl(PL_TYPE type);
 	~MouseCtl();
 	Vector2 GetPoint(void) const;
 	mouse_int GetButton(void) const;
 	PL_TYPE GetPlType(void);
 	void SetPlType(PL_TYPE type);
 	void Update();
+	void Update(std::shared_ptr<GameBoard>);
 private:
 	Vector2   pos;
 	PL_TYPE	  type;
 	std::unique_ptr<PlayerType> plType;
 	mouse_int mButton;
+
 };
 

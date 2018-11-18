@@ -10,7 +10,6 @@ MainScene::MainScene(PL_TYPE plType)
 	MainScene::Init();
 }
 
-
 MainScene::~MainScene()
 {
 }
@@ -18,16 +17,15 @@ MainScene::~MainScene()
 void MainScene::Init()
 {
 	//(*boardPtr).StartPiece({ 3,3 }, false);			// true : 通常の白黒配置, false : 白黒を反転して配置
-	
+
+	// プレイヤータイプごとのマウスの情報を設定している
 	for (auto unit : PIECE_ST())
 	{
 		mouseCtl[unit] = std::make_shared<MouseCtl>();
 		(*mouseCtl[unit]).SetPlType(PL_TYPE::MAN);
 	}
-	// タイトルシーンで設定したプレイヤーの型を渡している
-	
 	(*mouseCtl[1]).SetPlType(plType);
-	
+
 	boardPtr = std::make_shared<GameBoard>();
 
 	(*boardPtr).SetPiece(3, 3, PIECE_ST::B);
@@ -84,7 +82,7 @@ void MainScene::PutPieceCnt(void)
 	/* ピースの色を取得して、それぞれの個数をカウントしている */
 	for (int y = 0; y < (*boardPtr).GetDataSize().y; y++)
 	{
-		for (int x = 0; x < boardPtr->GetDataSize().x; x++)
+		for (int x = 0; x < (*boardPtr).GetDataSize().x; x++)
 		{
 			if ((*boardPtr).CheckPutPieceST(x, y) == PIECE_ST::W)
 			{
@@ -116,7 +114,7 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 	}
 
 	int mouseID = static_cast<int>((**player).pGetID());
-	(*mouseCtl[mouseID]).Update();
+	(*mouseCtl[mouseID]).Update(boardPtr);
 
 	// プレイヤーのターン処理を行っている
 	if ((*boardPtr).InvFlag())
@@ -140,7 +138,6 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 			if (!AutoPassPlayer())
 			{
 				(*boardPtr).SetPieceCnt(piece);
-				(*boardPtr).PieceClear();
 				return std::make_unique<ResultScene>(boardPtr);
 			}
 		}

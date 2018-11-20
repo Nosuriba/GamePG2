@@ -1,9 +1,8 @@
 #pragma once
 #include "PlayerType.h"
-class TypeMan :
-	public PlayerType
+
+struct TypeMan : PlayerType
 {
-public:
 	TypeMan();
 	~TypeMan();
 	PL_TYPE GetType(void);

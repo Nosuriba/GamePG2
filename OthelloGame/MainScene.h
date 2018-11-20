@@ -19,14 +19,12 @@ public:
 	void Init();
 	unique_scene Update(unique_scene own, mouse_shared sysMouse);
 private:
-	void SetBoardSize(void);
-
-	/* プレイヤー関係の処理 (ゲーム)*/
+	// プレイヤー関係の処理 (ゲーム)
 	void MakePlayer();
 	void NextPlayer(void);
 	bool AutoPassPlayer(void);
 
-	/* 配置されたピースの個数をカウントするための関数 */
+	// 配置されたピースの個数をカウントするための関数 
 	void PutPieceCnt(void);
 
 	Vector2 boardSize;

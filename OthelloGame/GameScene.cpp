@@ -27,7 +27,6 @@ void GameScene::Run()
 		(*sysMouse).Update();
 		gScene = (*gScene).Update(std::move(gScene), sysMouse);
 	}
-
 }
 
 Vector2 GameScene::GetScreenSize(void)

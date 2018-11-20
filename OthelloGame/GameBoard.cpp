@@ -39,7 +39,6 @@ bool GameBoard::CommonBoard(Vector2 vec)
 	{
 		data[i] = &pieceData[i * vec.x];
 	}
-
 	return true;
 }
 
@@ -61,18 +60,16 @@ Vector2 GameBoard::ChangeScrToPos(const Vector2& pPos)
 // データサイズを画面サイズに変換している
 Vector2 GameBoard::ChangeTblToScr(const Vector2& pNum)
 {
-	return Vector2((pNum.x * PIECE_SIZE), (pNum.y * PIECE_SIZE));
+	return Vector2((pNum.x * PIECE_SIZE) + BOARD_OFFSET_X, (pNum.y * PIECE_SIZE) + BOARD_OFFSET_Y);
 }
 
 void GameBoard::PutPieceField(void)
 {
-	Vector2 drawOffset = { BOARD_OFFSET_X, BOARD_OFFSET_Y };
 	// ピースが置ける位置の描画をしている 
 	for (auto pNum : putPieceTbl)
 	{
-		DrawBox(ChangeTblToScr(pNum) + drawOffset + 1, ChangeTblToScr(pNum) + Vector2(PIECE_SIZE, PIECE_SIZE) + drawOffset - 1, 0xc8c800, true);
+		DrawBox(ChangeTblToScr(pNum) + 1, ChangeTblToScr(pNum) + Vector2(PIECE_SIZE, PIECE_SIZE) - 1, 0xc8c800, true);
 	}
-	putPieceTbl.clear();
 }
 
 Vector2 GameBoard::GetDataSize(void)
@@ -80,44 +77,11 @@ Vector2 GameBoard::GetDataSize(void)
 	return Vector2((pieceData.size() / data.size()), data.size());
 }
 
-//void GameBoard::StartPiece(const Vector2& pNum, bool pFlag)
-//{
-//	int initPieceST = 0;
-//	int pWhite = static_cast<int>(PIECE_ST::W);
-//	int pBlack = static_cast<int>(PIECE_ST::B);
-//	int pMax = static_cast<int>(PIECE_ST::MAX);
-//	for (int y = 0; y <= 1; y++)
-//	{
-//		for (int x = 0; x <= 1; x++)
-//		{
-//			if (data[pNum.y + y][pNum.x + x].expired())
-//			{
-//				// 最初に配置されるピースの状態を設定している 
-//				if (pFlag)
-//				{
-//					initPieceST = (((x + y) % pMax) < 1
-//								? initPieceST = ((x + y) % pMax)
-//								: initPieceST = (x + y == 1 ? pWhite : pBlack));
-//				}
-//				else
-//				{
-//					initPieceST = ((x + y) < 1 ? initPieceST = ((x + y) % pMax) + 1 : initPieceST = pBlack);
-//				}
-//				// ピースの配置位置を設定している 
-//				pPos = ChangeTblToScr(pNum + Vector2(x, y));
-//				auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), (PIECE_ST)initPieceST));
-//				data[pNum.y + y][pNum.x + x] = (*tmp);
-//			}
-//		}
-//	}
-//
-//}
-
 void GameBoard::SetPiece(int x, int y, PIECE_ST state)
 {
 	// ピースの配置位置を設定している 
 	pPos = ChangeTblToScr(Vector2(x, y));
-	auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), state));
+	auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(0,0), state));
 	data[y][x] = (*tmp);
 }
 
@@ -125,7 +89,7 @@ bool GameBoard::SetPiece(const Vector2& vec, PIECE_ST id)
 {
 	bool rtnFlag = false;
 	Vector2 pNum = ChangeScrToPos(vec);
-	// クリックした位置がボードの盤面外でなければ、ピースの設置を行う 
+	// クリックした位置に盤面上であるかの確認を行っている 
 	if ((pNum >= Vector2(0, 0)) & (pNum < Vector2((data.size() * PIECE_SIZE), (data.size() * PIECE_SIZE))))
 	{
 		pNum /= PIECE_SIZE;
@@ -133,11 +97,10 @@ bool GameBoard::SetPiece(const Vector2& vec, PIECE_ST id)
 		if (data[pNum.y][pNum.x].expired())
 		{
 			rtnFlag = true;
-			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), id));
+			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(0,0), id));
 			data[pNum.y][pNum.x] = (*tmp);
 		}
 	}
-
 	return rtnFlag;
 }
 
@@ -152,16 +115,18 @@ PutPiece GameBoard::GetPieceCnt(void)
 	return piece;
 }
 
+// リザルト画面でピースの並び替えを行うためのもの
 void GameBoard::ResultPiece(PutPiece piece)
 {
 	pPos = {0,0};
+
 	// 黒ピースの並び替えを行っている 
 	for (int b = 0; b < piece.b; b++)
 	{
 		if (data[b / data.size()][b % data.size()].expired())
 		{
 			pPos = ChangeTblToScr(Vector2(b % data.size(), b / data.size()));
-			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), PIECE_ST::B));
+			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(0,0), PIECE_ST::B));
 			data[b / data.size()][b % data.size()] = (*tmp);
 		}
 	}
@@ -171,7 +136,7 @@ void GameBoard::ResultPiece(PutPiece piece)
 		if (data[(w / data.size())][w % data.size()].expired())
 		{
 			pPos = ChangeTblToScr(Vector2(w % data.size(), w / data.size()));
-			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y), PIECE_ST::W));
+			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(0,0), PIECE_ST::W));
 			data[(w / data.size())][w % data.size()] = (*tmp);
 		}
 	}
@@ -193,7 +158,7 @@ void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
 				rNum += rPos;
 				if (!data[pNum.y + rNum.y][pNum.x + rNum.x].expired())
 				{
-					// 配置したピースと違う色が見つかった時、見つかったピースの色を配置したピースの色に変更してあげる
+					// 置いたピースと違う色を見つけた場合、反転を行う
 					if (data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->GetState() != id)
 					{
 						reverseCnt++;
@@ -214,7 +179,6 @@ void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
 			rNum = { 0,0 };
 		}
 		reverseTbl.clear();
-		putPieceTbl.clear();
 	}
 }
 
@@ -223,7 +187,7 @@ bool GameBoard::CheckReverse(const Vector2& vec, PIECE_ST id)
 	bool rtnFlag = false;
 	Vector2 pNum = ChangeScrToPos(vec);
 
-	// クリックした位置にピースが配置できるかの確認を行っている 
+	// クリックした位置に盤面上であるかの確認を行っている
 	if (pNum >= Vector2(0, 0) & pNum < Vector2(data.size() * PIECE_SIZE, data.size() * PIECE_SIZE))
 	{
 		pNum /= PIECE_SIZE;
@@ -238,10 +202,6 @@ bool GameBoard::CheckReverse(const Vector2& vec, PIECE_ST id)
 			}
 		}
 	}
-	else
-	{
-		GameBoard::ReverseSkip();
-	}
 	return rtnFlag;
 }
 
@@ -250,8 +210,6 @@ bool GameBoard::CheckReverse(const Vector2& ckPos, const Vector2& pNum, PIECE_ST
 	bool	rtnFlag = false;
 	Vector2 ckNum = pNum;
 
-	/* 配置したピースの色と検索する方向のピースの色が違う色の時に
-	　 検索する方向の列を探索している */
 	if (pNum + ckPos >= Vector2(0, 0) & pNum + ckPos < Vector2(data.size(), data.size()))
 	{
 		if (!data[pNum.y + ckPos.y][pNum.x + ckPos.x].expired())
@@ -265,8 +223,6 @@ bool GameBoard::CheckReverse(const Vector2& ckPos, const Vector2& pNum, PIECE_ST
 					{
 						if (!data[ckNum.y][ckNum.x].expired())
 						{
-							/* 配置したピースと同じ色のピースを見つけた時探索をやめて
-							　 反転することができる列方向をリストに登録している */
 							if (data[ckNum.y][ckNum.x].lock()->GetState() == id)
 							{
 								rtnFlag = true;
@@ -286,39 +242,41 @@ bool GameBoard::CheckReverse(const Vector2& ckPos, const Vector2& pNum, PIECE_ST
 			}
 		}
 	}
-
-
 	return rtnFlag;
 }
 
-
-bool GameBoard::CheckPutPieceFlag(PIECE_ST id)
+void GameBoard::MakePutPieceField(PIECE_ST id)
 {
-	bool rtnFlag = false;
-
 	for (unsigned int y = 0; y < data.size(); y++)
 	{
 		for (unsigned int x = 0; x < data.size(); x++)
 		{
-			/* ピースが置かれていない時、配置した場所で反転ができるかの
-			   検索をしている*/
 			if (data[y][x].expired())
 			{
 				for (auto ckPos : pCheckTbl)
 				{
 					if (CheckReverse(ckPos, Vector2(x, y), id))
 					{
-						rtnFlag = true;
+						// ピースの置ける位置の登録
 						putPieceTbl.push_back(Vector2(x, y));
 					}
 				}
 			}
 		}
 	}
-	/* 反転できる方向のリストに必要なく登録を行っていたため、
-	   リストの中身を削除している */
+	/* 反転できる場所を検索した時に反転する位置の登録をする必要がないので
+	   ここでクリアをしている */
 	reverseTbl.clear();
-	return rtnFlag;
+}
+
+bool GameBoard::CheckPutPiece(void)
+{
+	return (putPieceTbl.size() > 0);
+}
+
+void GameBoard::PutPieceClear(void)
+{
+	putPieceTbl.clear();
 }
 
 PIECE_ST GameBoard::CheckPutPieceST(int x, int y)
@@ -339,37 +297,21 @@ PIECE_ST GameBoard::CheckPutPieceST(int x, int y)
 	return PIECE_ST::NON;
 }
 
-Vector2 GameBoard::PutPieceCpu()
+std::list<Vector2> GameBoard::GetPieceTbl()
 {
-	Vector2 pNum = putPieceTbl.front();
-	return ChangeTblToScr(pNum) + Vector2(BOARD_OFFSET_X, BOARD_OFFSET_Y);
+	return putPieceTbl;
 }
 
 void GameBoard::SetInvCnt(int reverseCnt)
 {
+	// コマの反転間隔が一番長い方を渡している
 	invCnt = (invCnt > reverseCnt ? invCnt : reverseCnt);
-}
-
-void GameBoard::ReverseSkip(void)
-{
-	for (unsigned int y = 0; y < data.size(); y++)
-	{
-		for (unsigned int x = 0; x < data.size(); x++)
-		{
-			// ピースのアニメーションをスキップ処理(未実装)
-			if (!data[y][x].expired())
-			{
-				data[y][x].lock()->ResetAnim(0);
-			}
-		}
-	}
 }
 
 bool GameBoard::InvFlag(void)
 {
 	if (invCnt < 0)
 	{
-		PutPieceField();
 		return true;
 	}
 	return false;
@@ -390,7 +332,7 @@ void GameBoard::Draw()
 	Vector2 ePos = { BOARD_SIZE + BOARD_OFFSET_X, BOARD_SIZE + PIECE_SIZE };
 	
 	// 盤面の描画 
-	DrawBox(sPos, ePos, 0x106010, true);
+	DrawBox(sPos, ePos, 0x107010, true);
 
 	sPos = { BOARD_OFFSET_X, BOARD_OFFSET_Y };
 	ePos = { BOARD_SIZE + BOARD_OFFSET_X, BOARD_SIZE };
@@ -405,12 +347,22 @@ void GameBoard::Draw()
 
 	sPos = { BOARD_OFFSET_X, BOARD_OFFSET_Y };
 	ePos = { BOARD_SIZE + BOARD_OFFSET_X, BOARD_SIZE + PIECE_SIZE };
-
 	for (unsigned int x = 0; x <= DEF_BOARD_CNT; x++)
 	{
 		sPos.x = (PIECE_SIZE * x) + BOARD_OFFSET_X;
 		ePos.x = (PIECE_SIZE * x) + BOARD_OFFSET_X;
 		DrawLine(sPos, ePos, 0xaaaaaa, 2);
+	}
+
+	if (InvFlag())
+	{
+		// ピースの置ける位置の描画
+		PutPieceField();
+	}
+	else
+	{
+		// ピースの置いた位置の描画
+		DrawBox(pPos, pPos + Vector2(PIECE_SIZE, PIECE_SIZE), 0x48d1cc, true);
 	}
 
 	// ピースの描画 

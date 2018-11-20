@@ -15,7 +15,7 @@ public:
 	unique_scene Update(unique_scene own, mouse_shared sysMouse);
 private:
 	
-	/* ŸÒ‚ğ”»’è‚·‚é‚½‚ß‚ÌŠÖ” */
+	// ŸÒ‚ğ”»’è‚·‚é‚½‚ß‚Ì‚à‚Ì
 	PIECE_ST WinJudge(PutPiece piece);
 	void DrawWinner(PIECE_ST pState);
 

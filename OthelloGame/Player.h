@@ -1,5 +1,6 @@
 #pragma once
 #include "GamePiece.h"
+#include "SceneState.h"
 
 class PieceTray;
 class MouseCtl;
@@ -12,7 +13,7 @@ public:
 	~Player();
 	bool Draw(void);
 	PIECE_ST pGetID(void);
-	bool TurnAct(std::array<std::shared_ptr<MouseCtl>, static_cast<int>(PIECE_ST::MAX)> mouse, GameBoard& gBoard);
+	bool TurnAct(mouse_array mouse, GameBoard& gBoard);
 	bool SetTurn(bool flag);
 private:
 	static int playerCnt;

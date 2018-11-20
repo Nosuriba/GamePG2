@@ -1,6 +1,5 @@
 #include <DxLib.h>
 #include "MouseCtl.h"
-#include "Vector2.h"
 #include "GameBoard.h"
 #include "TypeMan.h"
 #include "TypeCpu.h"
@@ -9,7 +8,6 @@ MouseCtl::MouseCtl()
 {
 	pos = { 0,0 };
 }
-
 
 MouseCtl::~MouseCtl()
 {
@@ -48,6 +46,7 @@ void MouseCtl::SetPlType(PL_TYPE type)
 
 void MouseCtl::Update()
 {
+	// システム処理用のマウス設定
 	mButton[PUSH_OLD] = mButton[PUSH_NOW];
 	mButton[PUSH_NOW] = DxLib::GetMouseInput();
 	DxLib::GetMousePoint(&pos.x, &pos.y);
@@ -60,7 +59,6 @@ void MouseCtl::Update(std::shared_ptr<GameBoard> boardPtr)
 	{
 		mButton[PUSH_OLD] = mButton[PUSH_NOW];
 		(*plType).Update(mButton[PUSH_NOW], pos, boardPtr);
-
 	}
 	else
 	{

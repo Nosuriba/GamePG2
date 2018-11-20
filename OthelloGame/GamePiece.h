@@ -36,14 +36,11 @@ public:
 	bool SetPos(const Vector2& pos);
 	bool SetDrawOffset(const Vector2& drawOffset);
 
-	void ResetAnim(int reverseCnt);
-	
 	void Update(void);
 	void Draw(void);
 private:
 	pState_uniqueList pState;
 	PIECE_ST oldState;
-	PIECE_ST state;
 	Vector2	 pos;
 	Vector2	 drawOffset;
 	int		 reverseCnt;

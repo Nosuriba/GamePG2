@@ -3,12 +3,11 @@
 #include "TypeCpu.h"
 #include "GameBoard.h"
 
-
+#define TIME_CNT (60)
 
 TypeCpu::TypeCpu()
 {
 }
-
 
 TypeCpu::~TypeCpu()
 {
@@ -21,6 +20,13 @@ PL_TYPE TypeCpu::GetType(void)
 
 void TypeCpu::Update(int& data, Vector2& pos, std::weak_ptr<GameBoard> boardPtr)
 {
+	// 敵のピースを置くまでの間隔
+	if (++waitTime < TIME_CNT)
+	{
+		return;
+	}
+	waitTime = 0;
+
 	if (data == 0)
 	{
 		data = MOUSE_INPUT_LEFT;
@@ -29,6 +35,24 @@ void TypeCpu::Update(int& data, Vector2& pos, std::weak_ptr<GameBoard> boardPtr)
 	{
 		data = 0;
 	}
-	boardPtr.lock()->CheckPutPieceFlag(static_cast<PIECE_ST>(GetType()));
-	pos = boardPtr.lock()->PutPieceCpu();
+
+	pointList = boardPtr.lock()->GetPieceTbl();
+
+	// CPUのピースをランダムで配置している
+	if (pointList.size() > 0)
+	{
+		auto itr = pointList.begin();
+		auto rand = GetRand(pointList.size() - 1);
+
+		for (int i = 0; i < rand; i++)
+		{
+			itr++;
+		}
+		pos = boardPtr.lock()->ChangeTblToScr((*itr));
+	}
+	else
+	{
+		pos = { 0,0 };
+	}
+	
 }

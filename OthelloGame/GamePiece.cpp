@@ -13,11 +13,9 @@ GamePiece::GamePiece(const Vector2& pos, const Vector2& drawOffset, PIECE_ST pSt
 	SetState(pState, 0);
 }
 
-
 GamePiece::~GamePiece()
 {
 }
-
 
 PIECE_ST GamePiece::GetState(void)
 {
@@ -40,8 +38,7 @@ void GamePiece::SetState(PIECE_ST pState, int reserveCnt)
 		oldState = (**GamePiece::pState.begin()).GetState();
 		this->pState.pop_front();
 	}
-	/* 引数で渡された情報を使用して、リストの先頭に
-	　 インスタンスを行っている */
+	
 	if (pState == PIECE_ST::W)
 	{
 		this->pState.push_front(std::make_unique<PieceWhite>());
@@ -70,11 +67,6 @@ bool GamePiece::SetDrawOffset(const Vector2 & drawOffset)
 	return true;
 }
 
-void GamePiece::ResetAnim(int reverseCnt)
-{
-	this->reverseCnt = reverseCnt;
-}
-
 void GamePiece::Update(void)
 {
 	if (reverseCnt < 0)
@@ -86,9 +78,9 @@ void GamePiece::Update(void)
 
 void GamePiece::Draw(void)
 {
-	/* アニメーション用の変数 */
-	int invCnt = (reverseCnt / 20);
-	int animCnt = (reverseCnt / 2) % 10;
+	// アニメーション用の変数 
+	int invCnt		= (reverseCnt / 20);
+	int animCnt		= (reverseCnt / 2) % 10;
 	double drawSize = (1.0 - (animCnt * 0.1)) - invCnt;
 
 	if (drawSize < 0.0)
@@ -96,9 +88,8 @@ void GamePiece::Draw(void)
 		drawSize = 0.0;
 	}
 
-	state = (reverseCnt < 0
-		  ?  state = (**pState.begin()).GetState()
-		  :  state = oldState);
+	//PIECE_ST state = (reverseCnt > 0 ? state = oldState : state = (**pState.begin()).GetState());
+	PIECE_ST state = (**pState.begin()).GetState();
 
 	 // ピースの状態によって、描画するピースの色を設定している 
 	if (state == PIECE_ST::W)
@@ -112,9 +103,7 @@ void GamePiece::Draw(void)
 		DxLib::DrawRotaGraph(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2), drawSize, 0.0, 
 							 LpImageMng.ImgGetID("image/piece/player2.png")[0], true);
 	}
-	else
-	{
-	}
+	else{}
 }
 
 int DrawBox(const Vector2& sPos, const Vector2& ePos, unsigned int color, int fillFlag)

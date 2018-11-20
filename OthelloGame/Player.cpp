@@ -35,7 +35,7 @@ PIECE_ST Player::pGetID(void)
 	return id;
 }
 
-bool Player::TurnAct(std::array<std::shared_ptr<MouseCtl>, static_cast<int>(PIECE_ST::MAX)> mouse, GameBoard & gBoard)
+bool Player::TurnAct(mouse_array mouse, GameBoard & gBoard)
 {
 	(*pTray).SetTurnFlag(true);
 	if (gBoard.CheckReverse((*mouse[static_cast<int>(id)]).GetPoint(), id))

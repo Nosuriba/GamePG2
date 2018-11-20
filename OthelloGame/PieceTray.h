@@ -14,7 +14,6 @@ private:
 	
 	piece_sharedList pieceList;
 	PIECE_ST pState = PIECE_ST::NON;
-
 	Vector2  pos;
 	
 	bool	 turnFlag;

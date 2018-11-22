@@ -44,6 +44,7 @@ private:
 	Vector2	 pos;
 	Vector2	 drawOffset;
 	int		 reverseCnt;
+	double   drawSize;
 };
 
 // DxLib::DrawBoxをオーバーロードしたもの

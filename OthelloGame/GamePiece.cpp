@@ -1,3 +1,4 @@
+#include <cmath>
 #include "ImageMng.h"
 #include "GamePiece.h"
 #include "PieceST.h"
@@ -8,6 +9,7 @@ GamePiece::GamePiece(const Vector2& pos, const Vector2& drawOffset, PIECE_ST pSt
 {
 	this->pos		 = pos;
 	this->drawOffset = drawOffset;
+	drawSize		 = -1.0;
 	oldState		 = pState;
 	reverseCnt		 = 0;
 	SetState(pState, 0);
@@ -80,28 +82,31 @@ void GamePiece::Draw(void)
 {
 	// アニメーション用の変数 
 	int invCnt		= (reverseCnt / 20);
-	int animCnt		= (reverseCnt / 2) % 10;
-	double drawSize = (1.0 - (animCnt * 0.1)) - invCnt;
+	PIECE_ST state  = oldState;
 
-	if (drawSize < 0.0)
+	// 反転アニメーションの設定
+	if (invCnt == 0)
 	{
-		drawSize = 0.0;
+		int animCnt = (reverseCnt / 2) % 10;
+		drawSize = -1.0 + (animCnt * 0.2);
+		state = (drawSize > 0 ? state = oldState : state = (**pState.begin()).GetState());
 	}
-
-	//PIECE_ST state = (reverseCnt > 0 ? state = oldState : state = (**pState.begin()).GetState());
-	PIECE_ST state = (**pState.begin()).GetState();
 
 	 // ピースの状態によって、描画するピースの色を設定している 
 	if (state == PIECE_ST::W)
 	{
-		DxLib::DrawRotaGraph(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2), drawSize, 0.0, 
-							 LpImageMng.ImgGetID("image/piece/player1.png")[0], true);
-		/*DxLib::DrawGraph(pos.x, pos.y, LpImageMng.ImgGetID("image/piece/charPiece1.png")[0], true);*/
+		
+		DxLib::DrawRotaGraph3(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2),
+							 (PIECE_SIZE / 2), (PIECE_SIZE / 2),
+							  abs(drawSize), 1.0, 0.0,
+							  LpImageMng.ImgGetID("image/piece/player1.png")[0], true);
 	}
 	else if (state == PIECE_ST::B)
 	{
-		DxLib::DrawRotaGraph(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2), drawSize, 0.0, 
-							 LpImageMng.ImgGetID("image/piece/player2.png")[0], true);
+		DxLib::DrawRotaGraph3(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2),
+							 (PIECE_SIZE / 2), (PIECE_SIZE / 2),
+							  abs(drawSize), 1.0, 0.0,
+							  LpImageMng.ImgGetID("image/piece/player2.png")[0], true);
 	}
 	else{}
 }

@@ -33,7 +33,7 @@ unique_scene TitleScene::Update(unique_scene own, mouse_shared sysMouse)
 	// タイトルの描画を行っている 
 	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/title2.jpg")[0], true);
-	DxLib::DrawExtendString(120, 120, 1.8, 1.8f, "右クリックで対戦モードが切り替わるよ", 0xffff00);
+	DxLib::DrawExtendString(120, 120, 1.8, 1.8f, "右クリックで2Pの変更ができるよ", 0xffff00);
 	DxLib::DrawExtendString(120, 450, 1.8, 1.8f, "左クリックを押すとゲームが始まるよ", 0xffff00);
 
 	// 対戦モードの情報を描画している

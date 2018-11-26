@@ -89,6 +89,29 @@ void MainScene::PutPieceCnt(void)
 	}
 }
 
+void MainScene::DrawPlType(void)
+{
+	// 1Pの描画
+	if ((*mouseCtl[static_cast<int>(PIECE_ST::B)]).GetPlType() == PL_TYPE::MAN)
+	{
+		DxLib::DrawExtendString(25, 60, 1.5f, 1.5f,"Player", 0x7fbfff);
+	}
+	else
+	{
+		DxLib::DrawExtendString(25, 60, 1.5f, 1.5f, "CPU", 0x7fbfff);
+	}
+
+	// 2Pの描画
+	if ((*mouseCtl[static_cast<int>(PIECE_ST::W)]).GetPlType() == PL_TYPE::MAN)
+	{
+		DxLib::DrawExtendString(700, 60, 1.5f, 1.5f, "Player", 0xff4500);
+	}
+	else
+	{
+		DxLib::DrawExtendString(700, 60, 1.5f, 1.5f, "CPU", 0xff4500);
+	}
+}
+
 unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 {
 	(**player).SetTurn(true);
@@ -110,6 +133,20 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 				NextPlayer();
 			}
 		}
+
+		// ゲーム中にプレイヤーを動的に切り替えれるようにしている
+		if ((*sysMouse).GetButton()[PUSH_NOW] & (~(*sysMouse).GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
+		{
+			if ((*mouseCtl[mouseID]).GetPlType() == PL_TYPE::MAN)
+			{
+				(*mouseCtl[mouseID]).SetPlType(PL_TYPE::CPU);
+			}
+			else
+			{
+				(*mouseCtl[mouseID]).SetPlType(PL_TYPE::MAN);
+			}
+			
+		}
 	}
 
 	// プレイヤーのパス処理とゲームを継続するかの管理をしている
@@ -130,8 +167,9 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
 	DxLib::DrawExtendString(200, 20, 1.9, 1.9f, "左クリックでコマが置けるよ", 0xffff00);
-	DxLib::DrawExtendFormatString(700, 450, 1.5f, 1.5f, 0xeeee00, "白: %d", piece.w);
 	DxLib::DrawExtendFormatString(25, 450, 1.5f, 1.5f, 0xeeee00, "黒: %d", piece.b);
+	DxLib::DrawExtendFormatString(700, 450, 1.5f, 1.5f, 0xeeee00, "白: %d", piece.w);
+	DrawPlType();
 	(*boardPtr).Draw();
 	for (auto data : playerList)
 	{

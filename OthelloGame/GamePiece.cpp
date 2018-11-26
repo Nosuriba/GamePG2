@@ -5,11 +5,17 @@
 #include "PieceWhite.h"
 #include "PieceBlack.h"
 
+// 反転アニメーション用のカウント(ここを修正しないと..)
+#define REVERSE_ANIM_CNT   (20)
+#define ANIM_FLAME_CNT	   (10)
+#define ANIM_FLAME_INV_CNT (REVERSE_ANIM_CNT / ANIM_FLAME_CNT)
+#define ANIM_FLOAT_CNT	   (ANIM_FLAME_INV_CNT * 2)
+
 GamePiece::GamePiece(const Vector2& pos, const Vector2& drawOffset, PIECE_ST pState)
 {
 	this->pos		 = pos;
 	this->drawOffset = drawOffset;
-	drawSize		 = -1.0;
+	drawSize		 = 0;
 	oldState		 = pState;
 	reverseCnt		 = 0;
 	SetState(pState, 0);
@@ -81,31 +87,35 @@ void GamePiece::Update(void)
 void GamePiece::Draw(void)
 {
 	// アニメーション用の変数 
-	int invCnt		= (reverseCnt / 20);
+	double debugSize = 0;
 	PIECE_ST state  = oldState;
 
 	// 反転アニメーションの設定
-	if (invCnt == 0)
+	if (reverseCnt < REVERSE_ANIM_CNT)
 	{
-		int animCnt = (reverseCnt / 2) % 10;
+		int animCnt = (reverseCnt / ANIM_FLAME_INV_CNT) % ANIM_FLAME_CNT;
 		drawSize = -1.0 + (animCnt * 0.2);
+		
 		state = (drawSize > 0 ? state = oldState : state = (**pState.begin()).GetState());
 	}
+	
+	// ピースの反転時に浮かせるためのアニメーション設定
+	debugSize = (int)(((drawSize * ANIM_FLAME_CNT) / ANIM_FLOAT_CNT) + 2) % 3;
+	debugSize = abs(debugSize * 0.1);
 
 	 // ピースの状態によって、描画するピースの色を設定している 
 	if (state == PIECE_ST::W)
 	{
-		
 		DxLib::DrawRotaGraph3(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2),
 							 (PIECE_SIZE / 2), (PIECE_SIZE / 2),
-							  abs(drawSize), 1.0, 0.0,
+							  abs(drawSize) + debugSize, 1.0 + debugSize, 0.0,
 							  LpImageMng.ImgGetID("image/piece/player1.png")[0], true);
 	}
 	else if (state == PIECE_ST::B)
 	{
 		DxLib::DrawRotaGraph3(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2),
 							 (PIECE_SIZE / 2), (PIECE_SIZE / 2),
-							  abs(drawSize), 1.0, 0.0,
+							  abs(drawSize) + debugSize, 1.0 + debugSize, 0.0,
 							  LpImageMng.ImgGetID("image/piece/player2.png")[0], true);
 	}
 	else{}

@@ -27,6 +27,8 @@ private:
 	// 配置されたピースの個数をカウントするための関数 
 	void PutPieceCnt(void);
 
+	void DrawPlType(void);
+
 	Vector2 boardSize;
 	PutPiece piece;
 	PL_TYPE plType;

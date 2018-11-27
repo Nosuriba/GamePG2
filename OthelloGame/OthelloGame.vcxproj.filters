@@ -25,10 +25,10 @@
     <Filter Include="ソース ファイル\GameScene">
       <UniqueIdentifier>{842091b2-c9ee-4586-8948-19dbcf90cfce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Mouse">
+    <Filter Include="ヘッダー ファイル\PlayerType">
       <UniqueIdentifier>{e4e421b0-ec11-4c9c-8985-690c4c9bd87e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Mouse">
+    <Filter Include="ソース ファイル\PlayerType">
       <UniqueIdentifier>{c435c89d-53c4-496c-8179-02a6e39d4238}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -82,19 +82,22 @@
       <Filter>ソース ファイル\Piece</Filter>
     </ClCompile>
     <ClCompile Include="TypeCpu.cpp">
-      <Filter>ソース ファイル\Mouse</Filter>
+      <Filter>ソース ファイル\PlayerType</Filter>
     </ClCompile>
     <ClCompile Include="PlayerType.cpp">
-      <Filter>ソース ファイル\Mouse</Filter>
+      <Filter>ソース ファイル\PlayerType</Filter>
     </ClCompile>
     <ClCompile Include="TypeMan.cpp">
-      <Filter>ソース ファイル\Mouse</Filter>
+      <Filter>ソース ファイル\PlayerType</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="PL_TYPE.cpp">
+      <Filter>ソース ファイル\PlayerType</Filter>
+    </ClCompile>
     <ClCompile Include="MouseCtl.cpp">
-      <Filter>ソース ファイル\Mouse</Filter>
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -144,19 +147,22 @@
       <Filter>ヘッダー ファイル\Piece</Filter>
     </ClInclude>
     <ClInclude Include="TypeCpu.h">
-      <Filter>ヘッダー ファイル\Mouse</Filter>
+      <Filter>ヘッダー ファイル\PlayerType</Filter>
     </ClInclude>
     <ClInclude Include="TypeMan.h">
-      <Filter>ヘッダー ファイル\Mouse</Filter>
+      <Filter>ヘッダー ファイル\PlayerType</Filter>
     </ClInclude>
     <ClInclude Include="PlayerType.h">
-      <Filter>ヘッダー ファイル\Mouse</Filter>
+      <Filter>ヘッダー ファイル\PlayerType</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="PL_TYPE.h">
+      <Filter>ヘッダー ファイル\PlayerType</Filter>
+    </ClInclude>
     <ClInclude Include="MouseCtl.h">
-      <Filter>ヘッダー ファイル\Mouse</Filter>
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

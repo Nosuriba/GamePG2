@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include "Vector2.h"
+#include "PL_TYPE.h"
 
 class PlayerType;
 class GameBoard;
@@ -10,15 +11,6 @@ enum M_PUSH
 	PUSH_NOW,
 	PUSH_OLD,
 	PUSH_MAX
-};
-
-// プレイヤーの種類
-enum class PL_TYPE
-{
-	MAN,
-	CPU,
-	SYS,
-	MAX
 };
 
 // マウスの情報を固定長配列で格納するための型 

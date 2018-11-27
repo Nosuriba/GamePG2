@@ -4,9 +4,11 @@
 #include "Player.h"
 #include "MouseCtl.h"
 
-MainScene::MainScene(PL_TYPE plType)
+MainScene::MainScene(std::array<PL_TYPE, static_cast<int>(PL_TYPE::MAX)> plType)
 {
 	this->plType = plType;
+	reverseFlag = false;
+	mPos = { 0,0 };
 	MainScene::Init();
 }
 
@@ -22,7 +24,8 @@ void MainScene::Init()
 		mouseCtl[unit] = std::make_shared<MouseCtl>();
 		(*mouseCtl[unit]).SetPlType(PL_TYPE::MAN);
 	}
-	(*mouseCtl[1]).SetPlType(plType);
+	(*mouseCtl[0]).SetPlType(plType[0]);
+	(*mouseCtl[1]).SetPlType(plType[1]);
 
 	boardPtr = std::make_shared<GameBoard>();
 
@@ -115,22 +118,25 @@ void MainScene::DrawPlType(void)
 unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 {
 	(**player).SetTurn(true);
-
 	int mouseID = static_cast<int>((**player).pGetID());
-	// プレイヤーのターン処理を行っている
+
+	// アクティブなプレイヤーのターン処理
 	if ((*boardPtr).InvFlag())
 	{
-		(*boardPtr).MakePutPieceField((**player).pGetID());
+		// 反転処理を行っていない時に置ける位置の登録を行っている
+		if (!reverseFlag)
+		{
+			(*boardPtr).MakePutPieceField((**player).pGetID());
+		}
+		
 		(*mouseCtl[mouseID]).Update(boardPtr);
 
 		if ((*mouseCtl[mouseID]).GetButton()[PUSH_NOW] & (~(*mouseCtl[mouseID]).GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 		{
 			if ((**player).TurnAct(mouseCtl, *boardPtr))
 			{
-				(*boardPtr).SetReverse((*mouseCtl[mouseID]).GetPoint(), (**player).pGetID());
-				PutPieceCnt();
-				(*boardPtr).PutPieceClear();
-				NextPlayer();
+				reverseFlag = true;
+				mPos = (*mouseCtl[mouseID]).GetPoint();
 			}
 		}
 
@@ -145,7 +151,19 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 			{
 				(*mouseCtl[mouseID]).SetPlType(PL_TYPE::MAN);
 			}
-			
+		}
+	}
+
+	// 間隔を空けて反転処理を行うようにしている
+	if (reverseFlag)
+	{
+		if ((*boardPtr).InvFlag(reverseFlag))
+		{
+			reverseFlag = false;
+			(*boardPtr).SetReverse(mPos, (**player).pGetID());
+			PutPieceCnt();
+			(*boardPtr).PutPieceClear();
+			NextPlayer();
 		}
 	}
 
@@ -163,14 +181,23 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 	}
 	(*boardPtr).Update();
 
-	// ゲーム中の情報を描画している 
 	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
-	DxLib::DrawExtendString(200, 20, 1.9, 1.9f, "左クリックでコマが置けるよ", 0xffff00);
+
+	// 操作方法のテキストを描画している
+	DxLib::DrawExtendString(50, 10, 1.3f, 1.3f, "左クリックでコマが置けるよ /", 0xffff00);
+	DxLib::DrawExtendString(375, 10, 1.3f, 1.3f, "右クリックでプレイヤーが切り替わるよ", 0xffff00);
+
+	// 現在のピースの個数を描画している
 	DxLib::DrawExtendFormatString(25, 450, 1.5f, 1.5f, 0xeeee00, "黒: %d", piece.b);
 	DxLib::DrawExtendFormatString(700, 450, 1.5f, 1.5f, 0xeeee00, "白: %d", piece.w);
+
 	DrawPlType();
+
+	// 盤面の情報を描画している
 	(*boardPtr).Draw();
+
+	// プレイヤーの持ちコマの情報を描画している
 	for (auto data : playerList)
 	{
 		(*data).Draw();

@@ -45,6 +45,7 @@ public:
 	std::list<Vector2> GetPieceTbl();
 
 	bool InvFlag(void);
+	bool InvFlag(bool drawFlag);
 	void Update(void);
 	void Draw(void);
 private:
@@ -59,13 +60,14 @@ private:
 	void PutPieceField(void);
 
 	void SetInvCnt(int reverseCnt);
-	
+
 	Vector2 ChangeScrToPos(const Vector2& pPos);
 
 	// ピースの方向を確認するための変数 
 	Vector2 pCheckTbl[8] = { { 1,0 },{ 1,1 },{ 0,1 },{ -1,1 },{ -1,0 },{ -1,-1 },{ 0,-1 },{ 1,-1 } };
 	Vector2 pPos;
 
+	bool drawFlag;
 	int invCnt;
 
 	// ピースの個数カウント用 

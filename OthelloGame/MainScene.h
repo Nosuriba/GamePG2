@@ -14,7 +14,7 @@ class MainScene :
 	public SceneState
 {
 public:
-	MainScene(PL_TYPE plType);
+	MainScene(std::array<PL_TYPE, static_cast<int>(PL_TYPE::MAX)> plType);
 	~MainScene();
 	void Init();
 	unique_scene Update(unique_scene own, mouse_shared sysMouse);
@@ -30,8 +30,10 @@ private:
 	void DrawPlType(void);
 
 	Vector2 boardSize;
+	Vector2 mPos;				// クリックしたマウスの位置を保存するもの
+	bool reverseFlag;			// 反転処理を行うかの判定用
 	PutPiece piece;
-	PL_TYPE plType;
+	std::array<PL_TYPE, static_cast<int>(PL_TYPE::MAX)> plType;
 
 	player_list playerList;
 	player_list::iterator player;

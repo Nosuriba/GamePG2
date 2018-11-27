@@ -31,6 +31,7 @@ GameBoard::~GameBoard()
 bool GameBoard::CommonBoard(Vector2 vec)
 {
 	pPos	 = { 0,0 };
+	drawFlag = false;
 	invCnt	 = 0;
 	// ピースを格納するためのサイズを取得している 
 	pieceData.resize(vec.y * vec.x);
@@ -99,6 +100,8 @@ bool GameBoard::SetPiece(const Vector2& vec, PIECE_ST id)
 			rtnFlag = true;
 			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(0,0), id));
 			data[pNum.y][pNum.x] = (*tmp);
+
+			SetInvCnt(REVERSE_INV_CNT * 4);		// 反転を行うまでの間隔を設定している
 		}
 	}
 	return rtnFlag;
@@ -148,6 +151,8 @@ void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
 	Vector2 rNum	= { 0,0 };
 	int reverseCnt  = 0;
 
+	reverseTbl.size();
+
 	if (pNum >= Vector2(0, 0) & pNum < Vector2(data.size() * PIECE_SIZE, data.size() * PIECE_SIZE))
 	{
 		pNum /= PIECE_SIZE;
@@ -184,6 +189,7 @@ void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
 
 bool GameBoard::CheckReverse(const Vector2& vec, PIECE_ST id)
 {
+	reverseTbl.clear();		// 置ける位置を登録する時に入ったリストの中身を削除している
 	bool rtnFlag = false;
 	Vector2 pNum = ChangeScrToPos(vec);
 
@@ -264,9 +270,6 @@ void GameBoard::MakePutPieceField(PIECE_ST id)
 			}
 		}
 	}
-	/* 反転できる場所を検索した時に反転する位置の登録をする必要がないので
-	   ここでクリアをしている */
-	reverseTbl.clear();
 }
 
 bool GameBoard::CheckPutPiece(void)
@@ -317,6 +320,22 @@ bool GameBoard::InvFlag(void)
 	return false;
 }
 
+bool GameBoard::InvFlag(bool drawFlag)
+{
+	this->drawFlag = drawFlag;
+
+	if (invCnt < 0)
+	{
+		this->drawFlag = false;
+		return true;
+	}
+	else
+	{
+		invCnt--;
+	}
+	return false;
+}
+
 void GameBoard::Update(void)
 {
 	if (invCnt < 0)
@@ -354,10 +373,17 @@ void GameBoard::Draw()
 		DrawLine(sPos, ePos, 0xaaaaaa, 2);
 	}
 
-	if (InvFlag())
+	if (InvFlag() | drawFlag)
 	{
 		// ピースの置ける位置の描画
 		PutPieceField();
+
+		if (drawFlag)
+		{
+			// 反転が行われるまでの間隔
+			DrawBox(pPos, pPos + Vector2(PIECE_SIZE, PIECE_SIZE), 0x48d1cc, true);
+		}
+		
 	}
 	else
 	{

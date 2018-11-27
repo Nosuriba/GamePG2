@@ -8,7 +8,6 @@
 #include "MouseCtl.h"
 
 class GameBoard;
-//class MouseCtl;
 
 #define LpGameScene (GameScene::GetInstance())
 

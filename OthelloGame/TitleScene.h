@@ -10,7 +10,14 @@ struct TitleScene : SceneState
 	void DrawPlType(void);
 	unique_scene Update(unique_scene own, mouse_shared sysMouse);
 
+	// ボタンの位置とサイズの設定
+	const int	  boxOffset;
 	const std::array<Vector2, static_cast<int>(PL_TYPE::MAX)> pPos = { Vector2(100, 270), Vector2(550, 270) };
+	const Vector2 startBtnPos;
+	const Vector2 boxSize;
+	const Vector2 startBoxSize;
+	
+
 	std::array<PL_TYPE, static_cast<int>(PL_TYPE::MAX)> plType;
 
 	

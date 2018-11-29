@@ -151,40 +151,28 @@ void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
 	Vector2 rNum	= { 0,0 };
 	int reverseCnt  = 0;
 
-	reverseTbl.size();
-
-	if (pNum >= Vector2(0, 0) & pNum < Vector2(data.size() * PIECE_SIZE, data.size() * PIECE_SIZE))
+	pNum /= PIECE_SIZE;
+	for (auto rPos : reverseTbl)
 	{
-		pNum /= PIECE_SIZE;
-		for (auto rPos : reverseTbl)
+		while (!data[pNum.y + rNum.y][pNum.x + rNum.x].expired())
 		{
-			while (!data[pNum.y + rNum.y][pNum.x + rNum.x].expired())
+			rNum += rPos;
+			// 置いたピースと違う色を見つけた場合、反転を行う
+			if (data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->GetState() != id)
 			{
-				rNum += rPos;
-				if (!data[pNum.y + rNum.y][pNum.x + rNum.x].expired())
-				{
-					// 置いたピースと違う色を見つけた場合、反転を行う
-					if (data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->GetState() != id)
-					{
-						reverseCnt++;
-						data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->SetState(id, reverseCnt * REVERSE_INV_CNT);
-					}
-					else
-					{
-						break;
-					}
-				}
-				else
-				{
-					break;
-				}
+				reverseCnt++;
+				data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->SetState(id, reverseCnt * REVERSE_INV_CNT);
 			}
-			GameBoard::SetInvCnt(reverseCnt * REVERSE_INV_CNT);
-			reverseCnt = 0;
-			rNum = { 0,0 };
+			else
+			{
+				break;
+			}
 		}
-		reverseTbl.clear();
+		GameBoard::SetInvCnt(reverseCnt * REVERSE_INV_CNT);
+		reverseCnt = 0;
+		rNum = { 0,0 };
 	}
+	reverseTbl.clear();
 }
 
 bool GameBoard::CheckReverse(const Vector2& vec, PIECE_ST id)

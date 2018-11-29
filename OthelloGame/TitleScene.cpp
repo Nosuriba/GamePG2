@@ -1,12 +1,12 @@
 #include "TitleScene.h"
 #include "MainScene.h"
 #include "MouseCtl.h"
+#include "GameScene.h"
 
-#define PL_BOX_SIZE_X (180)
-#define PL_BOX_SIZE_Y (80)
-#define PL_BOX_OFFSET (10)
-
-TitleScene::TitleScene()
+TitleScene::TitleScene() : startBtnPos(270, 450),
+boxSize(180, 80), 
+startBoxSize(240, 80),
+boxOffset(10)
 {
 	plType[0] = PL_TYPE::MAN;
 	plType[1] = PL_TYPE::CPU;
@@ -26,9 +26,9 @@ void TitleScene::DrawPlType(void)
 {
 	for (int i = 0; i < static_cast<int>(PL_TYPE::SYS); i++)
 	{
-		DrawBox(pPos[i].x - PL_BOX_OFFSET, pPos[i].y - PL_BOX_OFFSET, 
-				pPos[i].x + PL_BOX_SIZE_X - PL_BOX_OFFSET, pPos[i].y + PL_BOX_SIZE_Y - PL_BOX_OFFSET,
-				0xc0c0c0, true);
+		DxLib::DrawBox(pPos[i].x - boxOffset, pPos[i].y - boxOffset,
+					   pPos[i].x + boxSize.x - boxOffset, pPos[i].y + boxSize.y - boxOffset,
+					   0xc0c0c0, true);
 	}
 	
 	// 1Pの描画
@@ -57,7 +57,7 @@ unique_scene TitleScene::Update(unique_scene own, mouse_shared sysMouse)
 	 // 右クリックをした時、ゲームメインのシーンに移行する 
 	if ((*sysMouse).GetButton()[PUSH_NOW] & (~(*sysMouse).GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 	{
-		if ((*sysMouse).GetPoint() > pPos[0] & (*sysMouse).GetPoint() <= pPos[0] + Vector2(PL_BOX_SIZE_X, PL_BOX_SIZE_Y))
+		if ((*sysMouse).GetPoint() > pPos[0] & (*sysMouse).GetPoint() <= pPos[0] + Vector2(boxSize.x, boxSize.y))
 		{
 			if (plType[0] == PL_TYPE::MAN)
 			{
@@ -68,7 +68,7 @@ unique_scene TitleScene::Update(unique_scene own, mouse_shared sysMouse)
 				plType[0] = PL_TYPE::MAN;
 			}
 		}
-		else if ((*sysMouse).GetPoint() > pPos[1] & (*sysMouse).GetPoint() <= pPos[1] + Vector2(PL_BOX_SIZE_X, PL_BOX_SIZE_Y))
+		else if ((*sysMouse).GetPoint() > pPos[1] & (*sysMouse).GetPoint() <= pPos[1] + Vector2(boxSize.y, boxSize.y))
 		{
 			if (plType[1] == PL_TYPE::MAN)
 			{
@@ -79,10 +79,12 @@ unique_scene TitleScene::Update(unique_scene own, mouse_shared sysMouse)
 				plType[1] = PL_TYPE::MAN;
 			}
 		}
-		else
+		else if ((*sysMouse).GetPoint() >  startBtnPos
+				&(*sysMouse).GetPoint() <= startBtnPos+ Vector2(startBoxSize.x, startBoxSize.y))
 		{
 			return std::make_unique<MainScene>(plType);
 		}
+		else{}
 		
 	}
 
@@ -93,6 +95,12 @@ unique_scene TitleScene::Update(unique_scene own, mouse_shared sysMouse)
 	DxLib::DrawExtendString(100, 180, 1.8, 1.8f, "枠外を左クリック : ゲームスタート", 0xffff00);
 
 	DrawPlType();
+
+	// スタートボタンの表示位置
+	DxLib::DrawBox(startBtnPos.x - boxOffset, startBtnPos.y - boxOffset,
+				   startBtnPos.x + startBoxSize.x, startBtnPos.y + startBoxSize.y,
+				   0xc0c0c0, true);
+	DxLib::DrawExtendString(startBtnPos.x, startBtnPos.y, 2.5f, 2.5f, "GAME_START", 0xff0000);
 
 	DxLib::ScreenFlip();
 

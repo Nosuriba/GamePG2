@@ -4,7 +4,7 @@
 #include "Player.h"
 #include "MouseCtl.h"
 
-MainScene::MainScene(std::array<PL_TYPE, static_cast<int>(PL_TYPE::MAX)> plType)
+MainScene::MainScene(std::array<PL_TYPE, static_cast<int>(PL_TYPE::MAX)> plType) : plBoxSize(60, 120)
 {
 	this->plType = plType;
 	reverseFlag = false;
@@ -97,21 +97,21 @@ void MainScene::DrawPlType(void)
 	// 1Pの描画
 	if ((*mouseCtl[static_cast<int>(PIECE_ST::B)]).GetPlType() == PL_TYPE::MAN)
 	{
-		DxLib::DrawExtendString(25, 60, 1.5f, 1.5f,"Player", 0x7fbfff);
+		DxLib::DrawExtendString(plPos[0].x, plPos[0].y, 1.5f, 1.5f,"Player", 0x7fbfff);
 	}
 	else
 	{
-		DxLib::DrawExtendString(25, 60, 1.5f, 1.5f, "CPU", 0x7fbfff);
+		DxLib::DrawExtendString(plPos[0].x, plPos[0].y, 1.5f, 1.5f, "CPU", 0x7fbfff);
 	}
 
 	// 2Pの描画
 	if ((*mouseCtl[static_cast<int>(PIECE_ST::W)]).GetPlType() == PL_TYPE::MAN)
 	{
-		DxLib::DrawExtendString(700, 60, 1.5f, 1.5f, "Player", 0xff4500);
+		DxLib::DrawExtendString(plPos[1].x, plPos[1].y, 1.5f, 1.5f, "Player", 0xff4500);
 	}
 	else
 	{
-		DxLib::DrawExtendString(700, 60, 1.5f, 1.5f, "CPU", 0xff4500);
+		DxLib::DrawExtendString(plPos[1].x, plPos[1].y, 1.5f, 1.5f, "CPU", 0xff4500);
 	}
 }
 
@@ -152,6 +152,14 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 				(*mouseCtl[mouseID]).SetPlType(PL_TYPE::MAN);
 			}
 		}
+
+		//if ((*sysMouse).GetPoint() > plPos[static_cast<int>(PIECE_ST::B)] &
+		//    (*sysMouse).GetPoint() > plPos[static_cast<int>(PIECE_ST::B)] + Vector2(plBoxSize.x, plBoxSize.y))
+		//{
+		//	// 1Pのプレイヤーにアクセスして変更できるようにしておく
+		//	PL_TYPE p = (**player[0]);
+		//	(*mouseCtl[static_cast<int>(PIECE_ST::B)]).SetPlType((PL_TYPE)();
+		//}
 	}
 
 	// 間隔を空けて反転処理を行うようにしている
@@ -189,8 +197,8 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 	DxLib::DrawExtendString(375, 10, 1.3f, 1.3f, "右クリックでプレイヤーが切り替わるよ", 0xffff00);
 
 	// 現在のピースの個数を描画している
-	DxLib::DrawExtendFormatString(25, 450, 1.5f, 1.5f, 0xeeee00, "黒: %d", piece.b);
-	DxLib::DrawExtendFormatString(700, 450, 1.5f, 1.5f, 0xeeee00, "白: %d", piece.w);
+	DxLib::DrawExtendFormatString(pCntPos[0].x, pCntPos[0].y, 1.5f, 1.5f, 0xeeee00, "黒: %d", piece.b);
+	DxLib::DrawExtendFormatString(pCntPos[1].x, pCntPos[1].y, 1.5f, 1.5f, 0xeeee00, "白: %d", piece.w);
 
 	DrawPlType();
 

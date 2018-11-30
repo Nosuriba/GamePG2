@@ -5,13 +5,12 @@
 #include "PieceWhite.h"
 #include "PieceBlack.h"
 
-// 反転アニメーション用のカウント(ここを修正しないと..)
-#define REVERSE_ANIM_CNT   (20)
-#define ANIM_FLAME_CNT	   (10)
-#define ANIM_FLAME_INV_CNT (REVERSE_ANIM_CNT / ANIM_FLAME_CNT)
-#define ANIM_FLOAT_CNT	   (ANIM_FLAME_INV_CNT * 2)
-
-GamePiece::GamePiece(const Vector2& pos, const Vector2& drawOffset, PIECE_ST pState)
+GamePiece::GamePiece(const Vector2& pos, const Vector2& drawOffset, PIECE_ST pState) :
+drawPieceSize(64),
+animCnt(20),
+flameCnt(10),
+flameInvCnt(animCnt / flameCnt),
+holdAnimCnt(flameInvCnt * 2)
 {
 	this->pos		 = pos;
 	this->drawOffset = drawOffset;
@@ -56,11 +55,10 @@ void GamePiece::SetState(PIECE_ST pState, int reserveCnt)
 		this->pState.push_front(std::make_unique<PieceBlack>());
 	}
 }
-
-#define PIECE_SIZE 64		
+	
 int GamePiece::GetSize(void)
 {
-	return PIECE_SIZE;
+	return drawPieceSize;
 }
 
 bool GamePiece::SetPos(const Vector2 & pos)
@@ -87,35 +85,35 @@ void GamePiece::Update(void)
 void GamePiece::Draw(void)
 {
 	// アニメーション用の変数 
-	double debugSize = 0;
+	double holdSize = 0;
 	PIECE_ST state  = oldState;
 
 	// 反転アニメーションの設定
-	if (reverseCnt < REVERSE_ANIM_CNT)
+	if (reverseCnt < animCnt)
 	{
-		int animCnt = (reverseCnt / ANIM_FLAME_INV_CNT) % ANIM_FLAME_CNT;
+		int animCnt = (reverseCnt / flameInvCnt) % flameCnt;
 		drawSize = -1.0 + (animCnt * 0.2);
 		
 		state = (drawSize > 0 ? state = oldState : state = (**pState.begin()).GetState());
 	}
 	
 	// ピースの反転時に浮かせるためのアニメーション設定
-	debugSize = (int)(((drawSize * ANIM_FLAME_CNT) / ANIM_FLOAT_CNT) + 2) % 3;
-	debugSize = abs(debugSize * 0.1);
+	holdSize = (int)(((drawSize * flameCnt) / holdAnimCnt) + 2) % 3;
+	holdSize = abs(holdSize * 0.1);
 
 	 // ピースの状態によって、描画するピースの色を設定している 
 	if (state == PIECE_ST::W)
 	{
-		DxLib::DrawRotaGraph3(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2),
-							 (PIECE_SIZE / 2), (PIECE_SIZE / 2),
-							  abs(drawSize) + debugSize, 1.0 + debugSize, 0.0,
+		DxLib::DrawRotaGraph3(pos.x + drawOffset.x + (drawPieceSize / 2), pos.y + drawOffset.y + (drawPieceSize / 2),
+							 (drawPieceSize / 2), (drawPieceSize / 2),
+							  abs(drawSize) + holdSize, 1.0 + holdSize, 0.0,
 							  LpImageMng.ImgGetID("image/piece/player1.png")[0], true);
 	}
 	else if (state == PIECE_ST::B)
 	{
-		DxLib::DrawRotaGraph3(pos.x + drawOffset.x + (PIECE_SIZE / 2), pos.y + drawOffset.y + (PIECE_SIZE / 2),
-							 (PIECE_SIZE / 2), (PIECE_SIZE / 2),
-							  abs(drawSize) + debugSize, 1.0 + debugSize, 0.0,
+		DxLib::DrawRotaGraph3(pos.x + drawOffset.x + (drawPieceSize / 2), pos.y + drawOffset.y + (drawPieceSize / 2),
+							 (drawPieceSize / 2), (drawPieceSize / 2),
+							  abs(drawSize) + holdSize, 1.0 + holdSize, 0.0,
 							  LpImageMng.ImgGetID("image/piece/player2.png")[0], true);
 	}
 	else{}

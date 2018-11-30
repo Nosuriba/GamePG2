@@ -46,7 +46,6 @@ private:
 	std::shared_ptr<MouseCtl> sysMouse;
 	std::array<std::shared_ptr<MouseCtl>, static_cast<int>(PIECE_ST::MAX)> mouseCtl;
 	unique_scene gScene;
-};
 
-/* ゲームシーンクラスに必要な関数や変数は残しておき、
-	移動しても大丈夫なものはそれぞれのシーンの情報を渡すようにする*/
+	const Vector2 screenSize;
+};

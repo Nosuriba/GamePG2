@@ -10,5 +10,7 @@ struct TypeCpu : PlayerType
 	std::list<Vector2> pointList;
 private:
 	int waitTime = 0;
+
+	const int putTimer;
 };
 

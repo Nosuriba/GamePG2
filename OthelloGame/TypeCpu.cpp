@@ -3,9 +3,7 @@
 #include "TypeCpu.h"
 #include "GameBoard.h"
 
-#define TIME_CNT (60)
-
-TypeCpu::TypeCpu()
+TypeCpu::TypeCpu() : putTimer(60)
 {
 }
 
@@ -21,7 +19,7 @@ PL_TYPE TypeCpu::GetType(void)
 void TypeCpu::Update(int& data, Vector2& pos, std::weak_ptr<GameBoard> boardPtr)
 {
 	// 敵のピースを置くまでの間隔
-	if (++waitTime < TIME_CNT)
+	if (++waitTime <putTimer)
 	{
 		return;
 	}

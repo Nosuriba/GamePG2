@@ -5,21 +5,20 @@
 #include "MouseCtl.h"
 #include "Player.h"
 
-#define PIECE_SIZE		(64)
-#define BOARD_OFFSET_X	((PIECE_SIZE * 2) + (PIECE_SIZE / 4))
-#define BOARD_OFFSET_Y	(PIECE_SIZE)
-#define DEF_BOARD_CNT	(8)
-#define BOARD_SIZE		(PIECE_SIZE * DEF_BOARD_CNT)
-
-// コマの反転間隔
-#define REVERSE_INV_CNT (20)
-
-GameBoard::GameBoard()
+GameBoard::GameBoard() : pieceSize(64),
+defBoardCnt(8),
+boardSize(pieceSize * defBoardCnt),
+reverseInvCnt(20),
+boardOffset((pieceSize * 2) + (pieceSize / 4), pieceSize)
 {
-	CommonBoard(Vector2(DEF_BOARD_CNT, DEF_BOARD_CNT));
+	CommonBoard(Vector2(defBoardCnt, defBoardCnt));
 }
 
-GameBoard::GameBoard(Vector2 vec)
+GameBoard::GameBoard(Vector2 vec) : pieceSize(64),
+defBoardCnt(8),
+boardSize(pieceSize * defBoardCnt),
+reverseInvCnt(20),
+boardOffset((pieceSize * 2) + (pieceSize / 4), pieceSize)
 {
 	CommonBoard(vec);
 }
@@ -55,13 +54,13 @@ auto GameBoard::AddObjList(piece_shared && objPtr)
 // 画面サイズをクリックした座標に変換している 
 Vector2 GameBoard::ChangeScrToPos(const Vector2& pPos)
 {
-	return Vector2((pPos.x - BOARD_OFFSET_X), (pPos.y - BOARD_OFFSET_Y));
+	return Vector2((pPos.x - boardOffset.x), (pPos.y - boardOffset.y));
 }
 
 // データサイズを画面サイズに変換している
 Vector2 GameBoard::ChangeTblToScr(const Vector2& pNum)
 {
-	return Vector2((pNum.x * PIECE_SIZE) + BOARD_OFFSET_X, (pNum.y * PIECE_SIZE) + BOARD_OFFSET_Y);
+	return Vector2((pNum.x * pieceSize) + boardOffset.x, (pNum.y * pieceSize) + boardOffset.y);
 }
 
 void GameBoard::PutPieceField(void)
@@ -69,7 +68,7 @@ void GameBoard::PutPieceField(void)
 	// ピースが置ける位置の描画をしている 
 	for (auto pNum : putPieceTbl)
 	{
-		DrawBox(ChangeTblToScr(pNum) + 1, ChangeTblToScr(pNum) + Vector2(PIECE_SIZE, PIECE_SIZE) - 1, 0xc8c800, true);
+		DrawBox(ChangeTblToScr(pNum) + 1, ChangeTblToScr(pNum) + Vector2(pieceSize, pieceSize) - 1, 0xc8c800, true);
 	}
 }
 
@@ -91,9 +90,9 @@ bool GameBoard::SetPiece(const Vector2& vec, PIECE_ST id)
 	bool rtnFlag = false;
 	Vector2 pNum = ChangeScrToPos(vec);
 	// クリックした位置に盤面上であるかの確認を行っている 
-	if ((pNum >= Vector2(0, 0)) & (pNum < Vector2((data.size() * PIECE_SIZE), (data.size() * PIECE_SIZE))))
+	if ((pNum >= Vector2(0, 0)) & (pNum < Vector2((data.size() * pieceSize), (data.size() * pieceSize))))
 	{
-		pNum /= PIECE_SIZE;
+		pNum /= pieceSize;
 		pPos = ChangeTblToScr(pNum);
 		if (data[pNum.y][pNum.x].expired())
 		{
@@ -101,7 +100,7 @@ bool GameBoard::SetPiece(const Vector2& vec, PIECE_ST id)
 			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(0,0), id));
 			data[pNum.y][pNum.x] = (*tmp);
 
-			SetInvCnt(REVERSE_INV_CNT * 4);		// 反転を行うまでの間隔を設定している
+			invCnt = reverseInvCnt * 4;		// 反転を行うまでの間隔を設定している
 		}
 	}
 	return rtnFlag;
@@ -151,7 +150,7 @@ void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
 	Vector2 rNum	= { 0,0 };
 	int reverseCnt  = 0;
 
-	pNum /= PIECE_SIZE;
+	pNum /= pieceSize;
 	for (auto rPos : reverseTbl)
 	{
 		while (!data[pNum.y + rNum.y][pNum.x + rNum.x].expired())
@@ -161,14 +160,18 @@ void GameBoard::SetReverse(const Vector2& vec, PIECE_ST id)
 			if (data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->GetState() != id)
 			{
 				reverseCnt++;
-				data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->SetState(id, reverseCnt * REVERSE_INV_CNT);
+				data[pNum.y + rNum.y][pNum.x + rNum.x].lock()->SetState(id, reverseCnt * reverseInvCnt);
 			}
 			else
 			{
 				break;
 			}
 		}
-		GameBoard::SetInvCnt(reverseCnt * REVERSE_INV_CNT);
+		// コマの配置ができない間隔の設定
+		if (invCnt < (reverseCnt * reverseInvCnt))
+		{
+			invCnt = reverseCnt * reverseInvCnt;
+		}
 		reverseCnt = 0;
 		rNum = { 0,0 };
 	}
@@ -182,9 +185,9 @@ bool GameBoard::CheckReverse(const Vector2& vec, PIECE_ST id)
 	Vector2 pNum = ChangeScrToPos(vec);
 
 	// クリックした位置に盤面上であるかの確認を行っている
-	if (pNum >= Vector2(0, 0) & pNum < Vector2(data.size() * PIECE_SIZE, data.size() * PIECE_SIZE))
+	if (pNum >= Vector2(0, 0) & pNum < Vector2(data.size() * pieceSize, data.size() * pieceSize))
 	{
-		pNum /= PIECE_SIZE;
+		pNum /= pieceSize;
 		if (data[pNum.y][pNum.x].expired())
 		{
 			for (auto ckPos : pCheckTbl)
@@ -293,12 +296,6 @@ std::list<Vector2> GameBoard::GetPieceTbl()
 	return putPieceTbl;
 }
 
-void GameBoard::SetInvCnt(int reverseCnt)
-{
-	// コマの反転間隔が一番長い方を渡している
-	invCnt = (invCnt > reverseCnt ? invCnt : reverseCnt);
-}
-
 bool GameBoard::InvFlag(void)
 {
 	if (invCnt < 0)
@@ -335,29 +332,29 @@ void GameBoard::Update(void)
 
 void GameBoard::Draw()
 {
-	Vector2 sPos = { BOARD_OFFSET_X, BOARD_OFFSET_Y };
-	Vector2 ePos = { BOARD_SIZE + BOARD_OFFSET_X, BOARD_SIZE + PIECE_SIZE };
+	Vector2 sPos = { boardOffset.x, boardOffset.y };
+	Vector2 ePos = { boardSize + boardOffset.x, boardSize + pieceSize };
 	
 	// 盤面の描画 
 	DrawBox(sPos, ePos, 0x107010, true);
 
-	sPos = { BOARD_OFFSET_X, BOARD_OFFSET_Y };
-	ePos = { BOARD_SIZE + BOARD_OFFSET_X, BOARD_SIZE };
+	sPos = { boardOffset.x, boardOffset.y };
+	ePos = { boardSize + boardOffset.x, boardSize };
 
 	// グリッドの描画 
-	for (unsigned int y = 0; y <= DEF_BOARD_CNT + 1; y++)
+	for (unsigned int y = 0; y <= defBoardCnt + 1; y++)
 	{
-		sPos.y = PIECE_SIZE * y + BOARD_OFFSET_Y;
-		ePos.y = PIECE_SIZE * y + BOARD_OFFSET_Y;
+		sPos.y = pieceSize * y + boardOffset.y;
+		ePos.y = pieceSize * y + boardOffset.y;
 		DrawLine(sPos, ePos, 0xaaaaaa, 2);
 	}
 
-	sPos = { BOARD_OFFSET_X, BOARD_OFFSET_Y };
-	ePos = { BOARD_SIZE + BOARD_OFFSET_X, BOARD_SIZE + PIECE_SIZE };
-	for (unsigned int x = 0; x <= DEF_BOARD_CNT; x++)
+	sPos = { boardOffset.x, boardOffset.y };
+	ePos = { boardSize + boardOffset.x, boardSize + pieceSize };
+	for (unsigned int x = 0; x <= defBoardCnt; x++)
 	{
-		sPos.x = (PIECE_SIZE * x) + BOARD_OFFSET_X;
-		ePos.x = (PIECE_SIZE * x) + BOARD_OFFSET_X;
+		sPos.x = (pieceSize * x) + boardOffset.x;
+		ePos.x = (pieceSize * x) + boardOffset.x;
 		DrawLine(sPos, ePos, 0xaaaaaa, 2);
 	}
 
@@ -369,14 +366,14 @@ void GameBoard::Draw()
 		if (drawFlag)
 		{
 			// 反転が行われるまでの間隔
-			DrawBox(pPos, pPos + Vector2(PIECE_SIZE, PIECE_SIZE), 0x48d1cc, true);
+			DrawBox(pPos, pPos + Vector2(pieceSize, pieceSize), 0x48d1cc, true);
 		}
 		
 	}
 	else
 	{
 		// ピースの置いた位置の描画
-		DrawBox(pPos, pPos + Vector2(PIECE_SIZE, PIECE_SIZE), 0x48d1cc, true);
+		DrawBox(pPos, pPos + Vector2(pieceSize, pieceSize), 0x48d1cc, true);
 	}
 
 	// ピースの描画 

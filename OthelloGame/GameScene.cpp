@@ -4,12 +4,9 @@
 #include "TitleScene.h"
 #include "PieceST.h"
 
-#define SCREEN_SIZE_X (800)
-#define SCREEN_SIZE_Y (600)
-
 std::unique_ptr<GameScene, GameScene::GameSceneDeleter> GameScene::s_Instance(new GameScene());
 
-GameScene::GameScene()
+GameScene::GameScene() : screenSize(800, 600)
 {
 	SysInit();
 }
@@ -31,7 +28,7 @@ void GameScene::Run()
 
 Vector2 GameScene::GetScreenSize(void)
 {
-	return Vector2(SCREEN_SIZE_X, SCREEN_SIZE_Y);
+	return Vector2(screenSize.x, screenSize.y);
 }
 
 int GameScene::UpDate()
@@ -42,7 +39,7 @@ int GameScene::UpDate()
 int GameScene::SysInit()
 {
 	// システムの初期化が終わった後、ゲームの初期化を行うようにしている 
-	DxLib::SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 16);
+	DxLib::SetGraphMode(screenSize.x, screenSize.y, 16);
 	/*DxLib::SetWindowIconID();*/
 	DxLib::ChangeWindowMode(true);
 	DxLib::SetWindowText("1701310_北川 潤一 : OthelloGame");

@@ -59,8 +59,6 @@ private:
 	// ピースが置ける位置の描画
 	void PutPieceField(void);
 
-	void SetInvCnt(int reverseCnt);
-
 	Vector2 ChangeScrToPos(const Vector2& pPos);
 
 	// ピースの方向を確認するための変数 
@@ -81,6 +79,13 @@ private:
 	// ピースの中身を格納するための配列 
 	std::vector<std::weak_ptr<GamePiece>*> data;
 	std::vector<std::weak_ptr<GamePiece>>  pieceData;
+
+	const int pieceSize;
+	const int defBoardCnt;
+	const int boardSize;
+	const int reverseInvCnt;
+	const Vector2 boardOffset;
+
 };
 
 int DrawLine(Vector2 sPos, Vector2 ePos, unsigned int color, int thickNess);

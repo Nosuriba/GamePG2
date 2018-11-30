@@ -45,6 +45,12 @@ private:
 	Vector2	 drawOffset;
 	int		 reverseCnt;
 	double   drawSize;
+
+	const int drawPieceSize;
+	const int animCnt;
+	const int flameCnt;
+	const int flameInvCnt;
+	const int holdAnimCnt;
 };
 
 // DxLib::DrawBoxをオーバーロードしたもの

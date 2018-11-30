@@ -26,9 +26,7 @@ void TitleScene::DrawPlType(void)
 {
 	for (int i = 0; i < static_cast<int>(PL_TYPE::SYS); i++)
 	{
-		DxLib::DrawBox(pPos[i].x - boxOffset, pPos[i].y - boxOffset,
-					   pPos[i].x + boxSize.x - boxOffset, pPos[i].y + boxSize.y - boxOffset,
-					   0x666666, true);
+		DrawBox(pPos[i], pPos[i] + boxSize + Vector2(boxOffset, boxOffset), 0x666666, true);
 	}
 
 	DxLib::DrawExtendString(LpGameScene.GetScreenSize().x / 2 - 30,  pPos[0].y, 3.0f, 3.0f, "VS", 0xffff00);

@@ -42,7 +42,7 @@ private:
 
 	// ピースの個数の描画位置;
 	const std::array<Vector2, static_cast<int>(PIECE_ST::NON)> pCntPos = { Vector2(25, 450), Vector2(700, 450) };
-	const std::array<Vector2, static_cast<int>(PIECE_ST::NON)> plPos = { Vector2(25, 60), Vector2(700, 60) };
+	const std::array<Vector2, static_cast<int>(PIECE_ST::NON)> plPos = { Vector2(25, 480), Vector2(700, 480) };
 	const Vector2 plBoxSize;
 
 };

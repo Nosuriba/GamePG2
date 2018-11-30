@@ -4,7 +4,7 @@
 #include "Player.h"
 #include "MouseCtl.h"
 
-MainScene::MainScene(std::array<PL_TYPE, static_cast<int>(PL_TYPE::MAX)> plType) : plBoxSize(60, 120)
+MainScene::MainScene(std::array<PL_TYPE, static_cast<int>(PL_TYPE::MAX)> plType) : plBoxSize(80, 40)
 {
 	this->plType = plType;
 	reverseFlag = false;
@@ -94,6 +94,11 @@ void MainScene::PutPieceCnt(void)
 
 void MainScene::DrawPlType(void)
 {
+	for (int i = 0; i < static_cast<int>(PIECE_ST::NON); i++)
+	{
+		DrawBox(plPos[i], plPos[i] + plBoxSize, 0x666666, true);
+	}
+
 	// 1Pの描画
 	if ((*mouseCtl[static_cast<int>(PIECE_ST::B)]).GetPlType() == PL_TYPE::MAN)
 	{
@@ -141,25 +146,26 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 		}
 
 		// ゲーム中にプレイヤーを動的に切り替えれるようにしている
-		if ((*sysMouse).GetButton()[PUSH_NOW] & (~(*sysMouse).GetButton()[PUSH_OLD]) & MOUSE_INPUT_RIGHT)
+		if ((*sysMouse).GetButton()[PUSH_NOW] & (~(*sysMouse).GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 		{
-			if ((*mouseCtl[mouseID]).GetPlType() == PL_TYPE::MAN)
+			if ((*sysMouse).GetPoint() > plPos[static_cast<int>(PIECE_ST::B)] &
+				(*sysMouse).GetPoint() <= plPos[static_cast<int>(PIECE_ST::B)] + Vector2(plBoxSize.x, plBoxSize.y))
 			{
-				(*mouseCtl[mouseID]).SetPlType(PL_TYPE::CPU);
+				/// 1Pの状態を変更している
+				PL_TYPE pTypeB = (*mouseCtl[static_cast<int>(PIECE_ST::B)]).GetPlType();
+				(*mouseCtl[static_cast<int>(PIECE_ST::B)]).SetPlType((PL_TYPE)(1 ^ (int)(pTypeB)));
 			}
-			else
+			else if (((*sysMouse).GetPoint() > plPos[static_cast<int>(PIECE_ST::W)] &
+				      (*sysMouse).GetPoint() <= plPos[static_cast<int>(PIECE_ST::W)] + Vector2(plBoxSize.x, plBoxSize.y)))
 			{
-				(*mouseCtl[mouseID]).SetPlType(PL_TYPE::MAN);
+				/// 2Pの状態を変更している
+				PL_TYPE pTypeW = (*mouseCtl[static_cast<int>(PIECE_ST::W)]).GetPlType();
+				(*mouseCtl[static_cast<int>(PIECE_ST::W)]).SetPlType((PL_TYPE)(1 ^ (int)(pTypeW)));
 			}
+			else {}
 		}
 
-		//if ((*sysMouse).GetPoint() > plPos[static_cast<int>(PIECE_ST::B)] &
-		//    (*sysMouse).GetPoint() > plPos[static_cast<int>(PIECE_ST::B)] + Vector2(plBoxSize.x, plBoxSize.y))
-		//{
-		//	// 1Pのプレイヤーにアクセスして変更できるようにしておく
-		//	PL_TYPE p = (**player[0]);
-		//	(*mouseCtl[static_cast<int>(PIECE_ST::B)]).SetPlType((PL_TYPE)();
-		//}
+		
 	}
 
 	// 間隔を空けて反転処理を行うようにしている

@@ -42,7 +42,7 @@ public:
 	// 置かれたピースの個数をカウントするもの
 	PIECE_ST CheckPutPieceST(int x, int y);
 
-	std::list<Vector2> GetPieceTbl();
+	Vector2 GetPiecePos(PIECE_ST pState);
 
 	bool InvFlag(void);
 	bool InvFlag(bool drawFlag);
@@ -53,13 +53,18 @@ private:
 	// コンストラクタの共通化用関数
 	bool CommonBoard(Vector2 vec);
 
+	Vector2 ChangeScrToPos(const Vector2& pPos);
+
 	auto AddObjList(piece_shared && objPtr);
 
 	bool CheckReverse(const Vector2& ckNum, const Vector2& pNum, PIECE_ST id);
+
+	Vector2 ChoosePutPiece(std::list<Vector2> pTbl, PIECE_ST pState);
+
+	int DecidePoint(Vector2 pNum, Vector2 ckPos, PIECE_ST pState);
+
 	// ピースが置ける位置の描画
 	void PutPieceField(void);
-
-	Vector2 ChangeScrToPos(const Vector2& pPos);
 
 	// ピースの方向を確認するための変数 
 	Vector2 pCheckTbl[8] = { { 1,0 },{ 1,1 },{ 0,1 },{ -1,1 },{ -1,0 },{ -1,-1 },{ 0,-1 },{ 1,-1 } };

@@ -207,7 +207,7 @@ bool GameBoard::CheckReverse(const Vector2& ckPos, const Vector2& pNum, PIECE_ST
 	bool	rtnFlag = false;
 	Vector2 ckNum = pNum;
 
-	if (pNum + ckPos >= Vector2(0, 0) & pNum + ckPos < Vector2(data.size(), data.size()))
+	if (ckNum + ckPos >= Vector2(0, 0) & ckNum + ckPos < Vector2(data.size(), data.size()))
 	{
 		if (!data[pNum.y + ckPos.y][pNum.x + ckPos.x].expired())
 		{
@@ -240,6 +240,28 @@ bool GameBoard::CheckReverse(const Vector2& ckPos, const Vector2& pNum, PIECE_ST
 		}
 	}
 	return rtnFlag;
+}
+
+Vector2 GameBoard::ChoosePutPiece(std::list<Vector2> pTbl, PIECE_ST pState)
+{
+	std::list<int> pointList;	// メンバ変数にしてもいいかもしれない
+
+	for (Vector2 pNum : pTbl)
+	{
+		for (Vector2 ckPos : pCheckTbl)
+		{
+			pointList.push_front(DecidePoint(pNum, ckPos, pState));
+		}
+	}
+
+	return Vector2();
+}
+
+int GameBoard::DecidePoint(Vector2 pNum, Vector2 ckPos, PIECE_ST pState)
+{
+
+
+	return 0;
 }
 
 void GameBoard::MakePutPieceField(PIECE_ST id)
@@ -291,9 +313,32 @@ PIECE_ST GameBoard::CheckPutPieceST(int x, int y)
 	return PIECE_ST::NON;
 }
 
-std::list<Vector2> GameBoard::GetPieceTbl()
+Vector2 GameBoard::GetPiecePos(PIECE_ST pState)
 {
-	return putPieceTbl;
+	Vector2 pNum = { 0,0 };
+
+	if ((piece.w + piece.b) < 6)
+	{
+		// CPUのピースをランダムで配置している
+		if (putPieceTbl.size() > 0)
+		{
+			auto itr = putPieceTbl.begin();
+			auto rand = GetRand(putPieceTbl.size() - 1);
+
+			for (int i = 0; i < rand; i++)
+			{
+				itr++;
+			}
+			return ChangeTblToScr((*itr));
+		}
+	}
+	else
+	{
+		return ChoosePutPiece(putPieceTbl, pState);
+	}
+
+
+	return {0,0};
 }
 
 bool GameBoard::InvFlag(void)
@@ -342,7 +387,7 @@ void GameBoard::Draw()
 	ePos = { boardSize + boardOffset.x, boardSize };
 
 	// グリッドの描画 
-	for (unsigned int y = 0; y <= defBoardCnt + 1; y++)
+	for (int y = 0; y <= defBoardCnt + 1; y++)
 	{
 		sPos.y = pieceSize * y + boardOffset.y;
 		ePos.y = pieceSize * y + boardOffset.y;
@@ -351,7 +396,7 @@ void GameBoard::Draw()
 
 	sPos = { boardOffset.x, boardOffset.y };
 	ePos = { boardSize + boardOffset.x, boardSize + pieceSize };
-	for (unsigned int x = 0; x <= defBoardCnt; x++)
+	for (int x = 0; x <= defBoardCnt; x++)
 	{
 		sPos.x = (pieceSize * x) + boardOffset.x;
 		ePos.x = (pieceSize * x) + boardOffset.x;

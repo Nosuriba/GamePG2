@@ -50,8 +50,6 @@ int GameScene::SysInit()
 	DxLib::SetDrawScreen(DX_SCREEN_BACK);
 
 	sysMouse = std::make_shared<MouseCtl>();
-	(*sysMouse).SetPlType(PL_TYPE::MAN);
-
 	return 0;
 }
 

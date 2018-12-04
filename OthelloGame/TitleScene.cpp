@@ -27,6 +27,7 @@ void TitleScene::DrawPlType(void)
 	for (int i = 0; i < static_cast<int>(PL_TYPE::SYS); i++)
 	{
 		DrawBox(pPos[i], pPos[i] + boxSize + Vector2(boxOffset, boxOffset), 0x666666, true);
+
 	}
 
 	DxLib::DrawExtendString(LpGameScene.GetScreenSize().x / 2 - 30,  pPos[0].y, 3.0f, 3.0f, "VS", 0xffff00);
@@ -38,13 +39,13 @@ void TitleScene::DrawPlType(void)
 	}
 	else
 	{
-		DxLib::DrawExtendString(pPos[0].x, pPos[0].y, 3.0f, 3.0f, "CPU ", 0xff4500);
+		DxLib::DrawExtendString(pPos[0].x, pPos[0].y, 3.0f, 3.0f, "CPU ", 0x7fbfff);
 	}
 
 	// 2Pの描画
 	if (plType[1] == PL_TYPE::MAN)
 	{
-		DxLib::DrawExtendString(pPos[1].x, pPos[1].y, 3.0f, 3.0f, "Player", 0x7fbfff);
+		DxLib::DrawExtendString(pPos[1].x, pPos[1].y, 3.0f, 3.0f, "Player", 0xff4500);
 	}
 	else
 	{
@@ -77,8 +78,8 @@ unique_scene TitleScene::Update(unique_scene own, mouse_shared sysMouse)
 	// タイトルの描画を行っている 
 	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/title2.jpg")[0], true);
-	DxLib::DrawExtendString(100, 120, 1.8, 1.8f, "枠内を左クリック : プレイヤーの切り替え", 0xffff00);
-	DxLib::DrawExtendString(100, 180, 1.8, 1.8f, "枠外を左クリック : ゲームスタート", 0xffff00);
+	DxLib::DrawExtendString(100, 120, 1.8, 1.8f, "左クリックでプレイヤーが切り替わるよ", 0xffff00);
+
 
 	DrawPlType();
 

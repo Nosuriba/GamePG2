@@ -2,6 +2,7 @@
 #include <array>
 #include "Vector2.h"
 #include "PL_TYPE.h"
+#include "PieceSt.h"
 
 class PlayerType;
 class GameBoard;
@@ -26,7 +27,7 @@ public:
 	PL_TYPE GetPlType(void);
 	void SetPlType(PL_TYPE type);
 	void Update();
-	void Update(std::shared_ptr<GameBoard>);
+	void Update(std::shared_ptr<GameBoard>, PIECE_ST pState);
 private:
 	Vector2   pos;
 	PL_TYPE	  type;

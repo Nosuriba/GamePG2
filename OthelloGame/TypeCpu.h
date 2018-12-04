@@ -6,8 +6,8 @@ struct TypeCpu : PlayerType
 	TypeCpu();
 	~TypeCpu();
 	PL_TYPE GetType(void);
-	void Update(int& data, Vector2& pos, std::weak_ptr<GameBoard> boardPtr);
-	std::list<Vector2> pointList;
+	void Update(int& data, Vector2& pos, std::weak_ptr<GameBoard> boardPtr, PIECE_ST pState);
+	Vector2 pointList;
 private:
 	int waitTime = 0;
 

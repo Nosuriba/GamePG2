@@ -6,6 +6,6 @@ struct TypeMan : PlayerType
 	TypeMan();
 	~TypeMan();
 	PL_TYPE GetType(void);
-	void Update(int& data, Vector2& pos, std::weak_ptr<GameBoard> boardPtr);
+	void Update(int& data, Vector2& pos, std::weak_ptr<GameBoard> boardPtr, PIECE_ST pState);
 };
 

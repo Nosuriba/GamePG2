@@ -22,13 +22,11 @@ void MainScene::Init()
 	for (auto unit : PIECE_ST())
 	{
 		mouseCtl[unit] = std::make_shared<MouseCtl>();
-		(*mouseCtl[unit]).SetPlType(PL_TYPE::MAN);
 	}
 	(*mouseCtl[0]).SetPlType(plType[0]);
 	(*mouseCtl[1]).SetPlType(plType[1]);
 
 	boardPtr = std::make_shared<GameBoard>();
-
 	(*boardPtr).SetPiece(3, 3, PIECE_ST::B);
 	(*boardPtr).SetPiece(4, 4, PIECE_ST::B);
 	(*boardPtr).SetPiece(3, 4, PIECE_ST::W);
@@ -134,7 +132,7 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 			(*boardPtr).MakePutPieceField((**player).pGetID());
 		}
 		
-		(*mouseCtl[mouseID]).Update(boardPtr);
+		(*mouseCtl[mouseID]).Update(boardPtr, (**player).pGetID());
 
 		if ((*mouseCtl[mouseID]).GetButton()[PUSH_NOW] & (~(*mouseCtl[mouseID]).GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 		{
@@ -199,9 +197,7 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
 
 	// 操作方法のテキストを描画している
-	DxLib::DrawExtendString(50, 10, 1.3f, 1.3f, "左クリックでコマが置けるよ /", 0xffff00);
-	DxLib::DrawExtendString(375, 10, 1.3f, 1.3f, "右クリックでプレイヤーが切り替わるよ", 0xffff00);
-
+	DxLib::DrawExtendString(200, 10, 1.5f, 1.5f, "左クリックでコマが置けるよ", 0xffff00);
 	// 現在のピースの個数を描画している
 	DxLib::DrawExtendFormatString(pCntPos[0].x, pCntPos[0].y, 1.5f, 1.5f, 0xeeee00, "黒: %d", piece.b);
 	DxLib::DrawExtendFormatString(pCntPos[1].x, pCntPos[1].y, 1.5f, 1.5f, 0xeeee00, "白: %d", piece.w);

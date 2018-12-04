@@ -52,13 +52,13 @@ void MouseCtl::Update()
 	DxLib::GetMousePoint(&pos.x, &pos.y);
 }
 
-void MouseCtl::Update(std::shared_ptr<GameBoard> boardPtr)
+void MouseCtl::Update(std::shared_ptr<GameBoard> boardPtr, PIECE_ST pState)
 {
 	// プレイヤーのターンの時にマウスのクリックを更新する
 	if (!((*plType).GetType() == PL_TYPE::SYS))
 	{
 		mButton[PUSH_OLD] = mButton[PUSH_NOW];
-		(*plType).Update(mButton[PUSH_NOW], pos, boardPtr);
+		(*plType).Update(mButton[PUSH_NOW], pos, boardPtr, pState);
 	}
 	else
 	{

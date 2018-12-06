@@ -2,7 +2,6 @@
 #include "PieceST.h"
 #include "GameBoard.h"
 #include "GamePiece.h"
-#include "MouseCtl.h"
 #include "Player.h"
 
 GameBoard::GameBoard() : pieceSize(64),
@@ -250,6 +249,7 @@ Vector2 GameBoard::ChoosePutPiece(std::list<Vector2> pTbl, PIECE_ST pState)
 	{
 		for (Vector2 ckPos : pCheckTbl)
 		{
+			// 評価点の設定を行っている。
 			pointList.push_front(DecidePoint(pNum, ckPos, pState));
 		}
 	}
@@ -257,10 +257,9 @@ Vector2 GameBoard::ChoosePutPiece(std::list<Vector2> pTbl, PIECE_ST pState)
 	return Vector2();
 }
 
+// 評価点を決定するもの
 int GameBoard::DecidePoint(Vector2 pNum, Vector2 ckPos, PIECE_ST pState)
 {
-
-
 	return 0;
 }
 
@@ -315,27 +314,62 @@ PIECE_ST GameBoard::CheckPutPieceST(int x, int y)
 
 Vector2 GameBoard::GetPiecePos(PIECE_ST pState)
 {
-	Vector2 pNum = { 0,0 };
+	std::list<int> debugList;
 
-	if ((piece.w + piece.b) < 6)
+	clock_t start, end;
+	double time = 0;
+
+	// 処理時間の計測(debug用)	
+	for (int p = 0; p < 10; p++)
 	{
-		// CPUのピースをランダムで配置している
-		if (putPieceTbl.size() > 0)
+		start = clock();
+		for (int i = 1; i < 100000; i++)
 		{
-			auto itr = putPieceTbl.begin();
-			auto rand = GetRand(putPieceTbl.size() - 1);
-
-			for (int i = 0; i < rand; i++)
-			{
-				itr++;
-			}
-			return ChangeTblToScr((*itr));
+			debugList.push_back(i);
 		}
+		end = clock();
+		time = (double)(end - start);
+		time = 0;
+		debugList.clear();
 	}
-	else
+	
+	
+	// CPUのピースをランダムで配置している
+	if (putPieceTbl.size() > 0)
 	{
-		return ChoosePutPiece(putPieceTbl, pState);
+		auto itr = putPieceTbl.begin();
+		auto rand = GetRand(putPieceTbl.size() - 1);
+
+		for (int i = 0; i < rand; i++)
+		{
+			itr++;
+		}
+
+		
+
+		return ChangeTblToScr((*itr));
 	}
+	//// ピースを置くとき、1ターン目の場合
+	//if ((piece.w + piece.b) < 6)
+	//{
+	//	// CPUのピースをランダムで配置している
+	//	if (putPieceTbl.size() > 0)
+	//	{
+	//		auto itr = putPieceTbl.begin();
+	//		auto rand = GetRand(putPieceTbl.size() - 1);
+
+	//		for (int i = 0; i < rand; i++)
+	//		{
+	//			itr++;
+	//		}
+	//		return ChangeTblToScr((*itr));
+	//	}
+	//}
+	//else
+	//{
+	//	// 配置するピースを決めている
+	//	return ChoosePutPiece(putPieceTbl, pState);
+	//}
 
 
 	return {0,0};

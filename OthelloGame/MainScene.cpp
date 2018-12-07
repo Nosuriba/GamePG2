@@ -26,14 +26,14 @@ void MainScene::Init()
 	(*mouseCtl[0]).SetPlType(plType[0]);
 	(*mouseCtl[1]).SetPlType(plType[1]);
 
-	boardPtr = std::make_shared<GameBoard>();
-	(*boardPtr).SetPiece(3, 3, PIECE_ST::B);
-	(*boardPtr).SetPiece(4, 4, PIECE_ST::B);
-	(*boardPtr).SetPiece(3, 4, PIECE_ST::W);
-	(*boardPtr).SetPiece(4, 3, PIECE_ST::W);
+	gBoard = std::make_shared<GameBoard>();
+	(*gBoard).SetPiece(3, 3, PIECE_ST::B);
+	(*gBoard).SetPiece(4, 4, PIECE_ST::B);
+	(*gBoard).SetPiece(3, 4, PIECE_ST::W);
+	(*gBoard).SetPiece(4, 3, PIECE_ST::W);
 
-	boardSize = (*boardPtr).GetDataSize();
-	PutPieceCnt();
+	boardSize = (*gBoard).GetDataSize();
+	piece = (*gBoard).PutPieceCnt();
 
 	// プレイヤーの登録を行っている
 	MakePlayer();
@@ -61,33 +61,12 @@ void MainScene::NextPlayer(void)
 bool MainScene::AutoPassPlayer(void)
 {
 	NextPlayer();
-	(*boardPtr).MakePutPieceField((**player).pGetID());
-	if ((*boardPtr).CheckPutPiece())
+	(*gBoard).MakePutPieceField((**player).pGetID());
+	if ((*gBoard).CheckPutPiece())
 	{
 		return true;
 	}
 	return false;
-}
-
-void MainScene::PutPieceCnt(void)
-{
-	piece = { 0,0 };
-	// ピースの色を取得して、それぞれの個数をカウントしている 
-	for (int y = 0; y < (*boardPtr).GetDataSize().y; y++)
-	{
-		for (int x = 0; x < (*boardPtr).GetDataSize().x; x++)
-		{
-			if ((*boardPtr).CheckPutPieceST(x, y) == PIECE_ST::W)
-			{
-				piece.w++;
-			}
-			else if ((*boardPtr).CheckPutPieceST(x, y) == PIECE_ST::B)
-			{
-				piece.b++;
-			}
-			else {}
-		}
-	}
 }
 
 void MainScene::DrawPlType(void)
@@ -124,19 +103,19 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 	int mouseID = static_cast<int>((**player).pGetID());
 
 	// アクティブなプレイヤーのターン処理
-	if ((*boardPtr).InvFlag())
+	if ((*gBoard).InvFlag())
 	{
 		// 反転処理を行っていない時に置ける位置の登録を行っている
 		if (!reverseFlag)
 		{
-			(*boardPtr).MakePutPieceField((**player).pGetID());
+			(*gBoard).MakePutPieceField((**player).pGetID());
 		}
 		
-		(*mouseCtl[mouseID]).Update(boardPtr, (**player).pGetID());
+		(*mouseCtl[mouseID]).Update(gBoard, (**player).pGetID());
 
 		if ((*mouseCtl[mouseID]).GetButton()[PUSH_NOW] & (~(*mouseCtl[mouseID]).GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 		{
-			if ((**player).TurnAct(mouseCtl, *boardPtr))
+			if ((**player).TurnAct(mouseCtl, *gBoard))
 			{
 				reverseFlag = true;
 				mPos = (*mouseCtl[mouseID]).GetPoint();
@@ -146,14 +125,14 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 		// ゲーム中にプレイヤーを動的に切り替えれるようにしている
 		if ((*sysMouse).GetButton()[PUSH_NOW] & (~(*sysMouse).GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 		{
-			if ((*sysMouse).GetPoint() > plPos[static_cast<int>(PIECE_ST::B)] &
+			if ((*sysMouse).GetPoint() >  plPos[static_cast<int>(PIECE_ST::B)] &
 				(*sysMouse).GetPoint() <= plPos[static_cast<int>(PIECE_ST::B)] + Vector2(plBoxSize.x, plBoxSize.y))
 			{
 				/// 1Pの状態を変更している
 				PL_TYPE pTypeB = (*mouseCtl[static_cast<int>(PIECE_ST::B)]).GetPlType();
 				(*mouseCtl[static_cast<int>(PIECE_ST::B)]).SetPlType((PL_TYPE)(1 ^ (int)(pTypeB)));
 			}
-			else if (((*sysMouse).GetPoint() > plPos[static_cast<int>(PIECE_ST::W)] &
+			else if (((*sysMouse).GetPoint() >  plPos[static_cast<int>(PIECE_ST::W)] &
 				      (*sysMouse).GetPoint() <= plPos[static_cast<int>(PIECE_ST::W)] + Vector2(plBoxSize.x, plBoxSize.y)))
 			{
 				/// 2Pの状態を変更している
@@ -162,36 +141,34 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 			}
 			else {}
 		}
-
-		
 	}
 
 	// 間隔を空けて反転処理を行うようにしている
 	if (reverseFlag)
 	{
-		if ((*boardPtr).InvFlag(reverseFlag))
+		if ((*gBoard).InvFlag(reverseFlag))
 		{
 			reverseFlag = false;
-			(*boardPtr).SetReverse(mPos, (**player).pGetID());
-			PutPieceCnt();
-			(*boardPtr).PutPieceClear();
+			(*gBoard).SetReverse(mPos, (**player).pGetID());
+			piece = (*gBoard).PutPieceCnt();
+			(*gBoard).PutPieceClear();
 			NextPlayer();
 		}
 	}
 
 	// プレイヤーのパス処理とゲームを継続するかの管理をしている
-	if ((*boardPtr).InvFlag())
+	if ((*gBoard).InvFlag())
 	{
-		if (!(*boardPtr).CheckPutPiece())
+		if (!(*gBoard).CheckPutPiece())
 		{
 			if (!AutoPassPlayer())
 			{
-				(*boardPtr).SetPieceCnt(piece);
-				return std::make_unique<ResultScene>(boardPtr);
+				(*gBoard).SetPieceCnt(piece);
+				return std::make_unique<ResultScene>(gBoard);
 			}
 		}
 	}
-	(*boardPtr).Update();
+	(*gBoard).Update();
 
 	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
@@ -205,7 +182,7 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 	DrawPlType();
 
 	// 盤面の情報を描画している
-	(*boardPtr).Draw();
+	(*gBoard).Draw();
 
 	// プレイヤーの持ちコマの情報を描画している
 	for (auto data : playerList)

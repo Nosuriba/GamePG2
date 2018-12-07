@@ -14,7 +14,7 @@ PIECE_ST PieceBlack::GetState(void)
 	return PIECE_ST::B;
 }
 
-unsigned int PieceBlack::GetDrawColor(void)
+std::string PieceBlack::GetDrawImage(void)
 {
-	return 0x000000;
+	return "image/piece/player2.png";
 }

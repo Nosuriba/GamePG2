@@ -16,7 +16,7 @@ PIECE_ST PieceWhite::GetState(void)
 	return PIECE_ST::W;
 }
 
-unsigned int PieceWhite::GetDrawColor(void)
+std::string PieceWhite::GetDrawImage(void)
 {
-	return 0xffffff;
+	return "image/piece/player1.png";
 }

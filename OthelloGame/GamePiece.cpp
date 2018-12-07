@@ -15,7 +15,6 @@ holdAnimCnt(flameInvCnt * 2)
 	this->pos		 = pos;
 	this->drawOffset = drawOffset;
 	drawSize		 = 0;
-	oldState		 = pState;
 	reverseCnt		 = 0;
 	SetState(pState, 0);
 }
@@ -42,7 +41,7 @@ void GamePiece::SetState(PIECE_ST pState, int reserveCnt)
 	// リストの中身が空でない時、先頭の要素を削除している
 	if (this->pState.size() > 0)
 	{
-		oldState = (**GamePiece::pState.begin()).GetState();
+		oldImage = (**GamePiece::pState.begin()).GetDrawImage();
 		this->pState.pop_front();
 	}
 	
@@ -86,7 +85,7 @@ void GamePiece::Draw(void)
 {
 	// アニメーション用の変数 
 	double holdSize = 0;
-	PIECE_ST state  = oldState;
+	std::string image = oldImage;
 
 	// 反転アニメーションの設定
 	if (reverseCnt < animCnt)
@@ -94,29 +93,18 @@ void GamePiece::Draw(void)
 		int animCnt = (reverseCnt / flameInvCnt) % flameCnt;
 		drawSize = -1.0 + (animCnt * 0.2);
 		
-		state = (drawSize > 0 ? state = oldState : state = (**pState.begin()).GetState());
+		image = (drawSize > 0 ? image = oldImage : image = (**pState.begin()).GetDrawImage());
 	}
 	
 	// ピースの反転時に浮かせるためのアニメーション設定
 	holdSize = (int)(((drawSize * flameCnt) / holdAnimCnt) + 2) % 3;
 	holdSize = abs(holdSize * 0.1);
 
-	 // ピースの状態によって、描画するピースの色を設定している 
-	if (state == PIECE_ST::W)
-	{
-		DxLib::DrawRotaGraph3(pos.x + drawOffset.x + (drawPieceSize / 2), pos.y + drawOffset.y + (drawPieceSize / 2),
-							 (drawPieceSize / 2), (drawPieceSize / 2),
-							  abs(drawSize) + holdSize, 1.0 + holdSize, 0.0,
-							  LpImageMng.ImgGetID("image/piece/player1.png")[0], true);
-	}
-	else if (state == PIECE_ST::B)
-	{
-		DxLib::DrawRotaGraph3(pos.x + drawOffset.x + (drawPieceSize / 2), pos.y + drawOffset.y + (drawPieceSize / 2),
-							 (drawPieceSize / 2), (drawPieceSize / 2),
-							  abs(drawSize) + holdSize, 1.0 + holdSize, 0.0,
-							  LpImageMng.ImgGetID("image/piece/player2.png")[0], true);
-	}
-	else{}
+	// ピースの描画
+	DxLib::DrawRotaGraph3(pos.x + drawOffset.x + (drawPieceSize / 2), pos.y + drawOffset.y + (drawPieceSize / 2),
+						 (drawPieceSize / 2), (drawPieceSize / 2),
+						  abs(drawSize) + holdSize, 1.0 + holdSize, 0.0,
+						  LpImageMng.ImgGetID(image)[0], true);
 }
 
 int DrawBox(const Vector2& sPos, const Vector2& ePos, unsigned int color, int fillFlag)

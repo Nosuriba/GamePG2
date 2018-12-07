@@ -8,6 +8,6 @@ public:
 	PieceBlack();
 	~PieceBlack();
 	PIECE_ST GetState(void);
-	unsigned int GetDrawColor(void);
+	std::string GetDrawImage(void);
 };
 

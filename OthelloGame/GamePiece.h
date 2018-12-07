@@ -40,7 +40,7 @@ public:
 	void Draw(void);
 private:
 	pState_uniqueList pState;
-	PIECE_ST oldState;
+	std::string oldImage;
 	Vector2	 pos;
 	Vector2	 drawOffset;
 	int		 reverseCnt;

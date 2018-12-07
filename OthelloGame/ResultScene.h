@@ -21,6 +21,6 @@ private:
 
 	PutPiece piece = { 0,0 };
 
-	std::shared_ptr<GameBoard> boardPtr;
+	std::shared_ptr<GameBoard> gBoard;
 };
 

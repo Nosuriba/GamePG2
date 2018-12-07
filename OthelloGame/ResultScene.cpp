@@ -5,8 +5,8 @@
 
 ResultScene::ResultScene(std::shared_ptr<GameBoard> gBoard)
 {
-	boardPtr = gBoard;
-	piece	 = (*boardPtr).GetPieceCnt();
+	this->gBoard = gBoard;
+	piece	 = (*gBoard).GetPieceCnt();
 }
 
 ResultScene::~ResultScene()
@@ -60,12 +60,12 @@ unique_scene ResultScene::Update(unique_scene own, mouse_shared sysMouse)
 		return std::make_unique<TitleScene>();
 	}
 	// ピースの並び替えを行っている 
-	(*boardPtr).ResultPiece(piece);
+	(*gBoard).ResultPiece(piece);
 
 	// リザルトの情報を描画している 
 	DxLib::ClsDrawScreen();
 	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
-	(*boardPtr).Draw();
+	(*gBoard).Draw();
 	DrawWinner(WinJudge(piece));
 	// DxLib::DrawExtendString(60, 300, 2.2f, 2.2f, "左クリックを押すとタイトル画面に戻るよ", 0xffff00);
 	DxLib::DrawExtendFormatString(700, 450, 1.5f, 1.5f, 0xeeee00, "白: %d", piece.w);

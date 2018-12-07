@@ -24,9 +24,6 @@ private:
 	void NextPlayer(void);
 	bool AutoPassPlayer(void);
 
-	// 配置されたピースの個数をカウントするための関数 
-	void PutPieceCnt(void);
-
 	void DrawPlType(void);
 
 	Vector2 boardSize;
@@ -38,7 +35,7 @@ private:
 	player_list playerList;
 	player_list::iterator player;
 	mouse_array mouseCtl;
-	std::shared_ptr<GameBoard> boardPtr;
+	std::shared_ptr<GameBoard> gBoard;
 
 	// ピースの個数の描画位置;
 	const std::array<Vector2, static_cast<int>(PIECE_ST::NON)> pCntPos = { Vector2(25, 450), Vector2(700, 450) };

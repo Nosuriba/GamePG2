@@ -241,30 +241,9 @@ bool GameBoard::CheckReverse(const Vector2& ckPos, const Vector2& pNum, PIECE_ST
 	return rtnFlag;
 }
 
-Vector2 GameBoard::ChoosePutPiece(std::list<Vector2> pTbl, PIECE_ST pState)
-{
-	std::list<int> pointList;	// メンバ変数にしてもいいかもしれない
-
-	for (Vector2 pNum : pTbl)
-	{
-		for (Vector2 ckPos : pCheckTbl)
-		{
-			// 評価点の設定を行っている。
-			pointList.push_front(DecidePoint(pNum, ckPos, pState));
-		}
-	}
-
-	return Vector2();
-}
-
-// 評価点を決定するもの
-int GameBoard::DecidePoint(Vector2 pNum, Vector2 ckPos, PIECE_ST pState)
-{
-	return 0;
-}
-
 void GameBoard::MakePutPieceField(PIECE_ST id)
 {
+	putPieceTbl.clear();
 	for (unsigned int y = 0; y < data.size(); y++)
 	{
 		for (unsigned int x = 0; x < data.size(); x++)
@@ -277,6 +256,7 @@ void GameBoard::MakePutPieceField(PIECE_ST id)
 					{
 						// ピースの置ける位置の登録
 						putPieceTbl.push_back(Vector2(x, y));
+						break;
 					}
 				}
 			}
@@ -312,67 +292,176 @@ PIECE_ST GameBoard::CheckPutPieceST(int x, int y)
 	return PIECE_ST::NON;
 }
 
-Vector2 GameBoard::GetPiecePos(PIECE_ST pState)
+PutPiece GameBoard::PutPieceCnt(void)
+{
+	piece = { 0,0 };
+	// ピースの色を取得して、それぞれの個数をカウントしている 
+	for (int y = 0; y < data.size(); y++)
+	{
+		for (int x = 0; x < data.size(); x++)
+		{
+			if (CheckPutPieceST(x, y) == PIECE_ST::W)
+			{
+				piece.w++;
+			}
+			else if (CheckPutPieceST(x, y) == PIECE_ST::B)
+			{
+				piece.b++;
+			}
+			else {}
+		}
+	}
+
+	return piece;
+}
+
+
+Vector2 GameBoard::GetPiecePos(PIECE_ST id)
 {
 	std::list<int> debugList;
 
 	clock_t start, end;
 	double time = 0;
 
-	// 処理時間の計測(debug用)	
-	for (int p = 0; p < 10; p++)
-	{
-		start = clock();
-		for (int i = 1; i < 100000; i++)
-		{
-			debugList.push_back(i);
-		}
-		end = clock();
-		time = (double)(end - start);
-		time = 0;
-		debugList.clear();
-	}
-	
-	
-	// CPUのピースをランダムで配置している
-	if (putPieceTbl.size() > 0)
-	{
-		auto itr = putPieceTbl.begin();
-		auto rand = GetRand(putPieceTbl.size() - 1);
-
-		for (int i = 0; i < rand; i++)
-		{
-			itr++;
-		}
-
-		
-
-		return ChangeTblToScr((*itr));
-	}
-	//// ピースを置くとき、1ターン目の場合
-	//if ((piece.w + piece.b) < 6)
+	//// 処理時間の計測(debug用)	
+	//for (int p = 0; p < 10; p++)
 	//{
-	//	// CPUのピースをランダムで配置している
-	//	if (putPieceTbl.size() > 0)
+	//	start = clock();
+	//	for (int i = 1; i < 100000; i++)
 	//	{
-	//		auto itr = putPieceTbl.begin();
-	//		auto rand = GetRand(putPieceTbl.size() - 1);
-
-	//		for (int i = 0; i < rand; i++)
-	//		{
-	//			itr++;
-	//		}
-	//		return ChangeTblToScr((*itr));
+	//		debugList.push_back(i);
 	//	}
+	//	end = clock();
+	//	time += (double)(end - start);
+	//	debugList.clear();
+
+	//	/*if (time > 300)
+	//	{
+	//		break;
+	//	}*/
 	//}
-	//else
-	//{
-	//	// 配置するピースを決めている
-	//	return ChoosePutPiece(putPieceTbl, pState);
-	//}
+	
+	piece = PutPieceCnt();
+	// ピースを置くとき、1ターン目の場合
+	if ((piece.w + piece.b) < 6)
+	{
+		// CPUのピースをランダムで配置している
+		if (putPieceTbl.size() > 0)
+		{
+			auto itr = putPieceTbl.begin();
+			auto rand = GetRand(putPieceTbl.size() - 1);
+
+			for (int i = 0; i < rand; i++)
+			{
+				itr++;
+			}
+			return ChangeTblToScr((*itr));
+		}
+	}
+	else
+	{
+		// 配置するピースを決めている
+		return ChoosePutPiece(putPieceTbl, id);
+	}
 
 
 	return {0,0};
+}
+
+Vector2 GameBoard::ChoosePutPiece(std::list<Vector2> pTbl, PIECE_ST id)
+{
+	
+	std::list<int> pointList;	// メンバ変数にしてもいいかもしれない
+
+	clock_t start, end = 0;
+	int		point	   = 0;				// 評価点の保存用変数
+	double	time	   = 0;
+	bool    clockFlag  = false;
+	
+
+	start = clock();
+
+	//for (Vector2 pNum : pTbl)
+	//{
+	//	if (!clockFlag)
+	//	{
+	//		for (Vector2 ckPos : pCheckTbl)
+	//		{
+	//			if (!clockFlag)
+	//			{
+	//				// 評価点の設定を行っている。
+	//				point += DecidePoint(pNum, ckPos, id);
+	//			}
+	//		}
+	//		end = clock();
+	//		time = end - start;
+	//		clockFlag = (time > 300 ? true : false);
+	//		pointList.push_front(point);
+	//		point = 0;
+	//	}
+	//}
+
+	// 評価点の登録(debug用)
+	for (int i = 0; i < putPieceTbl.size(); i++)
+	{
+		pointList.push_back(10 * i);
+	}
+
+	point = pointList.front();
+	auto pointTbl = pointList.begin();
+	auto itr = putPieceTbl.begin();
+	int size = 0;
+
+	for (int p = 1; p < pointList.size(); p++)
+	{
+		(*pointTbl++);
+		if (point < (*pointTbl))
+		{
+			point = (*pointTbl);
+			size = p;
+		}
+		
+	}
+	
+	for (int i = 0; i < size; i++)
+	{
+		(*itr++);
+	}
+
+	return ChangeTblToScr((*itr));
+}
+
+// 評価点を決定するもの
+int GameBoard::DecidePoint(Vector2 pNum, Vector2 ckPos, PIECE_ST id)
+{
+	Vector2 ckNum = pNum;
+	int point	  = 0;
+	bool rtnFlag  = false;
+
+	if (!data[pNum.y + ckPos.y][pNum.x + ckPos.x].expired())
+	{
+		if (data[pNum.y + ckPos.y][pNum.x + ckPos.x].lock()->GetState() != id)
+		{
+			while (!rtnFlag)
+			{
+				ckNum += ckPos;
+				if (!data[ckNum.y][ckNum.x].expired())
+				{
+					if (data[ckNum.y][ckNum.x].lock()->GetState() == id)
+					{
+						rtnFlag = true;
+						reverseTbl.push_back(ckPos);
+					}
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+	}
+
+	return 0;
 }
 
 bool GameBoard::InvFlag(void)

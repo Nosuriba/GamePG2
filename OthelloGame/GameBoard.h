@@ -40,6 +40,7 @@ public:
 	void PutPieceClear(void);
 
 	// 置かれたピースの個数をカウントするもの
+	PutPiece PutPieceCnt(void);
 	PIECE_ST CheckPutPieceST(int x, int y);
 
 	Vector2 GetPiecePos(PIECE_ST pState);
@@ -59,9 +60,9 @@ private:
 
 	bool CheckReverse(const Vector2& ckNum, const Vector2& pNum, PIECE_ST id);
 
-	Vector2 ChoosePutPiece(std::list<Vector2> pTbl, PIECE_ST pState);
+	Vector2 ChoosePutPiece(std::list<Vector2> pTbl, PIECE_ST id);
 
-	int DecidePoint(Vector2 pNum, Vector2 ckPos, PIECE_ST pState);
+	int DecidePoint(Vector2 pNum, Vector2 ckPos, PIECE_ST id);
 
 	// ピースが置ける位置の描画
 	void PutPieceField(void);

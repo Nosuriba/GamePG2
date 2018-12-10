@@ -31,6 +31,34 @@ Vector2 GameScene::GetScreenSize(void)
 	return Vector2(screenSize.x, screenSize.y);
 }
 
+void GameScene::StartTime(void)
+{
+	clockTimer[static_cast<int>(TIME_ST::START)] = std::chrono::system_clock::now();
+}
+
+void GameScene::EndTime(void)
+{
+	clockTimer[static_cast<int>(TIME_ST::END)] = std::chrono::system_clock::now();
+}
+
+__int64 GameScene::GetMilliTime(void)
+{
+	return std::chrono::duration_cast<std::chrono::milliseconds>(clockTimer[static_cast<size_t>(TIME_ST::END)]
+															   - clockTimer[static_cast<size_t>(TIME_ST::START)]).count();
+}
+
+__int64 GameScene::GetMicroTime(void)
+{
+	return std::chrono::duration_cast<std::chrono::microseconds>(clockTimer[static_cast<size_t>(TIME_ST::END)]
+															   - clockTimer[static_cast<size_t>(TIME_ST::START)]).count();
+}
+
+__int64 GameScene::GetNanoTime(void)
+{
+	return std::chrono::duration_cast<std::chrono::nanoseconds>(clockTimer[static_cast<size_t>(TIME_ST::END)]
+															   - clockTimer[static_cast<size_t>(TIME_ST::START)]).count();
+}
+
 int GameScene::UpDate()
 {
 	return 0;

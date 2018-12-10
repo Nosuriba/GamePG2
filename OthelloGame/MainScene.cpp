@@ -3,6 +3,7 @@
 #include "GameBoard.h"
 #include "Player.h"
 #include "MouseCtl.h"
+#include "GameScene.h"
 
 MainScene::MainScene(std::array<PL_TYPE, static_cast<int>(PL_TYPE::MAX)> plType) : plBoxSize(80, 40)
 {
@@ -189,6 +190,7 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 	{
 		(*data).Draw();
 	}
+	DxLib::DrawFormatString(10, 550, 0xffdd00, "%d É}ÉCÉNÉçïb", LpGameScene.GetMicroTime());
 
 	DxLib::ScreenFlip();
 	return std::move(own);

@@ -2,14 +2,25 @@
 #include <mutex>
 #include <memory>
 #include <list>
+#include <array>
 #include "Vector2.h"
 #include "SceneState.h"
 #include "PieceST.h"
 #include "MouseCtl.h"
 
-class GameBoard;
+enum class TIME_ST
+{
+	START,
+	END, 
+	MAX
+};
 
 #define LpGameScene (GameScene::GetInstance())
+
+using TIME_POINT = std::chrono::system_clock::time_point;
+
+class GameBoard;
+
 
 class GameScene
 {
@@ -22,6 +33,15 @@ public:
 	void Run();
 	// ゲーム画面のサイズを取得するための関数
 	Vector2 GetScreenSize(void);	
+
+	void StartTime(void);
+	void EndTime(void);
+
+	/// 測定する時間の種類
+	__int64 GetMilliTime();
+	__int64 GetMicroTime(void);
+	__int64 GetNanoTime(void);
+
 private:
 	
 	// GameSceneクラスのdeleterを設定している 
@@ -41,6 +61,8 @@ private:
 	int SysDestroy();
 	
 	static std::unique_ptr<GameScene, GameSceneDeleter>	s_Instance;
+	std::array<TIME_POINT, static_cast<int>(TIME_ST::MAX)>  clockTimer;		// 処理時間計測用の変数
+	
 	std::shared_ptr<MouseCtl>  mousePtr;
 	// マウスをプレイヤータイプの最大数分を作っている(後で修正)
 	std::shared_ptr<MouseCtl> sysMouse;

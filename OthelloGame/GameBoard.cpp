@@ -2,7 +2,7 @@
 #include "PieceST.h"
 #include "GameBoard.h"
 #include "GamePiece.h"
-#include "Player.h"
+#include "GameScene.h"
 
 GameBoard::GameBoard() : pieceSize(64),
 defBoardCnt(8),
@@ -295,10 +295,11 @@ PIECE_ST GameBoard::CheckPutPieceST(int x, int y)
 PutPiece GameBoard::PutPieceCnt(void)
 {
 	piece = { 0,0 };
+
 	// ピースの色を取得して、それぞれの個数をカウントしている 
-	for (int y = 0; y < data.size(); y++)
+	for (unsigned int y = 0; y < data.size(); y++)
 	{
-		for (int x = 0; x < data.size(); x++)
+		for (unsigned int x = 0; x < data.size(); x++)
 		{
 			if (CheckPutPieceST(x, y) == PIECE_ST::W)
 			{
@@ -320,27 +321,6 @@ Vector2 GameBoard::GetPiecePos(PIECE_ST id)
 {
 	std::list<int> debugList;
 
-	clock_t start, end;
-	double time = 0;
-
-	//// 処理時間の計測(debug用)	
-	//for (int p = 0; p < 10; p++)
-	//{
-	//	start = clock();
-	//	for (int i = 1; i < 100000; i++)
-	//	{
-	//		debugList.push_back(i);
-	//	}
-	//	end = clock();
-	//	time += (double)(end - start);
-	//	debugList.clear();
-
-	//	/*if (time > 300)
-	//	{
-	//		break;
-	//	}*/
-	//}
-	
 	piece = PutPieceCnt();
 	// ピースを置くとき、1ターン目の場合
 	if ((piece.w + piece.b) < 6)
@@ -370,65 +350,52 @@ Vector2 GameBoard::GetPiecePos(PIECE_ST id)
 
 Vector2 GameBoard::ChoosePutPiece(std::list<Vector2> pTbl, PIECE_ST id)
 {
-	
 	std::list<int> pointList;	// メンバ変数にしてもいいかもしれない
+	int	point	   = 0;			// 評価点の保存用変数
 
-	clock_t start, end = 0;
-	int		point	   = 0;				// 評価点の保存用変数
-	double	time	   = 0;
-	bool    clockFlag  = false;
-	
-
-	start = clock();
-
-	//for (Vector2 pNum : pTbl)
-	//{
-	//	if (!clockFlag)
-	//	{
-	//		for (Vector2 ckPos : pCheckTbl)
-	//		{
-	//			if (!clockFlag)
-	//			{
-	//				// 評価点の設定を行っている。
-	//				point += DecidePoint(pNum, ckPos, id);
-	//			}
-	//		}
-	//		end = clock();
-	//		time = end - start;
-	//		clockFlag = (time > 300 ? true : false);
-	//		pointList.push_front(point);
-	//		point = 0;
-	//	}
-	//}
+	LpGameScene.StartTime();
 
 	// 評価点の登録(debug用)
-	for (int i = 0; i < putPieceTbl.size(); i++)
+	for (unsigned int i = 0; i < putPieceTbl.size(); i++)
 	{
+		if (LpGameScene.GetMicroTime() >= 20)
+		{
+			break;
+		}
 		pointList.push_back(10 * i);
+		 LpGameScene.EndTime();
 	}
 
-	point = pointList.front();
-	auto pointTbl = pointList.begin();
-	auto itr = putPieceTbl.begin();
-	int size = 0;
-
-	for (int p = 1; p < pointList.size(); p++)
+	// ポイントの登録がされている時
+	if (pointList.size() > 0)
 	{
-		(*pointTbl++);
-		if (point < (*pointTbl))
+		point = pointList.front();
+		auto pointTbl = pointList.begin();
+		auto itr = putPieceTbl.begin();
+		int size = 0;
+
+		for (unsigned int p = 1; p < pointList.size(); p++)
 		{
-			point = (*pointTbl);
-			size = p;
+			(*pointTbl++);
+			if (point < (*pointTbl))
+			{
+				point = (*pointTbl);
+				size = p;
+			}
 		}
-		
+
+		for (int i = 0; i < size; i++)
+		{
+			(*itr++);
+		}
+		return ChangeTblToScr((*itr));
+	}
+	else
+	{
+		return ChangeTblToScr(putPieceTbl.front());
 	}
 	
-	for (int i = 0; i < size; i++)
-	{
-		(*itr++);
-	}
-
-	return ChangeTblToScr((*itr));
+	
 }
 
 // 評価点を決定するもの
@@ -450,7 +417,6 @@ int GameBoard::DecidePoint(Vector2 pNum, Vector2 ckPos, PIECE_ST id)
 					if (data[ckNum.y][ckNum.x].lock()->GetState() == id)
 					{
 						rtnFlag = true;
-						reverseTbl.push_back(ckPos);
 					}
 				}
 				else
@@ -550,6 +516,8 @@ void GameBoard::Draw()
 		(*itr).Update();
 		(*itr).Draw();
 	}
+
+	DxLib::DrawExtendFormatString(20, 50, 1.2f, 1.2f, 0xff0000, "%d ミリ秒", LpGameScene.GetMilliTime());
 }
 
 int DrawLine(Vector2 sPos, Vector2 ePos, unsigned int color, int thickNess)

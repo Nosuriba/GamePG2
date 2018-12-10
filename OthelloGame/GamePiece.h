@@ -1,10 +1,14 @@
 #pragma once
 #include <DxLib.h>
+#include <chrono>
 #include <vector>
 #include <memory>
 #include <list>
 #include "Vector2.h"
 #include "PieceState.h"
+
+
+/// ‚±‚±‚Éˆ—ŠÔŒv‘ª—p‚ÌŠÖ”‚ğì‚Á‚Ä‚¨‚­
 
 class GamePiece;
 

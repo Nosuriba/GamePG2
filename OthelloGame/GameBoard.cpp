@@ -85,8 +85,8 @@ bool GameBoard::SetPiece(const Vector2& vec, PIECE_ST id)
 		pPos = ChangeTblToScr(pNum);
 		if (data[pNum.y][pNum.x].expired())
 		{
-			LpAudioMng.PlaySE(LpAudioMng.GetAudio().putSE);
-			LpAudioMng.ChangeVolume(150, LpAudioMng.GetAudio().putSE);
+			LpAudioMng.PlaySE(LpAudioMng.GetSound().putSE);
+			LpAudioMng.ChangeVolume(150, LpAudioMng.GetSound().putSE);
 			rtnFlag = true;
 			auto tmp = AddObjList(std::make_shared<GamePiece>(pPos, Vector2(0,0), id));
 			data[pNum.y][pNum.x] = (*tmp);
@@ -497,7 +497,7 @@ void GameBoard::Draw()
 	ePos = { boardSize.x + boardOffset.x, boardSize.y};
 
 	// ƒOƒŠƒbƒh‚Ì•`‰æ 
-	for (int y = 0; y <= data.size() + 1; y++)
+	for (unsigned int y = 0; y <= data.size() + 1; y++)
 	{
 		sPos.y = pieceSize * y + boardOffset.y;
 		ePos.y = pieceSize * y + boardOffset.y;
@@ -506,7 +506,7 @@ void GameBoard::Draw()
 
 	sPos = { boardOffset.x, boardOffset.y };
 	ePos = { boardSize.x + boardOffset.x, boardSize .y + pieceSize - 20 };
-	for (int x = 0; x <= data.size(); x++)
+	for (unsigned int x = 0; x <= data.size(); x++)
 	{
 		sPos.x = (pieceSize * x) + boardOffset.x;
 		ePos.x = (pieceSize * x) + boardOffset.x;

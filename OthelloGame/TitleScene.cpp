@@ -49,8 +49,8 @@ void TitleScene::DrawPlType()
 
 unique_scene TitleScene::Update(unique_scene own, mouse_shared sysMouse)
 {
-	LpAudioMng.PlayBGM(LpAudioMng.GetAudio().titleBGM);
-	LpAudioMng.ChangeVolume(70, LpAudioMng.GetAudio().titleBGM);
+	LpAudioMng.PlayBGM(LpAudioMng.GetSound().titleBGM);
+	LpAudioMng.ChangeVolume(70, LpAudioMng.GetSound().titleBGM);
 	Vector2 onlinePos = { netBtnPos.x, (netBtnPos.y + netBoxSize.y) + 40 };
 
 	if (lpNetWork.GetState() != NetState::READY)
@@ -59,24 +59,24 @@ unique_scene TitleScene::Update(unique_scene own, mouse_shared sysMouse)
 		{
 			if ((*sysMouse).GetPoint() > pPos[0] & (*sysMouse).GetPoint() <= pPos[0] + boxSize)
 			{
-				LpAudioMng.PlaySE(LpAudioMng.GetAudio().changeSE);
+				LpAudioMng.PlaySE(LpAudioMng.GetSound().changeSE);
 				plType[0] = (PL_TYPE)(1 ^ static_cast<int>(plType[0]));
 			}
 			else if ((*sysMouse).GetPoint() > pPos[1] & (*sysMouse).GetPoint() <= pPos[1] + boxSize)
 			{
-				LpAudioMng.PlaySE(LpAudioMng.GetAudio().changeSE);
+				LpAudioMng.PlaySE(LpAudioMng.GetSound().changeSE);
 				plType[1] = (PL_TYPE)(1 ^ static_cast<int>(plType[1]));
 			}
 			else if ((*sysMouse).GetPoint() >  netBtnPos &
 					 (*sysMouse).GetPoint() <= netBtnPos + netBoxSize)
 			{
-				LpAudioMng.PlaySE(LpAudioMng.GetAudio().decideSE);
+				LpAudioMng.PlaySE(LpAudioMng.GetSound().decideSE);
 				return std::make_unique<MainScene>(plType);
 			}
 			else if (((*sysMouse).GetPoint() >  onlinePos &
 					  (*sysMouse).GetPoint() <= onlinePos + netBoxSize))
 			{
-				LpAudioMng.PlaySE(LpAudioMng.GetAudio().decideSE);
+				LpAudioMng.PlaySE(LpAudioMng.GetSound().decideSE);
 				/// ホストまたはゲストの設定を行う
 				if (lpNetWork.GetState() == NetState::NON)
 				{
@@ -96,7 +96,7 @@ unique_scene TitleScene::Update(unique_scene own, mouse_shared sysMouse)
 		LpGameScene.EndTime();
 		if (LpGameScene.GetSecondsTime() > 4)
 		{
-			LpAudioMng.PlaySE(LpAudioMng.GetAudio().closeNetSE);
+			LpAudioMng.PlaySE(LpAudioMng.GetSound().closeNetSE);
 			lpNetWork.CloseNetWork();
 			LpGameScene.ResetTime();
 		}
@@ -126,7 +126,7 @@ unique_scene TitleScene::Update(unique_scene own, mouse_shared sysMouse)
 		if (lpNetWork.GetState() == NetState::START_WAIT || 
 			lpNetWork.GetState() == NetState::ACTIVE)
 		{
-			LpAudioMng.PlaySE(LpAudioMng.GetAudio().decideSE);
+			LpAudioMng.PlaySE(LpAudioMng.GetSound().decideSE);
 			return std::make_unique<MainScene>(plType);
 		}
 	}

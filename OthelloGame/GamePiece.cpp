@@ -101,7 +101,7 @@ void GamePiece::Draw()
 	{
 		if (reverseCnt % animCnt == 5)
 		{
-			LpAudioMng.PlaySE(LpAudioMng.GetAudio().reverseSE);
+			LpAudioMng.PlaySE(LpAudioMng.GetSound().reverseSE);
 		}
 	}
 

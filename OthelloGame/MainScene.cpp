@@ -119,13 +119,13 @@ void MainScene::DrawPlType()
 
 unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 {
-	LpAudioMng.PlayBGM(LpAudioMng.GetAudio().mainBGM);
+	LpAudioMng.PlayBGM(LpAudioMng.GetSound().mainBGM);
 	if (lpNetWork.GetMode() != NetWorkMode::OFFLINE)
 	{
 		if (!lpNetWork())
 		{
 			lpNetWork.CloseNetWork();
-			LpAudioMng.PlaySE(LpAudioMng.GetAudio().closeNetSE);
+			LpAudioMng.PlaySE(LpAudioMng.GetSound().closeNetSE);
 			return std::make_unique<TitleScene>();
 		}
 	}
@@ -157,7 +157,7 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 			if ((*sysMouse).GetPoint() >  plPos[static_cast<int>(PIECE_ST::B)] &&
 				(*sysMouse).GetPoint() <= plPos[static_cast<int>(PIECE_ST::B)] + Vector2(plBoxSize.x, plBoxSize.y))
 			{
-				LpAudioMng.PlaySE(LpAudioMng.GetAudio().changeSE);
+				LpAudioMng.PlaySE(LpAudioMng.GetSound().changeSE);
 				auto pTypeB = (1 ^ (int)(*mouseCtl[static_cast<int>(PIECE_ST::B)]).GetPlType());
 				(*mouseCtl[static_cast<int>(PIECE_ST::B)]).ThreadStop();
 				(*mouseCtl[static_cast<int>(PIECE_ST::B)]).SetPlType((PL_TYPE)(pTypeB));
@@ -166,7 +166,7 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 			else if (((*sysMouse).GetPoint() >  plPos[static_cast<int>(PIECE_ST::W)] &&
 				      (*sysMouse).GetPoint() <= plPos[static_cast<int>(PIECE_ST::W)] + Vector2(plBoxSize.x, plBoxSize.y)))
 			{
-				LpAudioMng.PlaySE(LpAudioMng.GetAudio().changeSE);
+				LpAudioMng.PlaySE(LpAudioMng.GetSound().changeSE);
 				auto pTypeW = (1 ^ (int)(*mouseCtl[static_cast<int>(PIECE_ST::W)]).GetPlType());
 				(*mouseCtl[static_cast<int>(PIECE_ST::W)]).ThreadStop();
 				(*mouseCtl[static_cast<int>(PIECE_ST::W)]).SetPlType((PL_TYPE)(pTypeW));

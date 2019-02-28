@@ -65,7 +65,7 @@ unique_scene ResultScene::Update(unique_scene own, mouse_shared sysMouse)
 	DxLib::ClsDrawScreen();
 	if ((*sysMouse).GetButton()[PUSH_NOW] & (~(*sysMouse).GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT && putFlag)
 	{
-		LpAudioMng.PlaySE(LpAudioMng.GetAudio().decideSE);
+		LpAudioMng.PlaySE(LpAudioMng.GetSound().decideSE);
 		return std::make_unique<TitleScene>();
 	}
 
@@ -76,7 +76,7 @@ unique_scene ResultScene::Update(unique_scene own, mouse_shared sysMouse)
 			if (dispCnt > 40)
 			{
 				putFlag = true;
-				LpAudioMng.PlaySE(LpAudioMng.GetAudio().countEndSE);
+				LpAudioMng.PlaySE(LpAudioMng.GetSound().countEndSE);
 				dispCnt = 0;
 			}
 			else
@@ -90,7 +90,7 @@ unique_scene ResultScene::Update(unique_scene own, mouse_shared sysMouse)
 		LpAudioMng.StopBGM();
 		if (dispCnt > 6)
 		{
-			LpAudioMng.PlaySE(LpAudioMng.GetAudio().countSE);
+			LpAudioMng.PlaySE(LpAudioMng.GetSound().countSE);
 			if (pCnt < piece.b)
 			{
 				(*gBoard).ResultPiece(pCnt, PIECE_ST::B);
@@ -123,7 +123,7 @@ unique_scene ResultScene::Update(unique_scene own, mouse_shared sysMouse)
 		if (dispCnt > 60)
 		{
 			animCnt++;
-			LpAudioMng.PlayBGM(LpAudioMng.GetAudio().resultBGM);
+			LpAudioMng.PlayBGM(LpAudioMng.GetSound().resultBGM);
 		}
 		else
 		{

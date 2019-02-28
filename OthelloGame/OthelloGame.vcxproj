@@ -89,7 +89,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(DXLIB_DIR)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(DXLIB_DIR)</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -116,21 +121,29 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(DXLIB_DIR)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(DXLIB_DIR)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AudioMng.cpp" />
+    <ClCompile Include="ClientState.cpp" />
     <ClCompile Include="dataTbl.cpp" />
     <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="GamePiece.cpp" />
     <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="HostState.cpp" />
     <ClCompile Include="ImageMng.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="MouseCtl.cpp" />
+    <ClCompile Include="NetWork.cpp" />
+    <ClCompile Include="NetWorkState.cpp" />
     <ClCompile Include="PieceBlack.cpp" />
     <ClCompile Include="PieceST.cpp" />
     <ClCompile Include="PieceState.cpp" />
@@ -144,16 +157,22 @@
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TypeCpu.cpp" />
     <ClCompile Include="TypeMan.cpp" />
+    <ClCompile Include="TypeNet.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioMng.h" />
+    <ClInclude Include="ClientState.h" />
     <ClInclude Include="dataTbl.h" />
     <ClInclude Include="GameBoard.h" />
     <ClInclude Include="GamePiece.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="HostState.h" />
     <ClInclude Include="ImageMng.h" />
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="MouseCtl.h" />
+    <ClInclude Include="NetWork.h" />
+    <ClInclude Include="NetWorkState.h" />
     <ClInclude Include="PieceBlack.h" />
     <ClInclude Include="PieceST.h" />
     <ClInclude Include="PieceState.h" />
@@ -167,6 +186,7 @@
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TypeCpu.h" />
     <ClInclude Include="TypeMan.h" />
+    <ClInclude Include="TypeNet.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <ItemGroup>

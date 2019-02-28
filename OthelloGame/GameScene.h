@@ -21,7 +21,6 @@ using TIME_POINT = std::chrono::system_clock::time_point;
 
 class GameBoard;
 
-
 class GameScene
 {
 public:
@@ -32,16 +31,16 @@ public:
 	}
 	void Run();
 	// ゲーム画面のサイズを取得するための関数
-	Vector2 GetScreenSize(void);	
+	Vector2 GetScreenSize();	
 
-	void StartTime(void);
-	void EndTime(void);
+	void StartTime();
+	void EndTime();
+	void ResetTime();			// 時間リセット用関数
 
 	/// 測定する時間の種類
+	__int64 GetSecondsTime();
 	__int64 GetMilliTime();
-	__int64 GetMicroTime(void);
-	__int64 GetNanoTime(void);
-
+	
 private:
 	
 	// GameSceneクラスのdeleterを設定している 

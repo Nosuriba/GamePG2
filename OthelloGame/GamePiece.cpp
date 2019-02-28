@@ -4,6 +4,7 @@
 #include "PieceST.h"
 #include "PieceWhite.h"
 #include "PieceBlack.h"
+#include "AudioMng.h"
 
 GamePiece::GamePiece(const Vector2& pos, const Vector2& drawOffset, PIECE_ST pState) :
 drawPieceSize(64),
@@ -23,7 +24,7 @@ GamePiece::~GamePiece()
 {
 }
 
-PIECE_ST GamePiece::GetState(void)
+PIECE_ST GamePiece::GetState()
 {
 	 // 先頭の要素に入っているピースの状態を返している 
 	if (*(pState.begin()))
@@ -55,7 +56,7 @@ void GamePiece::SetState(PIECE_ST pState, int reserveCnt)
 	}
 }
 	
-int GamePiece::GetSize(void)
+int GamePiece::GetSize()
 {
 	return drawPieceSize;
 }
@@ -72,7 +73,7 @@ bool GamePiece::SetDrawOffset(const Vector2 & drawOffset)
 	return true;
 }
 
-void GamePiece::Update(void)
+void GamePiece::Update()
 {
 	if (reverseCnt < 0)
 	{
@@ -81,7 +82,7 @@ void GamePiece::Update(void)
 	reverseCnt--;
 }
 
-void GamePiece::Draw(void)
+void GamePiece::Draw()
 {
 	// アニメーション用の変数 
 	double holdSize = 0;
@@ -92,10 +93,18 @@ void GamePiece::Draw(void)
 	{
 		int animCnt = (reverseCnt / flameInvCnt) % flameCnt;
 		drawSize = -1.0 + (animCnt * 0.2);
-		
 		image = (drawSize > 0 ? image = oldImage : image = (**pState.begin()).GetDrawImage());
 	}
-	
+
+	// 反転効果音
+	if (reverseCnt > 0)
+	{
+		if (reverseCnt % animCnt == 5)
+		{
+			LpAudioMng.PlaySE(LpAudioMng.GetAudio().reverseSE);
+		}
+	}
+
 	// ピースの反転時に浮かせるためのアニメーション設定
 	holdSize = (int)(((drawSize * flameCnt) / holdAnimCnt) + 2) % 3;
 	holdSize = abs(holdSize * 0.1);

@@ -1,9 +1,12 @@
+#include "TitleScene.h"
 #include "MainScene.h"
 #include "ResultScene.h"
 #include "GameBoard.h"
 #include "Player.h"
 #include "MouseCtl.h"
 #include "GameScene.h"
+#include "NetWork.h"
+#include "AudioMng.h"
 
 MainScene::MainScene(std::array<PL_TYPE, static_cast<int>(PL_TYPE::MAX)> plType) : plBoxSize(80, 40)
 {
@@ -11,6 +14,7 @@ MainScene::MainScene(std::array<PL_TYPE, static_cast<int>(PL_TYPE::MAX)> plType)
 	reverseFlag = false;
 	mPos = { 0,0 };
 	MainScene::Init();
+	LpGameScene.ResetTime();
 }
 
 MainScene::~MainScene()
@@ -19,14 +23,35 @@ MainScene::~MainScene()
 
 void MainScene::Init()
 {
-	// プレイヤータイプごとのマウスの情報を設定している
 	for (auto unit : PIECE_ST())
 	{
 		mouseCtl[unit] = std::make_shared<MouseCtl>();
 	}
-	(*mouseCtl[0]).SetPlType(plType[0]);
-	(*mouseCtl[1]).SetPlType(plType[1]);
 
+	// プレイヤータイプごとのマウスの情報を設定している
+	if (lpNetWork.GetMode() == NetWorkMode::OFFLINE)
+	{
+		(*mouseCtl[0]).SetPlType(plType[0]);
+		(*mouseCtl[1]).SetPlType(plType[1]);
+	}
+	else
+	{
+		/// とりあえず、ホストかゲストによって
+		if (lpNetWork.GetMode() == NetWorkMode::HOST)
+		{
+			//(*mouseCtl[0]).SetPlType(plType[0]);
+			(*mouseCtl[0]).SetPlType(PL_TYPE::CPU);
+			(*mouseCtl[1]).SetPlType(PL_TYPE::NET);
+		}
+		else if (lpNetWork.GetMode() == NetWorkMode::GUEST)
+		{
+			(*mouseCtl[0]).SetPlType(PL_TYPE::NET);
+			(*mouseCtl[1]).SetPlType(PL_TYPE::CPU);
+
+		}
+		else{}
+	}
+	
 	gBoard = std::make_shared<GameBoard>();
 	(*gBoard).SetPiece(3, 3, PIECE_ST::B);
 	(*gBoard).SetPiece(4, 4, PIECE_ST::B);
@@ -48,9 +73,10 @@ void MainScene::MakePlayer()
 }
 
 
-void MainScene::NextPlayer(void)
+void MainScene::NextPlayer()
 {
 	(**player).SetTurn(false);
+	(**player).ReleaseTray((**player).pGetID());
 	player++;
 	if (player == playerList.end())
 	{
@@ -59,7 +85,7 @@ void MainScene::NextPlayer(void)
 	(**player).SetTurn(true);
 }
 
-bool MainScene::AutoPassPlayer(void)
+bool MainScene::AutoPassPlayer()
 {
 	NextPlayer();
 	(*gBoard).MakePutPieceField((**player).pGetID());
@@ -70,36 +96,39 @@ bool MainScene::AutoPassPlayer(void)
 	return false;
 }
 
-void MainScene::DrawPlType(void)
+void MainScene::DrawPlType()
 {
 	for (int i = 0; i < static_cast<int>(PIECE_ST::NON); i++)
 	{
+		int plState = (i == 0 ? plState = static_cast<int>(PIECE_ST::B) : plState = static_cast<int>(PIECE_ST::W));
+		plColor = (i == 0 ? plColor = 0x7fbfff : plColor = 0xff4500);
+		
 		DrawBox(plPos[i], plPos[i] + plBoxSize, 0x666666, true);
-	}
 
-	// 1Pの描画
-	if ((*mouseCtl[static_cast<int>(PIECE_ST::B)]).GetPlType() == PL_TYPE::MAN)
-	{
-		DxLib::DrawExtendString(plPos[0].x, plPos[0].y, 1.5f, 1.5f,"Player", 0x7fbfff);
-	}
-	else
-	{
-		DxLib::DrawExtendString(plPos[0].x, plPos[0].y, 1.5f, 1.5f, "CPU", 0x7fbfff);
-	}
-
-	// 2Pの描画
-	if ((*mouseCtl[static_cast<int>(PIECE_ST::W)]).GetPlType() == PL_TYPE::MAN)
-	{
-		DxLib::DrawExtendString(plPos[1].x, plPos[1].y, 1.5f, 1.5f, "Player", 0xff4500);
-	}
-	else
-	{
-		DxLib::DrawExtendString(plPos[1].x, plPos[1].y, 1.5f, 1.5f, "CPU", 0xff4500);
+		// プレイヤーの描画
+		if ((*mouseCtl[plState]).GetPlType() == PL_TYPE::MAN)
+		{
+			DxLib::DrawExtendString(plPos[i].x, plPos[i].y, 1.5f, 1.5f, "Player", plColor);
+		}
+		else
+		{
+			DxLib::DrawExtendString(plPos[i].x, plPos[i].y, 1.5f, 1.5f, "CPU", plColor);
+		}
 	}
 }
 
 unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 {
+	LpAudioMng.PlayBGM(LpAudioMng.GetAudio().mainBGM);
+	if (lpNetWork.GetMode() != NetWorkMode::OFFLINE)
+	{
+		if (!lpNetWork())
+		{
+			lpNetWork.CloseNetWork();
+			LpAudioMng.PlaySE(LpAudioMng.GetAudio().closeNetSE);
+			return std::make_unique<TitleScene>();
+		}
+	}
 	(**player).SetTurn(true);
 	int mouseID = static_cast<int>((**player).pGetID());
 
@@ -111,9 +140,7 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 		{
 			(*gBoard).MakePutPieceField((**player).pGetID());
 		}
-		
 		(*mouseCtl[mouseID]).Update(gBoard, (**player).pGetID());
-
 		if ((*mouseCtl[mouseID]).GetButton()[PUSH_NOW] & (~(*mouseCtl[mouseID]).GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 		{
 			if ((**player).TurnAct(mouseCtl, *gBoard))
@@ -126,19 +153,23 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 		// ゲーム中にプレイヤーを動的に切り替えれるようにしている
 		if ((*sysMouse).GetButton()[PUSH_NOW] & (~(*sysMouse).GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
 		{
-			if ((*sysMouse).GetPoint() >  plPos[static_cast<int>(PIECE_ST::B)] &
+			/// 1PのIDを変更している
+			if ((*sysMouse).GetPoint() >  plPos[static_cast<int>(PIECE_ST::B)] &&
 				(*sysMouse).GetPoint() <= plPos[static_cast<int>(PIECE_ST::B)] + Vector2(plBoxSize.x, plBoxSize.y))
 			{
-				/// 1Pの状態を変更している
-				PL_TYPE pTypeB = (*mouseCtl[static_cast<int>(PIECE_ST::B)]).GetPlType();
-				(*mouseCtl[static_cast<int>(PIECE_ST::B)]).SetPlType((PL_TYPE)(1 ^ (int)(pTypeB)));
+				LpAudioMng.PlaySE(LpAudioMng.GetAudio().changeSE);
+				auto pTypeB = (1 ^ (int)(*mouseCtl[static_cast<int>(PIECE_ST::B)]).GetPlType());
+				(*mouseCtl[static_cast<int>(PIECE_ST::B)]).ThreadStop();
+				(*mouseCtl[static_cast<int>(PIECE_ST::B)]).SetPlType((PL_TYPE)(pTypeB));
 			}
-			else if (((*sysMouse).GetPoint() >  plPos[static_cast<int>(PIECE_ST::W)] &
+			/// 2PのIDを変更している
+			else if (((*sysMouse).GetPoint() >  plPos[static_cast<int>(PIECE_ST::W)] &&
 				      (*sysMouse).GetPoint() <= plPos[static_cast<int>(PIECE_ST::W)] + Vector2(plBoxSize.x, plBoxSize.y)))
 			{
-				/// 2Pの状態を変更している
-				PL_TYPE pTypeW = (*mouseCtl[static_cast<int>(PIECE_ST::W)]).GetPlType();
-				(*mouseCtl[static_cast<int>(PIECE_ST::W)]).SetPlType((PL_TYPE)(1 ^ (int)(pTypeW)));
+				LpAudioMng.PlaySE(LpAudioMng.GetAudio().changeSE);
+				auto pTypeW = (1 ^ (int)(*mouseCtl[static_cast<int>(PIECE_ST::W)]).GetPlType());
+				(*mouseCtl[static_cast<int>(PIECE_ST::W)]).ThreadStop();
+				(*mouseCtl[static_cast<int>(PIECE_ST::W)]).SetPlType((PL_TYPE)(pTypeW));
 			}
 			else {}
 		}
@@ -152,8 +183,10 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 			reverseFlag = false;
 			(*gBoard).SetReverse(mPos, (**player).pGetID());
 			piece = (*gBoard).PutPieceCnt();
-			(*gBoard).PutPieceClear();
+			mPos = { 0,0 };
 			NextPlayer();
+			(*gBoard).PutPieceClear();
+			LpGameScene.ResetTime();
 		}
 	}
 
@@ -164,15 +197,15 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 		{
 			if (!AutoPassPlayer())
 			{
+				piece = (*gBoard).PutPieceCnt();
 				(*gBoard).SetPieceCnt(piece);
 				return std::make_unique<ResultScene>(gBoard);
 			}
 		}
 	}
 	(*gBoard).Update();
-
 	DxLib::ClsDrawScreen();
-	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
+	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("resource/image/gameBG.png")[0], true);
 
 	// 操作方法のテキストを描画している
 	DxLib::DrawExtendString(200, 10, 1.5f, 1.5f, "左クリックでコマが置けるよ", 0xffff00);
@@ -190,8 +223,8 @@ unique_scene MainScene::Update(unique_scene own, mouse_shared sysMouse)
 	{
 		(*data).Draw();
 	}
-	DxLib::DrawFormatString(10, 550, 0xffdd00, "%d マイクロ秒", LpGameScene.GetMicroTime());
-
+	/// 時間の表示
+	DxLib::DrawExtendFormatString(40, 50, 1.5f, 1.5f, 0xff0000, "%d 秒", LpGameScene.GetSecondsTime());
 	DxLib::ScreenFlip();
 	return std::move(own);
 }

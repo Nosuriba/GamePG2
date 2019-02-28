@@ -31,6 +31,12 @@
     <Filter Include="ソース ファイル\PlayerType">
       <UniqueIdentifier>{c435c89d-53c4-496c-8179-02a6e39d4238}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\NetWork">
+      <UniqueIdentifier>{2e3f90bf-b4be-4cd8-89f8-8978805a187e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\NetWork">
+      <UniqueIdentifier>{490b7597-1835-4122-b3fa-63fc81fc0b08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ImageMng.cpp">
@@ -99,6 +105,24 @@
     <ClCompile Include="MouseCtl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="HostState.cpp">
+      <Filter>ソース ファイル\NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientState.cpp">
+      <Filter>ソース ファイル\NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="NetWork.cpp">
+      <Filter>ソース ファイル\NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="NetWorkState.cpp">
+      <Filter>ソース ファイル\NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeNet.cpp">
+      <Filter>ソース ファイル\PlayerType</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioMng.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImageMng.h">
@@ -162,6 +186,24 @@
       <Filter>ヘッダー ファイル\PlayerType</Filter>
     </ClInclude>
     <ClInclude Include="MouseCtl.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientState.h">
+      <Filter>ヘッダー ファイル\NetWork</Filter>
+    </ClInclude>
+    <ClInclude Include="HostState.h">
+      <Filter>ヘッダー ファイル\NetWork</Filter>
+    </ClInclude>
+    <ClInclude Include="NetWork.h">
+      <Filter>ヘッダー ファイル\NetWork</Filter>
+    </ClInclude>
+    <ClInclude Include="NetWorkState.h">
+      <Filter>ヘッダー ファイル\NetWork</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeNet.h">
+      <Filter>ヘッダー ファイル\PlayerType</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioMng.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

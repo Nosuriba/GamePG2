@@ -21,10 +21,10 @@ public:
 private:
 	// プレイヤー関係の処理
 	void MakePlayer();
-	void NextPlayer(void);
-	bool AutoPassPlayer(void);
+	void NextPlayer();
+	bool AutoPassPlayer();
 
-	void DrawPlType(void);
+	void DrawPlType();
 
 	Vector2 boardSize;
 	Vector2 mPos;				// クリックしたマウスの位置を保存するもの

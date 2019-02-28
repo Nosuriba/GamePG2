@@ -1,5 +1,7 @@
 #pragma once
 #include <array>
+#include <thread>
+#include <mutex>
 #include "Vector2.h"
 #include "PL_TYPE.h"
 #include "PieceSt.h"
@@ -14,6 +16,13 @@ enum M_PUSH
 	PUSH_MAX
 };
 
+typedef struct
+{
+	Vector2 pos;
+	int mouseID;
+}mouse_data;
+
+
 // É}ÉEÉXÇÃèÓïÒÇå≈íËí∑îzóÒÇ≈äiî[Ç∑ÇÈÇΩÇﬂÇÃå^ 
 using mouse_int = std::array<int, PUSH_MAX>;
 
@@ -22,17 +31,19 @@ class MouseCtl
 public:
 	MouseCtl();
 	~MouseCtl();
-	Vector2 GetPoint(void) const;
-	mouse_int GetButton(void) const;
-	PL_TYPE GetPlType(void);
+	Vector2 GetPoint() const;
+	mouse_int GetButton() const;
+	PL_TYPE GetPlType();
 	void SetPlType(PL_TYPE type);
+	void ThreadStop();
 	void Update();
-	void Update(std::shared_ptr<GameBoard>, PIECE_ST pState);
+	void Update(std::shared_ptr<GameBoard> boardPtr, PIECE_ST pState);
 private:
-	Vector2   pos;
-	PL_TYPE	  type;
+	mouse_data data;
 	std::unique_ptr<PlayerType> plType;
+	std::thread threadAI;
 	mouse_int mButton;
+	const int limTime;
 
 };
 

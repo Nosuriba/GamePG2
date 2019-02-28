@@ -2,11 +2,18 @@
 #include "TitleScene.h"
 #include "MouseCtl.h"
 #include "GameBoard.h"
+#include "AudioMng.h"
+#include "NetWork.h"
 
 ResultScene::ResultScene(std::shared_ptr<GameBoard> gBoard)
 {
+	lpNetWork.CloseNetWork();
 	this->gBoard = gBoard;
-	piece	 = (*gBoard).GetPieceCnt();
+	dispCnt		 = 0;
+	animCnt		 = 0;
+	piece		 = (*gBoard).GetPieceCnt();
+	pCnt		 = 0;
+	pCntMax		 = (piece.b + piece.w);
 }
 
 ResultScene::~ResultScene()
@@ -39,7 +46,7 @@ void ResultScene::DrawWinner(PIECE_ST pState)
 	// 勝者の描画
 	if (pState == PIECE_ST::B)
 	{
-		DxLib::DrawExtendString(240, 5, 2.5f, 2.5f, "先手[黒]の勝利なり", 0xfffacd);
+		DxLib::DrawExtendString(240, 5, 2.5f, 2.5f, "先手[黒]の勝利なり", 0xaaaaaa);
 	}
 	else if (pState == PIECE_ST::W)
 	{
@@ -55,21 +62,75 @@ void ResultScene::DrawWinner(PIECE_ST pState)
 unique_scene ResultScene::Update(unique_scene own, mouse_shared sysMouse)
 {
 	// 右クリックをした時、タイトルのシーンに移行している
-	if ((*sysMouse).GetButton()[PUSH_NOW] & (~(*sysMouse).GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT)
+	DxLib::ClsDrawScreen();
+	if ((*sysMouse).GetButton()[PUSH_NOW] & (~(*sysMouse).GetButton()[PUSH_OLD]) & MOUSE_INPUT_LEFT && putFlag)
 	{
+		LpAudioMng.PlaySE(LpAudioMng.GetAudio().decideSE);
 		return std::make_unique<TitleScene>();
 	}
-	// ピースの並び替えを行っている 
-	(*gBoard).ResultPiece(piece);
+
+	if (pCnt == pCntMax)
+	{	
+		if (!putFlag)
+		{
+			if (dispCnt > 40)
+			{
+				putFlag = true;
+				LpAudioMng.PlaySE(LpAudioMng.GetAudio().countEndSE);
+				dispCnt = 0;
+			}
+			else
+			{
+				dispCnt++;
+			}
+		}	
+	}
+	else
+	{
+		LpAudioMng.StopBGM();
+		if (dispCnt > 6)
+		{
+			LpAudioMng.PlaySE(LpAudioMng.GetAudio().countSE);
+			if (pCnt < piece.b)
+			{
+				(*gBoard).ResultPiece(pCnt, PIECE_ST::B);
+			}
+			else
+			{
+				(*gBoard).ResultPiece(pCnt, PIECE_ST::W);
+			}
+			pCnt++;
+			dispCnt = 0;
+		}
+		else
+		{
+			dispCnt++;
+		}
+	}
 
 	// リザルトの情報を描画している 
-	DxLib::ClsDrawScreen();
-	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("image/gameBG.png")[0], true);
+	DxLib::DrawGraph(0, 0, LpImageMng.ImgGetID("resource/image/gameBG.png")[0], true);
 	(*gBoard).Draw();
-	DrawWinner(WinJudge(piece));
-	// DxLib::DrawExtendString(60, 300, 2.2f, 2.2f, "左クリックを押すとタイトル画面に戻るよ", 0xffff00);
-	DxLib::DrawExtendFormatString(700, 450, 1.5f, 1.5f, 0xeeee00, "白: %d", piece.w);
-	DxLib::DrawExtendFormatString(25 , 450, 1.5f, 1.5f, 0xeeee00, "黒: %d", piece.b);
+	if (putFlag)
+	{
+		DrawWinner(WinJudge(piece));
+		DxLib::DrawExtendFormatString(700, 100, 3.f, 3.f, 0xfffacd, "%d", piece.w);
+		DxLib::DrawExtendFormatString(50,  100, 3.f, 3.f, 0x999999, "%d", piece.b);
+		if (!((animCnt / 30) % 2))
+		{
+			DxLib::DrawExtendString(150, 550, 2.f, 2.f, "左クリックでタイトルに戻るよ", 0xffd700);
+		}
+		if (dispCnt > 60)
+		{
+			animCnt++;
+			LpAudioMng.PlayBGM(LpAudioMng.GetAudio().resultBGM);
+		}
+		else
+		{
+			dispCnt++;
+		}
+	}
+	
 	DxLib::ScreenFlip();
 
 	return std::move(own);

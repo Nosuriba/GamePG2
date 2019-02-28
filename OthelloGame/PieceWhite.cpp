@@ -11,12 +11,12 @@ PieceWhite::~PieceWhite()
 {
 }
 
-PIECE_ST PieceWhite::GetState(void)
+PIECE_ST PieceWhite::GetState()
 {
 	return PIECE_ST::W;
 }
 
-std::string PieceWhite::GetDrawImage(void)
+std::string PieceWhite::GetDrawImage()
 {
-	return "image/piece/player1.png";
+	return "resource/image/player1.png";
 }

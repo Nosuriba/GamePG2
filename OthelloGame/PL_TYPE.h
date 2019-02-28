@@ -5,6 +5,7 @@ enum class PL_TYPE
 {
 	MAN,
 	CPU,
+	NET,
 	SYS,
 	MAX
 };

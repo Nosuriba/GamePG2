@@ -9,12 +9,12 @@ PieceBlack::~PieceBlack()
 {
 }
 
-PIECE_ST PieceBlack::GetState(void)
+PIECE_ST PieceBlack::GetState()
 {
 	return PIECE_ST::B;
 }
 
-std::string PieceBlack::GetDrawImage(void)
+std::string PieceBlack::GetDrawImage()
 {
-	return "image/piece/player2.png";
+	return "resource/image/player2.png";
 }

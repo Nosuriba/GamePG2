@@ -17,8 +17,8 @@ class SceneState
 public:
 	virtual ~SceneState();
 	virtual void Init() = 0;
-	//virtual unique_scene Update(unique_scene own, MouseCtl& mousePtr)  = 0;
 	virtual unique_scene Update(unique_scene own, mouse_shared sysMouse) = 0;
-	
+protected:
+	unsigned int plColor = 0;
 };
 

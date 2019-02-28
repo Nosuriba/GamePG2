@@ -19,7 +19,7 @@ Player::~Player()
 	playerCnt = 0;
 }
 
-bool Player::Draw(void)
+bool Player::Draw()
 {
 	// pTray‚Ì’†g‚ª“ü‚Á‚Ä‚¢‚ê‚Î•`‰æ‚ğs‚¤ 
 	if (pTray)
@@ -30,7 +30,7 @@ bool Player::Draw(void)
 	return false;
 }
 
-PIECE_ST Player::pGetID(void)
+PIECE_ST Player::pGetID()
 {
 	return id;
 }
@@ -49,4 +49,12 @@ bool Player::TurnAct(mouse_array mouse, GameBoard & gBoard)
 bool Player::SetTurn(bool flag)
 {
 	return (*pTray).SetTurnFlag(flag);
+}
+
+void Player::ReleaseTray(PIECE_ST id)
+{
+	if (!(*pTray).ReleasePiece())
+	{
+		(*pTray).AddPiece(id);
+	}
 }

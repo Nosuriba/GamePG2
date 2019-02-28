@@ -7,7 +7,7 @@ class PieceBlack :
 public:
 	PieceBlack();
 	~PieceBlack();
-	PIECE_ST GetState(void);
-	std::string GetDrawImage(void);
+	PIECE_ST GetState();
+	std::string GetDrawImage();
 };
 

@@ -8,9 +8,11 @@ public:
 	~PieceTray();
 	// ターン処理を行っているプレイヤーの情報を取得している 
 	bool SetTurnFlag(bool flag);
-	bool Draw(void);
+	bool ReleasePiece();
+	void AddPiece(PIECE_ST id);
+	bool Draw();
 private:
-	bool AddPiece(void);
+	bool AddPiece();
 	
 	piece_sharedList pieceList;
 	PIECE_ST pState = PIECE_ST::NON;

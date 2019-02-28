@@ -11,10 +11,11 @@ class Player
 public:
 	Player(Vector2 boardSize);
 	~Player();
-	bool Draw(void);
-	PIECE_ST pGetID(void);
+	bool Draw();
+	PIECE_ST pGetID();
 	bool TurnAct(mouse_array mouse, GameBoard& gBoard);
 	bool SetTurn(bool flag);
+	void ReleaseTray(PIECE_ST id);
 private:
 	static int playerCnt;
 	Vector2 boardSize = { 0,0 };

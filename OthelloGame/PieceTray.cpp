@@ -25,13 +25,28 @@ bool PieceTray::SetTurnFlag(bool flag)
 	return turnFlag;
 }
 
-bool PieceTray::Draw(void)
+bool PieceTray::ReleasePiece()
+{
+	if (pieceList.size() > 0)
+	{
+		pieceList.pop_front();
+		return true;
+	}
+	return false;	
+}
+
+void PieceTray::AddPiece(PIECE_ST id)
+{
+	pieceList.push_back(std::make_shared<GamePiece>(Vector2(0, 0), pos, id));
+}
+
+bool PieceTray::Draw()
 {
 	int cnt = 0;
 	// 現在ターン処理を行っているプレイヤーに枠を描画している 
 	if (turnFlag)
 	{
-		DrawBox(pos - 5, pos + Vector2(70, 320) + 5, 0xeeeeee, true);
+		DrawBox(pos - 5, pos + Vector2(70, 320) + 5, 0x00d4ff, true);
 	}
 
 	// ピースを置くためのトレイを描画している 
@@ -49,7 +64,7 @@ bool PieceTray::Draw(void)
 	return true;
 }
 
-bool PieceTray::AddPiece(void)
+bool PieceTray::AddPiece()
 {
 	pieceList.push_back(std::make_shared<GamePiece>(Vector2(0,0), pos, pState));
 	return true;
